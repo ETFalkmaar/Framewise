@@ -11,11 +11,7 @@ export interface ChecklistStatusBannerProps {
   className?: string;
 }
 
-export function ChecklistStatusBanner({
-  canGoLive,
-  copy,
-  className,
-}: ChecklistStatusBannerProps) {
+export function ChecklistStatusBanner({ canGoLive, copy, className }: ChecklistStatusBannerProps) {
   if (canGoLive) {
     return (
       <div
@@ -44,9 +40,7 @@ export function ChecklistStatusBanner({
       data-testid="checklist-banner-pending"
       className={cn('rounded-lg border border-amber-500/40 bg-amber-500/5 p-4', className)}
     >
-      <p className="font-medium text-amber-700 dark:text-amber-300">
-        ⚠ {copy.cannotGoLive}
-      </p>
+      <p className="font-medium text-amber-700 dark:text-amber-300">⚠ {copy.cannotGoLive}</p>
     </div>
   );
 }
