@@ -76,13 +76,18 @@ export default function DesignSystemPage() {
   return (
     <main className="mx-auto max-w-screen-xl px-4 py-12 sm:px-8 lg:px-12">
       <header className="mb-16 space-y-3">
-        <Badge variant="outline" className="font-mono">
-          /design-system
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="font-mono">
+            /design-system
+          </Badge>
+          <Badge variant="secondary" className="font-mono">
+            Developer-only · no translations
+          </Badge>
+        </div>
         <h1 className="text-display-xl font-bold tracking-tight">Framewise Design System</h1>
         <p className="text-muted-foreground max-w-2xl text-lg">
           Tokens, typografie en componenten van het Framewise platform. Deze pagina is bedoeld voor
-          ontwikkelaars en wordt later achter een feature flag verborgen.
+          ontwikkelaars en valt buiten de meertalige routing — er is bewust geen vertaling van.
         </p>
       </header>
 

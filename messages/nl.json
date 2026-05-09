@@ -1,0 +1,18 @@
+{
+  "common": {
+    "comingSoon": "Binnenkort beschikbaar",
+    "loading": "Laden...",
+    "language": "Taal"
+  },
+  "homepage": {
+    "title": "Framewise",
+    "tagline": "Slimme websites, vakkundig gebouwd",
+    "cta": "Binnenkort beschikbaar",
+    "metaTitle": "Framewise - Slimme websites, vakkundig gebouwd",
+    "metaDescription": "Multi-tenant website builder met ingebouwde AI-assistent. Binnenkort beschikbaar."
+  },
+  "languageSwitcher": {
+    "label": "Taal",
+    "selectLanguage": "Selecteer taal"
+  }
+}

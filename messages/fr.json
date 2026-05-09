@@ -1,0 +1,18 @@
+{
+  "common": {
+    "comingSoon": "Bientôt disponible",
+    "loading": "Chargement...",
+    "language": "Langue"
+  },
+  "homepage": {
+    "title": "Framewise",
+    "tagline": "Sites web intelligents, construits avec expertise",
+    "cta": "Bientôt disponible",
+    "metaTitle": "Framewise - Sites web intelligents, construits avec expertise",
+    "metaDescription": "Constructeur de sites web multi-tenant avec assistant IA intégré. Bientôt disponible."
+  },
+  "languageSwitcher": {
+    "label": "Langue",
+    "selectLanguage": "Sélectionner la langue"
+  }
+}

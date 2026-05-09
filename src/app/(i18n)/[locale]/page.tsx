@@ -1,6 +1,13 @@
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
+import { type Locale } from '@/i18n/routing';
 
-export default function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations('homepage');
+
   return (
     <main
       data-testid="homepage-hero"
@@ -17,12 +24,12 @@ export default function Home() {
       />
 
       <div className="relative z-10 flex flex-col items-center gap-6 text-center">
-        <h1 className="text-display-xl sm:text-display-2xl font-bold tracking-tight">Framewise</h1>
-        <p className="text-muted-foreground max-w-xl text-lg sm:text-xl">
-          Smart websites, built right
-        </p>
+        <h1 className="text-display-xl sm:text-display-2xl font-bold tracking-tight">
+          {t('title')}
+        </h1>
+        <p className="text-muted-foreground max-w-xl text-lg sm:text-xl">{t('tagline')}</p>
         <Button size="lg" className="mt-4" disabled>
-          Coming soon
+          {t('cta')}
         </Button>
       </div>
 
