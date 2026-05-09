@@ -71,6 +71,28 @@ To inspect the current store contents during development, visit
 [`/debug/data`](http://localhost:3000/debug/data) — this route is
 hidden in production (returns 404) and never indexed.
 
+## Validation
+
+Every write into the data layer goes through Zod schemas defined under
+`src/lib/validation/`. Three layers:
+
+- **Helpers** (`helpers/`): shared building blocks for slugs, locales,
+  countries, dates, UUIDs.
+- **Entity schemas** (`schemas/<entity>.ts`): per-entity insert/update
+  shapes with field-level constraints (slug regex, email, refines like
+  "default_locale must be in enabled_locales", booking start ≤ end, …).
+- **Cross-entity rules** (`rules/`): business logic that needs more
+  than one entity — `checkBookingAvailability`, `assertFeature`,
+  `assertTransition` for tenant status moves.
+
+Failures throw `ValidationError` with a stable `code`
+(`INVALID_INPUT`, `SLUG_NOT_UNIQUE`, `BOOKING_CONFLICT`, …) plus a
+list of zod issues. The mock adapter calls `parseOrThrow()` on every
+`create()`/`update()`, so invalid data never lands in the store.
+
+The same schemas will be reused for API route validation, automatic
+form generation in the admin, and AI agent tool calls.
+
 ## Status
 
-In development - Step 5 of 118
+In development - Step 6 of 118 (revised plan)

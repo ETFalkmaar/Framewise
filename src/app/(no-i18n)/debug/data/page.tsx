@@ -7,8 +7,14 @@ import {
   tenantsRepo,
   usersRepo,
 } from '@/lib/data';
+import {
+  bookingInsertSchema,
+  checkBookingAvailability,
+  tenantInsertSchema,
+  ValidationError,
+} from '@/lib/validation';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
 export default async function DebugDataPage() {
@@ -76,8 +82,179 @@ export default async function DebugDataPage() {
       <PreviewSection title="Subscription plans" rows={plans} emptyHint="No plans seeded" />
       <PreviewSection title="Pages" rows={pages} emptyHint="No pages seeded" />
       <PreviewSection title="Bookings" rows={bookings} emptyHint="No bookings seeded" />
+
+      <ValidationPlayground />
     </main>
   );
+}
+
+async function ValidationPlayground() {
+  const examples = await runValidationExamples();
+  return (
+    <section className="mb-16 space-y-4" data-testid="validation-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Validation playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Three live validation calls against the same schemas the mock adapter uses on every write.
+        Refreshing this page re-runs them.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-3">
+        {examples.map((ex) => (
+          <Card key={ex.title} size="sm">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge variant={ex.ok ? 'secondary' : 'destructive'} className="font-mono">
+                  {ex.ok ? '✅ ok' : '❌ rejected'}
+                </Badge>
+                <CardTitle className="text-sm">{ex.title}</CardTitle>
+              </div>
+              <CardDescription className="text-xs">{ex.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xs">
+              <p className="font-mono">{ex.outcome}</p>
+              {ex.issues && ex.issues.length > 0 && (
+                <ul className="text-muted-foreground mt-2 list-disc space-y-0.5 pl-5">
+                  {ex.issues.map((issue, i) => (
+                    <li key={i} className="font-mono">
+                      <span className="text-foreground">{issue.path || '(root)'}</span>:{' '}
+                      {issue.message}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+type PlaygroundExample = {
+  title: string;
+  description: string;
+  ok: boolean;
+  outcome: string;
+  issues?: Array<{ path: string; message: string }>;
+};
+
+async function runValidationExamples(): Promise<PlaygroundExample[]> {
+  const results: PlaygroundExample[] = [];
+
+  // 1) Valid tenant insert
+  {
+    const valid = tenantInsertSchema.safeParse({
+      slug: 'demo-fresh',
+      name: 'Demo Fresh',
+      country: 'NL',
+      vat_number: null,
+      crib_number: null,
+      subscription_plan_id: 'b0000000-0000-0000-0000-000000000001',
+      status: 'onboarding',
+      custom_domain: null,
+      default_locale: 'nl',
+      enabled_locales: ['nl'],
+    });
+    results.push({
+      title: 'Valid tenant insert',
+      description: 'tenantInsertSchema.safeParse() with a clean payload',
+      ok: valid.success,
+      outcome: valid.success ? 'Parsed successfully' : 'Unexpectedly rejected',
+    });
+  }
+
+  // 2) Invalid tenant insert (slug + locale mismatch)
+  {
+    const invalid = tenantInsertSchema.safeParse({
+      slug: 'NOT VALID!',
+      name: 'X',
+      country: 'NL',
+      vat_number: null,
+      crib_number: null,
+      subscription_plan_id: 'not-a-uuid',
+      status: 'onboarding',
+      custom_domain: null,
+      default_locale: 'fr',
+      enabled_locales: ['nl', 'en'],
+    });
+    results.push({
+      title: 'Invalid tenant insert',
+      description: 'Bad slug, short name, non-UUID plan id, default not in enabled_locales',
+      ok: invalid.success,
+      outcome: invalid.success ? 'Unexpectedly accepted' : 'Rejected as expected',
+      issues: invalid.success
+        ? []
+        : invalid.error.issues.map((i) => ({
+            path: i.path.join('.'),
+            message: i.message,
+          })),
+    });
+  }
+
+  // 3) Booking that conflicts with seeded reservation
+  {
+    const VILLA_ID = '11111111-1111-1111-1111-111111111111';
+    const conflictPayload = {
+      tenant_id: VILLA_ID,
+      status: 'pending' as const,
+      start_date: '2026-06-18',
+      end_date: '2026-06-25',
+      persons: 2,
+      guest_name: 'Conflict Demo',
+      guest_email: 'conflict@example.com',
+      guest_phone: null,
+      total_price_cents: 100000,
+      currency: 'EUR' as const,
+      payment_status: 'unpaid' as const,
+      payment_provider: null,
+      payment_reference: null,
+      notes: null,
+    };
+    const schemaResult = bookingInsertSchema.safeParse(conflictPayload);
+    if (!schemaResult.success) {
+      results.push({
+        title: 'Booking with conflict',
+        description: 'Range overlapping the seeded confirmed booking',
+        ok: false,
+        outcome: 'Rejected by schema before availability check',
+        issues: schemaResult.error.issues.map((i) => ({
+          path: i.path.join('.'),
+          message: i.message,
+        })),
+      });
+    } else {
+      try {
+        const av = await checkBookingAvailability(
+          conflictPayload.tenant_id,
+          conflictPayload.start_date,
+          conflictPayload.end_date
+        );
+        results.push({
+          title: 'Booking with conflict',
+          description: 'Range overlapping the seeded confirmed booking 2026-06-15 → 2026-06-22',
+          ok: av.ok,
+          outcome: av.ok
+            ? 'Unexpectedly available'
+            : `Conflict with ${av.conflicts.length} booking(s)`,
+          issues: av.conflicts.map((c) => ({
+            path: `conflict:${c.id}`,
+            message: `${c.start_date} → ${c.end_date} (${c.status})`,
+          })),
+        });
+      } catch (err) {
+        results.push({
+          title: 'Booking with conflict',
+          description: 'Range overlapping the seeded confirmed booking',
+          ok: false,
+          outcome: err instanceof ValidationError ? err.message : 'Unexpected error during check',
+        });
+      }
+    }
+  }
+
+  return results;
 }
 
 function PreviewSection<T>({
