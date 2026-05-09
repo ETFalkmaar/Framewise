@@ -8,6 +8,7 @@ import {
   tenantsRepo,
   usersRepo,
 } from '@/lib/data';
+import { ValidationError, VALIDATION_ERROR_CODES } from '@/lib/validation';
 
 const VILLA_ID = '11111111-1111-1111-1111-111111111111';
 const RESTAURANT_ID = '22222222-2222-2222-2222-222222222222';
@@ -156,5 +157,167 @@ describe('mock data layer — bookings CRUD', () => {
     const slots = await bookingsRepo.listAvailability(VILLA_ID, '2026-06-15', '2026-06-21');
     expect(slots).toHaveLength(7);
     expect(slots.every((s) => s.status === 'booked')).toBe(true);
+  });
+});
+
+describe('mock data layer — validation enforcement', () => {
+  beforeEach(() => {
+    resetStore();
+  });
+
+  it('rejects an invalid tenant slug at create time', async () => {
+    await expect(
+      tenantsRepo.create({
+        slug: 'INVALID SLUG!',
+        name: 'Bad Tenant',
+        country: 'NL',
+        vat_number: null,
+        crib_number: null,
+        subscription_plan_id: 'b0000000-0000-0000-0000-000000000001',
+        status: 'onboarding',
+        custom_domain: null,
+        default_locale: 'nl',
+        enabled_locales: ['nl'],
+      })
+    ).rejects.toBeInstanceOf(ValidationError);
+  });
+
+  it('rejects a duplicate tenant slug with SLUG_NOT_UNIQUE', async () => {
+    let caught: unknown;
+    try {
+      await tenantsRepo.create({
+        slug: 'demo-villa',
+        name: 'Clone Villa',
+        country: 'NL',
+        vat_number: null,
+        crib_number: null,
+        subscription_plan_id: 'b0000000-0000-0000-0000-000000000001',
+        status: 'onboarding',
+        custom_domain: null,
+        default_locale: 'nl',
+        enabled_locales: ['nl'],
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.SLUG_NOT_UNIQUE);
+  });
+
+  it('rejects an invalid tenant status transition', async () => {
+    await tenantsRepo.update(VILLA_ID, { status: 'cancelled' });
+    let caught: unknown;
+    try {
+      await tenantsRepo.update(VILLA_ID, { status: 'live' });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.STATUS_TRANSITION_INVALID);
+  });
+
+  it('rejects updating a non-existent tenant with NOT_FOUND', async () => {
+    let caught: unknown;
+    try {
+      await tenantsRepo.update('00000000-0000-0000-0000-000000000000', {
+        name: 'Ghost',
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.NOT_FOUND);
+  });
+
+  it('rejects an invalid user email at create time', async () => {
+    await expect(
+      usersRepo.create({
+        email: 'not-an-email',
+        name: 'Bad',
+        avatar_url: null,
+        last_login_at: null,
+      })
+    ).rejects.toBeInstanceOf(ValidationError);
+  });
+
+  it('rejects a duplicate user email', async () => {
+    let caught: unknown;
+    try {
+      await usersRepo.create({
+        email: 'framewise@example.com',
+        name: 'Clone',
+        avatar_url: null,
+        last_login_at: null,
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.EMAIL_NOT_UNIQUE);
+  });
+
+  it('rejects a duplicate page slug per tenant', async () => {
+    let caught: unknown;
+    try {
+      await pagesRepo.create({
+        tenant_id: VILLA_ID,
+        slug: 'home',
+        status: 'draft',
+        parent_id: null,
+        order_index: 50,
+        published_at: null,
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.SLUG_NOT_UNIQUE);
+  });
+
+  it('rejects bookings that conflict with existing ones', async () => {
+    let caught: unknown;
+    try {
+      await bookingsRepo.create({
+        tenant_id: VILLA_ID,
+        status: 'pending',
+        // Overlap with seeded confirmed booking 2026-06-15 → 2026-06-22
+        start_date: '2026-06-18',
+        end_date: '2026-06-25',
+        persons: 2,
+        guest_name: 'Conflict Guest',
+        guest_email: 'conflict@example.com',
+        guest_phone: null,
+        total_price_cents: 100000,
+        currency: 'EUR',
+        payment_status: 'unpaid',
+        payment_provider: null,
+        payment_reference: null,
+        notes: null,
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.BOOKING_CONFLICT);
+  });
+
+  it('accepts a non-conflicting booking', async () => {
+    const created = await bookingsRepo.create({
+      tenant_id: VILLA_ID,
+      status: 'pending',
+      start_date: '2026-10-01',
+      end_date: '2026-10-08',
+      persons: 2,
+      guest_name: 'Happy Guest',
+      guest_email: 'happy@example.com',
+      guest_phone: null,
+      total_price_cents: 200000,
+      currency: 'EUR',
+      payment_status: 'unpaid',
+      payment_provider: null,
+      payment_reference: null,
+      notes: null,
+    });
+    expect(created.id).toMatch(/^[0-9a-f]{8}-/i);
   });
 });

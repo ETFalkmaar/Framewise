@@ -1,11 +1,17 @@
 import type { SupportHoursLog } from '@/types/database';
+import { parseOrThrow, supportHoursLogInsertSchema } from '@/lib/validation';
 import type { SupportHoursRepository } from '../../repositories/support-hours';
 import { generateId, getTimestamp, table } from './store';
 
 export const mockSupportHoursRepo: SupportHoursRepository = {
   async log(data) {
+    const parsed = parseOrThrow(
+      supportHoursLogInsertSchema,
+      data,
+      'Invalid support hours log entry'
+    );
     const row: SupportHoursLog = {
-      ...data,
+      ...parsed,
       id: generateId(),
       logged_at: getTimestamp(),
     };
