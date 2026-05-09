@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -10,12 +10,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogClose,
@@ -25,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 type ColorSwatch = {
   name: string;
@@ -35,16 +35,21 @@ type ColorSwatch = {
 };
 
 const colorSwatches: ColorSwatch[] = [
-  { name: "background", cssVar: "bg-background", hex: "#0A0E1A", fg: "text-foreground" },
-  { name: "foreground", cssVar: "bg-foreground", hex: "#F8FAFC", fg: "text-background" },
-  { name: "primary", cssVar: "bg-primary", hex: "#3B82F6", fg: "text-primary-foreground" },
-  { name: "secondary", cssVar: "bg-secondary", hex: "#1E293B", fg: "text-secondary-foreground" },
-  { name: "accent", cssVar: "bg-accent", hex: "#06B6D4", fg: "text-accent-foreground" },
-  { name: "muted", cssVar: "bg-muted", hex: "#334155", fg: "text-muted-foreground" },
-  { name: "destructive", cssVar: "bg-destructive", hex: "#EF4444", fg: "text-destructive-foreground" },
-  { name: "success", cssVar: "bg-success", hex: "#10B981", fg: "text-success-foreground" },
-  { name: "warning", cssVar: "bg-warning", hex: "#F59E0B", fg: "text-warning-foreground" },
-  { name: "border", cssVar: "bg-border", hex: "#1E293B", fg: "text-foreground" },
+  { name: 'background', cssVar: 'bg-background', hex: '#0A0E1A', fg: 'text-foreground' },
+  { name: 'foreground', cssVar: 'bg-foreground', hex: '#F8FAFC', fg: 'text-background' },
+  { name: 'primary', cssVar: 'bg-primary', hex: '#3B82F6', fg: 'text-primary-foreground' },
+  { name: 'secondary', cssVar: 'bg-secondary', hex: '#1E293B', fg: 'text-secondary-foreground' },
+  { name: 'accent', cssVar: 'bg-accent', hex: '#06B6D4', fg: 'text-accent-foreground' },
+  { name: 'muted', cssVar: 'bg-muted', hex: '#334155', fg: 'text-muted-foreground' },
+  {
+    name: 'destructive',
+    cssVar: 'bg-destructive',
+    hex: '#EF4444',
+    fg: 'text-destructive-foreground',
+  },
+  { name: 'success', cssVar: 'bg-success', hex: '#10B981', fg: 'text-success-foreground' },
+  { name: 'warning', cssVar: 'bg-warning', hex: '#F59E0B', fg: 'text-warning-foreground' },
+  { name: 'border', cssVar: 'bg-border', hex: '#1E293B', fg: 'text-foreground' },
 ];
 
 function Section({
@@ -59,9 +64,7 @@ function Section({
   return (
     <section data-testid={testId} className="space-y-6">
       <div>
-        <h2 className="text-display-md font-semibold tracking-tight">
-          {title}
-        </h2>
+        <h2 className="text-display-md font-semibold tracking-tight">{title}</h2>
         <Separator className="mt-3" />
       </div>
       {children}
@@ -76,13 +79,10 @@ export default function DesignSystemPage() {
         <Badge variant="outline" className="font-mono">
           /design-system
         </Badge>
-        <h1 className="text-display-xl font-bold tracking-tight">
-          Framewise Design System
-        </h1>
-        <p className="max-w-2xl text-lg text-muted-foreground">
-          Tokens, typografie en componenten van het Framewise platform.
-          Deze pagina is bedoeld voor ontwikkelaars en wordt later achter een
-          feature flag verborgen.
+        <h1 className="text-display-xl font-bold tracking-tight">Framewise Design System</h1>
+        <p className="text-muted-foreground max-w-2xl text-lg">
+          Tokens, typografie en componenten van het Framewise platform. Deze pagina is bedoeld voor
+          ontwikkelaars en wordt later achter een feature flag verborgen.
         </p>
       </header>
 
@@ -93,11 +93,9 @@ export default function DesignSystemPage() {
             {colorSwatches.map((swatch) => (
               <div key={swatch.name} className="space-y-2">
                 <div
-                  className={`flex h-20 w-full items-end justify-start rounded-lg ring-1 ring-border ${swatch.cssVar} ${swatch.fg ?? ""} p-2`}
+                  className={`ring-border flex h-20 w-full items-end justify-start rounded-lg ring-1 ${swatch.cssVar} ${swatch.fg ?? ''} p-2`}
                 >
-                  <span className="text-[0.65rem] font-mono opacity-80">
-                    {swatch.hex}
-                  </span>
+                  <span className="font-mono text-[0.65rem] opacity-80">{swatch.hex}</span>
                 </div>
                 <p className="text-sm font-medium">{swatch.name}</p>
               </div>
@@ -109,93 +107,65 @@ export default function DesignSystemPage() {
         <Section title="Typography" testId="ds-typography">
           <div className="space-y-6">
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
+              <p className="text-muted-foreground mb-1 font-mono text-xs">
                 display-2xl · 4.5rem / 1.1 / -0.02em
               </p>
-              <p className="text-display-2xl font-bold tracking-tight">
-                Framewise
-              </p>
+              <p className="text-display-2xl font-bold tracking-tight">Framewise</p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
+              <p className="text-muted-foreground mb-1 font-mono text-xs">
                 display-xl · 3.75rem / 1.1 / -0.02em
               </p>
-              <p className="text-display-xl font-bold tracking-tight">
-                Smart websites
-              </p>
+              <p className="text-display-xl font-bold tracking-tight">Smart websites</p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
+              <p className="text-muted-foreground mb-1 font-mono text-xs">
                 display-lg · 3rem / 1.15 / -0.015em
               </p>
-              <p className="text-display-lg font-bold tracking-tight">
-                Built right
-              </p>
+              <p className="text-display-lg font-bold tracking-tight">Built right</p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
+              <p className="text-muted-foreground mb-1 font-mono text-xs">
                 display-md · 2.25rem / 1.2 / -0.01em
               </p>
-              <p className="text-display-md font-semibold tracking-tight">
-                Section heading
-              </p>
+              <p className="text-display-md font-semibold tracking-tight">Section heading</p>
             </div>
             <Separator />
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                h1 · text-3xl
-              </p>
-              <h1 className="text-3xl font-semibold tracking-tight">
-                Heading level 1
-              </h1>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">h1 · text-3xl</p>
+              <h1 className="text-3xl font-semibold tracking-tight">Heading level 1</h1>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                h2 · text-2xl
-              </p>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Heading level 2
-              </h2>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">h2 · text-2xl</p>
+              <h2 className="text-2xl font-semibold tracking-tight">Heading level 2</h2>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                h3 · text-xl
-              </p>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">h3 · text-xl</p>
               <h3 className="text-xl font-medium">Heading level 3</h3>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                paragraph · text-base
-              </p>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">paragraph · text-base</p>
               <p className="max-w-prose">
-                Framewise combineert moderne webtechnologie met een
-                geïntegreerde AI-agent om bedrijfssites razendsnel op te
-                leveren — meertalig, multi-tenant en uit één codebase.
+                Framewise combineert moderne webtechnologie met een geïntegreerde AI-agent om
+                bedrijfssites razendsnel op te leveren — meertalig, multi-tenant en uit één
+                codebase.
               </p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                small · text-sm
-              </p>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">small · text-sm</p>
               <p className="text-sm">
                 Een kleine typografische component voor secundaire informatie.
               </p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
+              <p className="text-muted-foreground mb-1 font-mono text-xs">
                 muted · text-sm text-muted-foreground
               </p>
-              <p className="text-sm text-muted-foreground">
-                Voor metadata, hints en bijschriften.
-              </p>
+              <p className="text-muted-foreground text-sm">Voor metadata, hints en bijschriften.</p>
             </div>
             <div>
-              <p className="mb-1 text-xs font-mono text-muted-foreground">
-                mono · font-mono
-              </p>
-              <p className="font-mono text-sm">
-                const framewise = &quot;built right&quot;;
-              </p>
+              <p className="text-muted-foreground mb-1 font-mono text-xs">mono · font-mono</p>
+              <p className="font-mono text-sm">const framewise = &quot;built right&quot;;</p>
             </div>
           </div>
         </Section>
@@ -204,9 +174,7 @@ export default function DesignSystemPage() {
         <Section title="Buttons" testId="ds-buttons">
           <div className="space-y-6">
             <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                Variants
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">Variants</p>
               <div className="flex flex-wrap gap-3">
                 <Button>Default</Button>
                 <Button variant="secondary">Secondary</Button>
@@ -217,9 +185,7 @@ export default function DesignSystemPage() {
               </div>
             </div>
             <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                Sizes
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">Sizes</p>
               <div className="flex flex-wrap items-center gap-3">
                 <Button size="xs">xs</Button>
                 <Button size="sm">sm</Button>
@@ -231,9 +197,7 @@ export default function DesignSystemPage() {
               </div>
             </div>
             <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                States
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">States</p>
               <div className="flex flex-wrap gap-3">
                 <Button disabled>Disabled</Button>
                 <Button variant="outline" disabled>
@@ -249,27 +213,15 @@ export default function DesignSystemPage() {
           <div className="grid max-w-xl gap-6">
             <div className="space-y-2">
               <Label htmlFor="ds-email">E-mail</Label>
-              <Input
-                id="ds-email"
-                type="email"
-                placeholder="you@framewise.com"
-              />
+              <Input id="ds-email" type="email" placeholder="you@framewise.com" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="ds-name">Naam</Label>
-              <Input
-                id="ds-name"
-                placeholder="Voer je naam in"
-                defaultValue="Framewise"
-              />
+              <Input id="ds-name" placeholder="Voer je naam in" defaultValue="Framewise" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="ds-disabled">Disabled</Label>
-              <Input
-                id="ds-disabled"
-                placeholder="Niet beschikbaar"
-                disabled
-              />
+              <Input id="ds-disabled" placeholder="Niet beschikbaar" disabled />
             </div>
           </div>
         </Section>
@@ -286,9 +238,8 @@ export default function DesignSystemPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm">
-                  De ingebouwde agent helpt je om hele pagina&apos;s te bouwen
-                  uit een korte beschrijving en houdt rekening met je tone of
-                  voice.
+                  De ingebouwde agent helpt je om hele pagina&apos;s te bouwen uit een korte
+                  beschrijving en houdt rekening met je tone of voice.
                 </p>
               </CardContent>
               <CardFooter>
@@ -300,14 +251,12 @@ export default function DesignSystemPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Multi-tenant</CardTitle>
-                <CardDescription>
-                  Eén codebase, oneindig veel sites.
-                </CardDescription>
+                <CardDescription>Eén codebase, oneindig veel sites.</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm">
-                  Beheer al je sites vanuit één dashboard. Each tenant heeft
-                  een eigen domein, taal en huisstijl.
+                  Beheer al je sites vanuit één dashboard. Each tenant heeft een eigen domein, taal
+                  en huisstijl.
                 </p>
               </CardContent>
               <CardFooter>
@@ -338,20 +287,20 @@ export default function DesignSystemPage() {
               <TabsTrigger value="docs">Docs</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="pt-4">
-              <p className="text-sm text-muted-foreground">
-                Framewise combineert moderne webtechnologie met een
-                AI-agent om sites razendsnel op te leveren.
+              <p className="text-muted-foreground text-sm">
+                Framewise combineert moderne webtechnologie met een AI-agent om sites razendsnel op
+                te leveren.
               </p>
             </TabsContent>
             <TabsContent value="features" className="pt-4">
-              <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
                 <li>Multi-tenant met aparte domeinen per site</li>
                 <li>Meertalig via next-intl</li>
                 <li>Server components en streaming uit de doos</li>
               </ul>
             </TabsContent>
             <TabsContent value="docs" className="pt-4">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Documentatie volgt zodra de eerste publieke release klaarstaat.
               </p>
             </TabsContent>
@@ -361,20 +310,18 @@ export default function DesignSystemPage() {
         {/* Dialog */}
         <Section title="Dialog" testId="ds-dialog">
           <Dialog>
-            <DialogTrigger
-              render={<Button data-testid="ds-dialog-trigger">Open dialog</Button>}
-            />
+            <DialogTrigger render={<Button data-testid="ds-dialog-trigger">Open dialog</Button>} />
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Welkom bij Framewise</DialogTitle>
                 <DialogDescription>
-                  Dit is een voorbeelddialoog die het design system
-                  demonstreert. Sluit met Escape of de knop hieronder.
+                  Dit is een voorbeelddialoog die het design system demonstreert. Sluit met Escape
+                  of de knop hieronder.
                 </DialogDescription>
               </DialogHeader>
-              <p className="text-sm text-muted-foreground">
-                Dialogen gebruiken het popover-token, scherm-overlap en
-                animatie uit het design system.
+              <p className="text-muted-foreground text-sm">
+                Dialogen gebruiken het popover-token, scherm-overlap en animatie uit het design
+                system.
               </p>
               <DialogFooter>
                 <DialogClose render={<Button variant="outline">Sluiten</Button>} />
@@ -390,8 +337,8 @@ export default function DesignSystemPage() {
             <Button
               data-testid="ds-toast-trigger"
               onClick={() =>
-                toast.success("Framewise design tokens geladen", {
-                  description: "Inter + JetBrains Mono, electric blue accent.",
+                toast.success('Framewise design tokens geladen', {
+                  description: 'Inter + JetBrains Mono, electric blue accent.',
                 })
               }
             >
@@ -400,8 +347,8 @@ export default function DesignSystemPage() {
             <Button
               variant="outline"
               onClick={() =>
-                toast.warning("Voorbeeld waarschuwing", {
-                  description: "Dit is een demo voor de warning-state.",
+                toast.warning('Voorbeeld waarschuwing', {
+                  description: 'Dit is een demo voor de warning-state.',
                 })
               }
             >
@@ -410,8 +357,8 @@ export default function DesignSystemPage() {
             <Button
               variant="destructive"
               onClick={() =>
-                toast.error("Voorbeeld error", {
-                  description: "Iets ging mis in deze demo.",
+                toast.error('Voorbeeld error', {
+                  description: 'Iets ging mis in deze demo.',
                 })
               }
             >
