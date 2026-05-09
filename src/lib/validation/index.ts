@@ -86,3 +86,4 @@ export {
 } from './rules/booking-availability';
 export { tenantHasFeature, assertFeature } from './rules/plan-features';
 export { canTransitionTo, assertTransition } from './rules/tenant-status';
+export { isProviderAvailable, assertProviderAvailable } from './rules/country-providers';

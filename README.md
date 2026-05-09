@@ -149,6 +149,39 @@ the future Supabase implementation will be — call sites use
 
 Visit `/login`, `/account`, or the auth playground at `/debug/data`.
 
+## Countries & providers
+
+Country and third-party-provider configuration lives under
+`src/lib/countries/` and is exposed through `@/lib/countries`.
+
+- **Country configs** (`nl.ts`, `cw.ts`): identity (flag, locale,
+  currency, timezone), tax-identifier metadata (BTW for NL, CRIB
+  for CW with a serialisable regex), curated provider ids per
+  category, and launch-required legal requirements with localised
+  copy in NL/FR/EN.
+- **Provider entries** (`providers/<id>.ts`): one file per
+  third-party — Moneybird, e-Boekhouden, Exact Online, Twinfield,
+  Xero, QuickBooks, BDO Online, Stripe, Mollie, PayPal Business,
+  Twilio, Telnyx, HubSpot, Pipedrive, Brevo, Mailchimp. Each entry
+  declares auth method (`oauth` / `api_key`), pricing notes,
+  setup complexity, the countries it is `availableIn`, and which
+  countries `recommendedFor`.
+- **Registry helpers** (`registry.ts`): `getCountryConfig(code)`,
+  `getProviderById(id)`, `getAllProviders()`,
+  `getProvidersByCategory(cat)`, `getProvidersForCountry(code, cat?)`,
+  `isProviderAvailableForCountry(id, code)`.
+- **Validation rule** (`@/lib/validation`): `isProviderAvailable`
+  and `assertProviderAvailable` throw a `ValidationError`
+  (`PROVIDER_NOT_AVAILABLE_IN_COUNTRY`) when a tenant tries to
+  connect a provider not configured for its country. Step 10
+  (`provider_connections`) wires this into the connections
+  repository.
+
+The `/debug/data` route renders both country configs side-by-side
+with their curated provider lists, every provider in the registry
+as a card, and three live calls to `assertProviderAvailable` so
+you can verify behaviour at a glance.
+
 ## Status
 
-In development - Step 8 of 118 (revised plan)
+In development - Step 9 of 118 (revised plan)
