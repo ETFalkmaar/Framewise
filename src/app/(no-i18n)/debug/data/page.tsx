@@ -9,6 +9,7 @@ import {
   usersRepo,
 } from '@/lib/data';
 import {
+  assertProviderAvailable,
   bookingInsertSchema,
   checkBookingAvailability,
   tenantInsertSchema,
@@ -16,6 +17,15 @@ import {
 } from '@/lib/validation';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { getCurrentUser } from '@/lib/auth';
+import {
+  countries,
+  getAllProviders,
+  getProvidersForCountry,
+  type CountryCode,
+  type CountryConfig,
+  type ProviderCategory,
+  type ProviderEntry,
+} from '@/lib/countries';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -90,9 +100,216 @@ export default async function DebugDataPage() {
 
       <TenantResolutionPlayground />
 
+      <CountriesAndProviders />
+
       <AuthPlayground />
     </main>
   );
+}
+
+const PROVIDER_CATEGORIES: ProviderCategory[] = [
+  'accounting',
+  'payments',
+  'phone',
+  'crm',
+  'newsletter',
+];
+
+function CountriesAndProviders() {
+  const allProviders = getAllProviders();
+  const countryEntries = Object.values(countries) as CountryConfig[];
+
+  const providerCheck = runProviderRuleExamples();
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="countries-and-providers">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Countries & providers</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Static registry from <code className="font-mono">@/lib/countries</code> — every country
+        config lists curated provider ids per category, every provider lists which countries it
+        supports. The validation rule below uses the same data.
+      </p>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {countryEntries.map((c) => (
+          <Card key={c.code} size="sm" data-testid={`country-card-${c.code}`}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="font-mono">
+                  {c.flagEmoji} {c.code}
+                </Badge>
+                <CardTitle className="text-sm">{c.name.en}</CardTitle>
+              </div>
+              <CardDescription className="font-mono text-xs">
+                {c.defaultCurrency} · {c.timezone} · {c.taxIdentifier.name}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-xs">
+              {PROVIDER_CATEGORIES.map((cat) => {
+                const items = getProvidersForCountry(c.code, cat);
+                return (
+                  <div key={cat}>
+                    <p className="text-muted-foreground font-mono uppercase">{cat}</p>
+                    {items.length === 0 ? (
+                      <p className="text-muted-foreground">—</p>
+                    ) : (
+                      <ul className="ml-4 list-disc space-y-0.5">
+                        {items.map((p) => (
+                          <li key={p.id}>
+                            <span className="font-mono">{p.name}</span>{' '}
+                            <span className="text-muted-foreground">
+                              ({p.authMethod}, {p.setupComplexity})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+              {c.legalRequirements.length > 0 && (
+                <div>
+                  <p className="text-muted-foreground font-mono uppercase">legal</p>
+                  <ul className="ml-4 list-disc space-y-0.5">
+                    {c.legalRequirements.map((r, i) => (
+                      <li key={i}>
+                        <span className="font-mono">{r.category}</span>{' '}
+                        <span
+                          className={
+                            r.requiredAtLaunch ? 'text-foreground' : 'text-muted-foreground'
+                          }
+                        >
+                          ({r.requiredAtLaunch ? 'required at launch' : 'recommended'})
+                        </span>{' '}
+                        — {r.description.en}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div>
+        <h3 className="font-mono text-sm tracking-wider uppercase">All providers</h3>
+        <Separator className="mt-2" />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {allProviders.map((p: ProviderEntry) => (
+          <Card key={p.id} size="sm">
+            <CardHeader>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className="font-mono">
+                  {p.category}
+                </Badge>
+                <CardTitle className="text-sm">{p.name}</CardTitle>
+              </div>
+              <CardDescription className="font-mono text-xs">
+                {p.id} · {p.authMethod} · {p.setupComplexity}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-1 text-xs">
+              <p>{p.description.en}</p>
+              <p className="font-mono">
+                <span className="text-muted-foreground">availableIn </span>
+                {p.availableIn.join(', ')}
+              </p>
+              <p className="font-mono">
+                <span className="text-muted-foreground">recommendedFor </span>
+                {p.recommendedFor.join(', ') || '—'}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div>
+        <h3 className="font-mono text-sm tracking-wider uppercase">assertProviderAvailable rule</h3>
+        <Separator className="mt-2" />
+      </div>
+      <div className="grid gap-3 lg:grid-cols-3">
+        {providerCheck.map((ex) => (
+          <Card key={ex.title} size="sm">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge variant={ex.ok ? 'secondary' : 'destructive'} className="font-mono">
+                  {ex.ok ? '✅ ok' : '❌ rejected'}
+                </Badge>
+                <CardTitle className="text-sm">{ex.title}</CardTitle>
+              </div>
+              <CardDescription className="text-xs">{ex.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xs">
+              <p className="font-mono">{ex.outcome}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+type ProviderRuleExample = {
+  title: string;
+  description: string;
+  ok: boolean;
+  outcome: string;
+};
+
+function runProviderRuleExamples(): ProviderRuleExample[] {
+  const cases: Array<{
+    title: string;
+    description: string;
+    expectOk: boolean;
+    providerId: string;
+    countryCode: CountryCode;
+  }> = [
+    {
+      title: 'Mollie + NL',
+      description: 'mollie listed for NL — should pass',
+      expectOk: true,
+      providerId: 'mollie',
+      countryCode: 'NL',
+    },
+    {
+      title: 'Mollie + CW',
+      description: 'mollie not listed for CW — should reject',
+      expectOk: false,
+      providerId: 'mollie',
+      countryCode: 'CW',
+    },
+    {
+      title: 'Telnyx + CW',
+      description: 'telnyx specifically supports +599 numbers',
+      expectOk: true,
+      providerId: 'telnyx',
+      countryCode: 'CW',
+    },
+  ];
+
+  return cases.map((c) => {
+    try {
+      assertProviderAvailable(c.providerId, c.countryCode);
+      return {
+        title: c.title,
+        description: c.description,
+        ok: true,
+        outcome: c.expectOk ? 'Allowed as expected' : 'Unexpectedly allowed',
+      };
+    } catch (err) {
+      return {
+        title: c.title,
+        description: c.description,
+        ok: false,
+        outcome: err instanceof ValidationError ? err.message : 'Unexpected error',
+      };
+    }
+  });
 }
 
 async function AuthPlayground() {

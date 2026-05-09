@@ -1,10 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   assertFeature,
+  assertProviderAvailable,
   assertTransition,
   canTransitionTo,
   checkBookingAvailability,
+  isProviderAvailable,
   tenantHasFeature,
+  VALIDATION_ERROR_CODES,
   ValidationError,
 } from '@/lib/validation';
 import { resetStore } from '@/lib/data';
@@ -142,5 +145,62 @@ describe('rule: checkBookingAvailability', () => {
   it('reports invalid range (start after end) as not ok', async () => {
     const result = await checkBookingAvailability(VILLA_ID, '2026-09-10', '2026-09-01');
     expect(result.ok).toBe(false);
+  });
+});
+
+describe('rule: assertProviderAvailable', () => {
+  it('isProviderAvailable returns true for valid combinations', () => {
+    expect(isProviderAvailable('mollie', 'NL')).toBe(true);
+    expect(isProviderAvailable('telnyx', 'CW')).toBe(true);
+    expect(isProviderAvailable('stripe', 'NL')).toBe(true);
+    expect(isProviderAvailable('stripe', 'CW')).toBe(true);
+  });
+
+  it('isProviderAvailable returns false for invalid combinations or unknown ids', () => {
+    expect(isProviderAvailable('mollie', 'CW')).toBe(false);
+    expect(isProviderAvailable('moneybird', 'CW')).toBe(false);
+    expect(isProviderAvailable('telnyx', 'NL')).toBe(false);
+    expect(isProviderAvailable('does-not-exist', 'NL')).toBe(false);
+  });
+
+  it('does not throw for valid combinations', () => {
+    expect(() => assertProviderAvailable('mollie', 'NL')).not.toThrow();
+    expect(() => assertProviderAvailable('xero', 'CW')).not.toThrow();
+  });
+
+  it('throws PROVIDER_NOT_AVAILABLE_IN_COUNTRY when provider does not list the country', () => {
+    try {
+      assertProviderAvailable('mollie', 'CW');
+      throw new Error('expected throw');
+    } catch (err) {
+      expect(err).toBeInstanceOf(ValidationError);
+      const ve = err as ValidationError;
+      expect(ve.code).toBe(VALIDATION_ERROR_CODES.PROVIDER_NOT_AVAILABLE_IN_COUNTRY);
+      expect(ve.field).toBe('provider_id');
+    }
+  });
+
+  it('throws when provider id is not registered', () => {
+    try {
+      assertProviderAvailable('not-a-provider', 'NL');
+      throw new Error('expected throw');
+    } catch (err) {
+      expect(err).toBeInstanceOf(ValidationError);
+      const ve = err as ValidationError;
+      expect(ve.code).toBe(VALIDATION_ERROR_CODES.PROVIDER_NOT_AVAILABLE_IN_COUNTRY);
+      expect(ve.field).toBe('provider_id');
+    }
+  });
+
+  it('throws when country code is not supported', () => {
+    try {
+      assertProviderAvailable('mollie', 'XX' as 'NL');
+      throw new Error('expected throw');
+    } catch (err) {
+      expect(err).toBeInstanceOf(ValidationError);
+      const ve = err as ValidationError;
+      expect(ve.code).toBe(VALIDATION_ERROR_CODES.PROVIDER_NOT_AVAILABLE_IN_COUNTRY);
+      expect(ve.field).toBe('country_code');
+    }
   });
 });
