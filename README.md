@@ -93,6 +93,31 @@ list of zod issues. The mock adapter calls `parseOrThrow()` on every
 The same schemas will be reused for API route validation, automatic
 form generation in the admin, and AI agent tool calls.
 
+## Multi-tenant
+
+Every request hits the resolver in `src/lib/tenant/resolver.ts` before
+i18n routing kicks in. Four strategies are tried in priority order:
+
+| Order | Strategy        | Example                                                 |
+| ----- | --------------- | ------------------------------------------------------- |
+| 1     | `custom-domain` | `villa-bonbini.com/`                                    |
+| 2     | `subdomain`     | `demo-villa.framewise.app/` (also `*.localhost` in dev) |
+| 3     | `path-prefix`   | `framewise-pi.vercel.app/sites/demo-villa/about`        |
+| 4     | `none`          | `framewise-pi.vercel.app/` (Framewise marketing site)   |
+
+The middleware writes the resolved tenant id into the
+`x-framewise-tenant-id` request header. Server components read it
+via `getCurrentTenant()` / `getCurrentTenantWithSubscription()`;
+client components consume it through `<TenantProvider>` plus the
+`useTenant()` / `useOptionalTenant()` / `usePlan()` hooks.
+
+When a tenant exists but is `onboarding` or `paused`, the locale
+layout renders `<MaintenancePage>` instead of the normal page.
+
+The `/debug/data` route includes a "Tenant resolution playground"
+that calls the resolver against the four canonical input shapes so
+you can verify behaviour at a glance.
+
 ## Status
 
-In development - Step 6 of 118 (revised plan)
+In development - Step 7 of 118 (revised plan)

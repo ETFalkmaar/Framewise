@@ -13,6 +13,7 @@ import {
   tenantInsertSchema,
   ValidationError,
 } from '@/lib/validation';
+import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -84,7 +85,87 @@ export default async function DebugDataPage() {
       <PreviewSection title="Bookings" rows={bookings} emptyHint="No bookings seeded" />
 
       <ValidationPlayground />
+
+      <TenantResolutionPlayground />
     </main>
+  );
+}
+
+async function TenantResolutionPlayground() {
+  const cases: Array<{ label: string; hostname: string; pathname: string }> = [
+    { label: 'Custom domain', hostname: 'villa-bonbini.com', pathname: '/' },
+    { label: 'Subdomain', hostname: 'demo-villa.framewise.app', pathname: '/' },
+    {
+      label: 'Path prefix',
+      hostname: 'framewise-pi.vercel.app',
+      pathname: '/sites/demo-villa/over-ons',
+    },
+    { label: 'No tenant', hostname: 'framewise-pi.vercel.app', pathname: '/' },
+  ];
+
+  const resolved: Array<{
+    label: string;
+    hostname: string;
+    pathname: string;
+    result: TenantResolutionResult;
+  }> = await Promise.all(
+    cases.map(async (c) => ({
+      ...c,
+      result: await resolveTenant({ hostname: c.hostname, pathname: c.pathname }),
+    }))
+  );
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="tenant-resolution-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">
+          Tenant resolution playground
+        </h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Live calls to <code className="font-mono">resolveTenant()</code> for the four canonical
+        input shapes the middleware sees.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {resolved.map((r) => (
+          <Card key={r.label} size="sm">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge variant={r.result.tenantId ? 'secondary' : 'outline'} className="font-mono">
+                  {r.result.strategy}
+                </Badge>
+                <CardTitle className="text-sm">{r.label}</CardTitle>
+              </div>
+              <CardDescription className="font-mono text-xs">
+                {r.hostname}
+                {r.pathname}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-1 text-xs">
+              <p className="font-mono">
+                <span className="text-muted-foreground">tenantId </span>
+                <span className="text-foreground">
+                  {r.result.tenantId ?? '(none — Framewise marketing)'}
+                </span>
+              </p>
+              {r.result.matchedSlug && (
+                <p className="font-mono">
+                  <span className="text-muted-foreground">matchedSlug </span>
+                  <span className="text-foreground">{r.result.matchedSlug}</span>
+                </p>
+              )}
+              {r.result.residualPath !== undefined && (
+                <p className="font-mono">
+                  <span className="text-muted-foreground">residualPath </span>
+                  <span className="text-foreground">{r.result.residualPath}</span>
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
   );
 }
 

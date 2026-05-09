@@ -5,7 +5,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Toaster } from '@/components/ui/sonner';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { MaintenancePage } from '@/components/maintenance-page';
 import { routing, type Locale } from '@/i18n/routing';
+import { getCurrentTenantWithSubscription } from '@/lib/tenant';
+import { TenantProvider } from '@/lib/tenant/client-context';
 import '../../globals.css';
 
 const inter = Inter({
@@ -63,6 +66,14 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
+  const tenantContext = await getCurrentTenantWithSubscription();
+  const tenant = tenantContext?.tenant ?? null;
+  const plan = tenantContext?.plan ?? null;
+  const subscription = tenantContext?.subscription ?? null;
+
+  const showMaintenance =
+    tenant !== null && (tenant.status === 'onboarding' || tenant.status === 'paused');
+
   return (
     <html
       lang={locale}
@@ -70,11 +81,13 @@ export default async function LocaleLayout({
     >
       <body className="bg-background text-foreground flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <header className="absolute top-0 right-0 z-20 p-4 sm:p-6">
-            <LanguageSwitcher />
-          </header>
-          {children}
-          <Toaster richColors theme="dark" />
+          <TenantProvider tenant={tenant} plan={plan} subscription={subscription}>
+            <header className="absolute top-0 right-0 z-20 p-4 sm:p-6">
+              <LanguageSwitcher />
+            </header>
+            {showMaintenance ? <MaintenancePage tenant={tenant!} /> : children}
+            <Toaster richColors theme="dark" />
+          </TenantProvider>
         </NextIntlClientProvider>
       </body>
     </html>
