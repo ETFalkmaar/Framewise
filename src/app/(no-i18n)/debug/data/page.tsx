@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
   bookingsRepo,
@@ -14,6 +15,7 @@ import {
   ValidationError,
 } from '@/lib/validation';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
+import { getCurrentUser } from '@/lib/auth';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -87,7 +89,80 @@ export default async function DebugDataPage() {
       <ValidationPlayground />
 
       <TenantResolutionPlayground />
+
+      <AuthPlayground />
     </main>
+  );
+}
+
+async function AuthPlayground() {
+  const user = await getCurrentUser();
+  return (
+    <section className="mb-16 space-y-4" data-testid="auth-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Auth playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <Card size="sm">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Badge variant={user ? 'secondary' : 'outline'} className="font-mono">
+              {user ? 'authenticated' : 'anonymous'}
+            </Badge>
+            <CardTitle className="text-sm">Current session</CardTitle>
+          </div>
+          <CardDescription className="font-mono text-xs">
+            getCurrentUser() · server-rendered
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-1 font-mono text-xs">
+          {user ? (
+            <>
+              <p>
+                <span className="text-muted-foreground">id </span>
+                <span className="text-foreground">{user.id}</span>
+              </p>
+              <p>
+                <span className="text-muted-foreground">email </span>
+                <span className="text-foreground">{user.email}</span>
+              </p>
+              <p>
+                <span className="text-muted-foreground">name </span>
+                <span className="text-foreground">{user.name}</span>
+              </p>
+            </>
+          ) : (
+            <p className="text-muted-foreground">No active session.</p>
+          )}
+        </CardContent>
+      </Card>
+      <Card size="sm">
+        <CardHeader>
+          <CardTitle className="text-sm">Test credentials (dev only)</CardTitle>
+          <CardDescription className="text-xs">
+            Visit{' '}
+            <Link className="text-foreground underline" href="/login">
+              /login
+            </Link>{' '}
+            to start a session.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-1 font-mono text-xs">
+          <p>
+            <span className="text-muted-foreground">super-admin </span>
+            <span className="text-foreground">framewise@example.com / Framewise2025!</span>
+          </p>
+          <p>
+            <span className="text-muted-foreground">villa-owner </span>
+            <span className="text-foreground">owner@demo-villa.example / Villa2025!</span>
+          </p>
+          <p>
+            <span className="text-muted-foreground">restaurant-owner </span>
+            <span className="text-foreground">owner@demo-restaurant.example / Restaurant2025!</span>
+          </p>
+        </CardContent>
+      </Card>
+    </section>
   );
 }
 

@@ -103,6 +103,7 @@ describe('userInsertSchema', () => {
         email: 'someone@example.com',
         name: 'Someone',
         avatar_url: null,
+        password_hash: 'Password1!',
         last_login_at: null,
       }).success
     ).toBe(true);
@@ -113,6 +114,7 @@ describe('userInsertSchema', () => {
       email: 'MIXED@Example.COM',
       name: 'Mixed',
       avatar_url: null,
+      password_hash: 'Password1!',
       last_login_at: null,
     });
     expect(parsed.email).toBe('mixed@example.com');

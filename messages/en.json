@@ -14,5 +14,24 @@
   "languageSwitcher": {
     "label": "Language",
     "selectLanguage": "Select language"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back to Framewise.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "loading": "Signing in...",
+      "error": "Invalid credentials"
+    }
+  },
+  "account": {
+    "title": "My account",
+    "email": "Email",
+    "tenants": "My tenants",
+    "activeTenant": "Active tenant",
+    "noTenants": "No tenants linked to this account.",
+    "logout": "Sign out"
   }
 }
