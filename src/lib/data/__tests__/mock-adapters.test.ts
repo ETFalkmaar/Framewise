@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   bookingsRepo,
+  connectionsRepo,
   pagesRepo,
   resetStore,
   subscriptionsRepo,
   tableCounts,
+  tenantCountrySettingsRepo,
   tenantsRepo,
   usersRepo,
 } from '@/lib/data';
@@ -321,5 +323,259 @@ describe('mock data layer — validation enforcement', () => {
       notes: null,
     });
     expect(created.id).toMatch(/^[0-9a-f]{8}-/i);
+  });
+});
+
+describe('mock data layer — provider connections', () => {
+  beforeEach(() => resetStore());
+  afterEach(() => resetStore());
+
+  it('loads seed rows', async () => {
+    const villa = await connectionsRepo.listByTenant(VILLA_ID);
+    const restaurant = await connectionsRepo.listByTenant(RESTAURANT_ID);
+    expect(villa).toHaveLength(4);
+    expect(restaurant).toHaveLength(3);
+  });
+
+  it('findByCategory filters by tenant + category', async () => {
+    const accounting = await connectionsRepo.findByCategory(VILLA_ID, 'accounting');
+    expect(accounting).toHaveLength(1);
+    expect(accounting[0]!.provider).toBe('xero');
+
+    const newsletter = await connectionsRepo.findByCategory(VILLA_ID, 'newsletter');
+    expect(newsletter).toHaveLength(0);
+  });
+
+  it('findActive returns only connected rows', async () => {
+    const active = await connectionsRepo.findActive(VILLA_ID);
+    expect(active.every((c) => c.status === 'connected')).toBe(true);
+    expect(active.map((c) => c.provider).sort()).toEqual(['hubspot', 'xero']);
+  });
+
+  it('findByProvider returns the matching row or null', async () => {
+    const stripe = await connectionsRepo.findByProvider(VILLA_ID, 'stripe');
+    expect(stripe?.status).toBe('error');
+    const missing = await connectionsRepo.findByProvider(VILLA_ID, 'mollie');
+    expect(missing).toBeNull();
+  });
+
+  it('rejects creating a connection for a provider not available in the tenant country', async () => {
+    let caught: unknown;
+    try {
+      // mollie is NL-only; demo-villa is CW.
+      await connectionsRepo.create({
+        tenant_id: VILLA_ID,
+        category: 'payments',
+        provider: 'mollie',
+        status: 'connected',
+        auth_method: 'api_key',
+        encrypted_token: null,
+        metadata: {},
+        expires_at: null,
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(
+      VALIDATION_ERROR_CODES.PROVIDER_NOT_AVAILABLE_IN_COUNTRY
+    );
+  });
+
+  it('reuses a disconnected row when reconnecting same provider', async () => {
+    const restaurantBefore = await connectionsRepo.listByTenant(RESTAURANT_ID);
+    const mollieBefore = restaurantBefore.find((c) => c.provider === 'mollie')!;
+    expect(mollieBefore.status).toBe('disconnected');
+
+    const reconnected = await connectionsRepo.create({
+      tenant_id: RESTAURANT_ID,
+      category: 'payments',
+      provider: 'mollie',
+      status: 'connected',
+      auth_method: 'api_key',
+      encrypted_token: 'fresh_token',
+      metadata: { profile_id: 'pfl_new' },
+      expires_at: null,
+    });
+    expect(reconnected.id).toBe(mollieBefore.id);
+    expect(reconnected.status).toBe('connected');
+
+    const restaurantAfter = await connectionsRepo.listByTenant(RESTAURANT_ID);
+    expect(restaurantAfter).toHaveLength(3); // no duplicates
+  });
+
+  it('rejects creating a duplicate active connection', async () => {
+    let caught: unknown;
+    try {
+      await connectionsRepo.create({
+        tenant_id: VILLA_ID,
+        category: 'accounting',
+        provider: 'xero',
+        status: 'connected',
+        auth_method: 'oauth',
+        encrypted_token: 'mock',
+        metadata: {},
+        expires_at: null,
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+  });
+
+  it('markExpired sets status to expired', async () => {
+    const villa = await connectionsRepo.listByTenant(VILLA_ID);
+    const xero = villa.find((c) => c.provider === 'xero')!;
+    const expired = await connectionsRepo.markExpired(xero.id);
+    expect(expired.status).toBe('expired');
+    expect(expired.expires_at).not.toBeNull();
+  });
+
+  it('markError records the error message and switches status', async () => {
+    const villa = await connectionsRepo.listByTenant(VILLA_ID);
+    const hubspot = villa.find((c) => c.provider === 'hubspot')!;
+    const errored = await connectionsRepo.markError(hubspot.id, 'token rejected');
+    expect(errored.status).toBe('error');
+    expect((errored.metadata as Record<string, unknown>).last_error).toBe('token rejected');
+  });
+
+  it('revoke clears the token and switches to disconnected', async () => {
+    const villa = await connectionsRepo.listByTenant(VILLA_ID);
+    const hubspot = villa.find((c) => c.provider === 'hubspot')!;
+    const revoked = await connectionsRepo.revoke(hubspot.id);
+    expect(revoked.status).toBe('disconnected');
+    expect(revoked.encrypted_token).toBeNull();
+    expect(revoked.last_used_at).not.toBe(hubspot.last_used_at);
+  });
+
+  it('rejects an invalid status transition', async () => {
+    const restaurant = await connectionsRepo.listByTenant(RESTAURANT_ID);
+    const mollie = restaurant.find((c) => c.provider === 'mollie')!; // disconnected
+    let caught: unknown;
+    try {
+      await connectionsRepo.markError(mollie.id, 'cannot go straight to error');
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+    expect((caught as ValidationError).code).toBe(VALIDATION_ERROR_CODES.STATUS_TRANSITION_INVALID);
+  });
+});
+
+describe('mock data layer — tenant_country_settings', () => {
+  beforeEach(() => resetStore());
+  afterEach(() => resetStore());
+
+  it('loads seed rows', async () => {
+    const all = await tenantCountrySettingsRepo.list();
+    expect(all).toHaveLength(2);
+  });
+
+  it('findByTenant returns the matching row', async () => {
+    const villa = await tenantCountrySettingsRepo.findByTenant(VILLA_ID);
+    expect(villa?.country).toBe('CW');
+    expect(villa?.currency).toBe('ANG');
+    expect(villa?.legal_entity_name).toBe('Villa Bonbini B.V.');
+  });
+
+  it('upsert updates an existing row in place', async () => {
+    const before = await tenantCountrySettingsRepo.findByTenant(VILLA_ID);
+    expect(before).toBeTruthy();
+
+    const updated = await tenantCountrySettingsRepo.upsert({
+      tenant_id: VILLA_ID,
+      country: 'CW',
+      currency: 'USD',
+      timezone: 'America/Curacao',
+      locale_default: 'en',
+      legal_entity_name: 'Villa Bonbini Trading N.V.',
+      address: {
+        street: 'Caracasbaaiweg 1',
+        city: 'Willemstad',
+        postal_code: '0000',
+        country: 'CW',
+      },
+    });
+    expect(updated.id).toBe(before!.id);
+    expect(updated.legal_entity_name).toBe('Villa Bonbini Trading N.V.');
+    expect(updated.currency).toBe('USD');
+
+    const all = await tenantCountrySettingsRepo.list();
+    expect(all).toHaveLength(2); // still no duplicate row
+  });
+
+  it('upsert inserts a new row when none exists', async () => {
+    const NEW_TENANT = '33333333-3333-3333-3333-333333333333';
+    const created = await tenantCountrySettingsRepo.upsert({
+      tenant_id: NEW_TENANT,
+      country: 'NL',
+      currency: 'EUR',
+      timezone: 'Europe/Amsterdam',
+      locale_default: 'nl',
+      legal_entity_name: 'Fresh BV',
+      address: { street: 'X 1', city: 'Amsterdam', postal_code: '1000AA', country: 'NL' },
+    });
+    expect(created.id).toMatch(/^[0-9a-f]{8}-/i);
+    expect(await tenantCountrySettingsRepo.list()).toHaveLength(3);
+  });
+
+  it('rejects an invalid timezone', async () => {
+    let caught: unknown;
+    try {
+      await tenantCountrySettingsRepo.upsert({
+        tenant_id: VILLA_ID,
+        country: 'CW',
+        currency: 'ANG',
+        timezone: 'NOTAVALIDZONE',
+        locale_default: 'nl',
+        legal_entity_name: 'X',
+        address: { street: 'X', city: 'X', postal_code: '1', country: 'CW' },
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+  });
+
+  it('rejects a locale not available in the country', async () => {
+    let caught: unknown;
+    try {
+      await tenantCountrySettingsRepo.upsert({
+        tenant_id: VILLA_ID,
+        country: 'CW',
+        currency: 'ANG',
+        timezone: 'America/Curacao',
+        // CW availableLocales is ['nl', 'en'] — fr is rejected
+        locale_default: 'fr',
+        legal_entity_name: 'X',
+        address: { street: 'X 1', city: 'Willemstad', postal_code: '0000', country: 'CW' },
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+  });
+
+  it('rejects a currency not supported in the country', async () => {
+    let caught: unknown;
+    try {
+      await tenantCountrySettingsRepo.upsert({
+        tenant_id: RESTAURANT_ID,
+        country: 'NL',
+        currency: 'ANG',
+        timezone: 'Europe/Amsterdam',
+        locale_default: 'nl',
+        legal_entity_name: 'X',
+        address: { street: 'X', city: 'A', postal_code: '1000AA', country: 'NL' },
+      });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ValidationError);
+  });
+
+  it('delete removes the settings row', async () => {
+    await tenantCountrySettingsRepo.delete(VILLA_ID);
+    expect(await tenantCountrySettingsRepo.findByTenant(VILLA_ID)).toBeNull();
   });
 });

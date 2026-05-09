@@ -35,6 +35,8 @@ import blocksSeed from './seeds/blocks.json';
 import bookingsSeed from './seeds/bookings.json';
 import availabilitySeed from './seeds/availability.json';
 import setupChecklistItemsSeed from './seeds/setup_checklist_items.json';
+import providerConnectionsSeed from './seeds/provider_connections.json';
+import tenantCountrySettingsSeed from './seeds/tenant_country_settings.json';
 
 /**
  * In-memory store for the mock adapter. One Map per table keyed by `id`.
@@ -117,6 +119,8 @@ function loadSeeds(): void {
     ['bookings', bookingsSeed as unknown as Booking[]],
     ['availability', availabilitySeed as unknown as Availability[]],
     ['setup_checklist_items', setupChecklistItemsSeed as unknown as SetupChecklistItem[]],
+    ['provider_connections', providerConnectionsSeed as unknown as ProviderConnection[]],
+    ['tenant_country_settings', tenantCountrySettingsSeed as unknown as TenantCountrySettings[]],
   ];
 
   for (const [name, rows] of pairs) {

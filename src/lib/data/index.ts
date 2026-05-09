@@ -18,6 +18,7 @@ import { mockMediaRepo } from './adapters/mock/media';
 import { mockPagesRepo } from './adapters/mock/pages';
 import { mockSubscriptionsRepo } from './adapters/mock/subscriptions';
 import { mockSupportHoursRepo } from './adapters/mock/support-hours';
+import { mockTenantCountrySettingsRepo } from './adapters/mock/tenant-country-settings';
 import { mockTenantsRepo } from './adapters/mock/tenants';
 import { mockTranslationsRepo } from './adapters/mock/translations';
 import { mockUsersRepo } from './adapters/mock/users';
@@ -35,6 +36,10 @@ import { mediaRepo, setMediaRepo } from './repositories/media';
 import { pagesRepo, setPagesRepo } from './repositories/pages';
 import { subscriptionsRepo, setSubscriptionsRepo } from './repositories/subscriptions';
 import { setSupportHoursRepo, supportHoursRepo } from './repositories/support-hours';
+import {
+  setTenantCountrySettingsRepo,
+  tenantCountrySettingsRepo,
+} from './repositories/tenant-country-settings';
 import { setTenantsRepo, tenantsRepo } from './repositories/tenants';
 import { setTranslationsRepo, translationsRepo } from './repositories/translations';
 import { setUsersRepo, usersRepo } from './repositories/users';
@@ -50,6 +55,7 @@ setMediaRepo(mockMediaRepo);
 setPagesRepo(mockPagesRepo);
 setSubscriptionsRepo(mockSubscriptionsRepo);
 setSupportHoursRepo(mockSupportHoursRepo);
+setTenantCountrySettingsRepo(mockTenantCountrySettingsRepo);
 setTenantsRepo(mockTenantsRepo);
 setTranslationsRepo(mockTranslationsRepo);
 setUsersRepo(mockUsersRepo);
@@ -65,6 +71,7 @@ export {
   pagesRepo,
   subscriptionsRepo,
   supportHoursRepo,
+  tenantCountrySettingsRepo,
   tenantsRepo,
   translationsRepo,
   usersRepo,

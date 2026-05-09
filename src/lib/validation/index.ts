@@ -71,11 +71,24 @@ export {
 } from './schemas/agent';
 export {
   connectionInsertSchema,
+  connectionUpdateSchema,
+  connectionRowSchema,
   connectionCategorySchema,
   connectionStatusSchema,
   connectionAuthMethodSchema,
   type ConnectionInsert,
+  type ConnectionUpdate,
+  type ConnectionRow,
 } from './schemas/connection';
+export {
+  tenantCountrySettingsUpsertSchema,
+  tenantCountrySettingsRowSchema,
+  ianaTimezoneSchema,
+  postalAddressSchema,
+  currencySchema,
+  type TenantCountrySettingsUpsert,
+  type TenantCountrySettingsRow,
+} from './schemas/tenant-country-settings';
 export { checklistTemplateRowSchema, checklistStatusSchema } from './schemas/checklist';
 export { supportHoursLogInsertSchema, type SupportHoursLogInsert } from './schemas/support-hours';
 
@@ -87,3 +100,11 @@ export {
 export { tenantHasFeature, assertFeature } from './rules/plan-features';
 export { canTransitionTo, assertTransition } from './rules/tenant-status';
 export { isProviderAvailable, assertProviderAvailable } from './rules/country-providers';
+export {
+  categoriesAvailableForCountry,
+  getRequiredConnectionsForTenant,
+  canTenantGoLive,
+  type RequiredConnectionStatus,
+  type RequiredConnectionsResult,
+  type CanGoLiveResult,
+} from './rules/connection-rules';

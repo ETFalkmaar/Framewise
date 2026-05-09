@@ -32,6 +32,34 @@
     "tenants": "Mijn tenants",
     "activeTenant": "Actieve tenant",
     "noTenants": "Geen tenants gekoppeld aan dit account.",
-    "logout": "Uitloggen"
+    "logout": "Uitloggen",
+    "viewConnections": "Verbindingen beheren",
+    "connections": {
+      "title": "Verbindingen",
+      "subtitle": "Bring-your-own-account integraties voor de actieve tenant.",
+      "noTenant": "Geen tenant geselecteerd voor deze sessie.",
+      "allConfigured": "Alle vereiste verbindingen zijn actief.",
+      "missing": "Ontbrekende verbindingen",
+      "viewAll": "Beheer verbindingen",
+      "byoaDisclaimer": "Dit account staat op jouw naam. Wij hebben enkel toegang om de gekozen acties uit te voeren. Je kunt deze toegang op elk moment intrekken.",
+      "lastUsed": "Laatst gebruikt",
+      "neverUsed": "nog niet gebruikt",
+      "expiresAt": "Verloopt",
+      "noConnection": "Niet verbonden",
+      "statusLabel": {
+        "connected": "Verbonden",
+        "disconnected": "Niet verbonden",
+        "error": "Actie vereist",
+        "expired": "Verlopen",
+        "none": "Niet verbonden"
+      },
+      "categoryLabel": {
+        "accounting": "Boekhouding",
+        "payments": "Betalingen",
+        "phone": "Telefonie",
+        "crm": "CRM",
+        "newsletter": "Nieuwsbrief"
+      }
+    }
   }
 }

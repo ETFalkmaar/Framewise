@@ -4,6 +4,7 @@ import { LogoutButton } from '@/components/auth/logout-button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
 
 export default async function AccountPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -87,9 +88,18 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
       </div>
 
       <Separator className="my-12" />
-      <p className="text-muted-foreground font-mono text-xs">
-        Mock auth — Supabase replacement scheduled for step 119/118.
-      </p>
+      <div className="space-y-3">
+        <Link
+          href="/account/connections"
+          data-testid="link-connections"
+          className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+        >
+          → {t('viewConnections')}
+        </Link>
+        <p className="text-muted-foreground font-mono text-xs">
+          Mock auth — Supabase replacement scheduled for step 119/118.
+        </p>
+      </div>
     </main>
   );
 }
