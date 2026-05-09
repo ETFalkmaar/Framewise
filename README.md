@@ -214,6 +214,39 @@ red = error/expired, grey = disconnected/none), and shows the
 BYOA disclaimer per card. Connect/disconnect actions are added in
 step 14+.
 
+## Setup checklist
+
+Each tenant gets a country + plan-aware onboarding checklist that
+must be (mostly) green before status `onboarding → live` is allowed.
+
+- **Templates** (`src/lib/checklist/templates.ts`): code-defined, one
+  entry per (country, plan, item) combo. `required` items gate
+  go-live; `optional` ones don't. Each template declares an
+  `autoCompleteSource`:
+  - `tenant_field` (e.g. `custom_domain` set on the tenant row),
+  - `connection` (e.g. a `connected` provider in some category), or
+  - `manual` (the user clicks "mark done" / "skip").
+- **Generator + progress** (`src/lib/checklist`): `ensureChecklist
+ForTenant()` idempotently inserts `pending` rows for newly
+  applicable templates. `computeChecklistProgress()` resolves the
+  auto-complete sources live and returns a `{ total, completed,
+pendingRequired, pendingOptional, percentageComplete, items }`
+  snapshot.
+- **Launch gate** (`canTenantGoLive`): updated to combine the
+  required-connections check from step 10 with required-checklist
+  items. Reasons are now structured (`{ key, defaultMessage }`) so
+  the UI can translate them.
+- **UI**: `/<locale>/account/setup` renders a progress bar, status
+  banner (green = ready, amber = pending), and one card per item
+  grouped by required/optional. Manual items have ✓/↺/– actions
+  wired through three server actions; auto-complete items show a
+  hint instead.
+- **Account overview**: `/account` now shows the same progress bar
+  - a "Manage setup" link.
+
+`/debug/data` includes a Checklist playground mirroring the live
+state for the seeded tenants.
+
 ## Status
 
-In development - Step 10 of 118 (revised plan)
+In development - Step 11 of 118 (revised plan)

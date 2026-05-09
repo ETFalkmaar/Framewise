@@ -5,6 +5,7 @@ import {
   type CountryCode,
   type ProviderCategory,
 } from '@/lib/countries';
+import { computeChecklistProgress } from '@/lib/checklist';
 
 /**
  * Returns the categories that have at least one provider configured for the
@@ -71,18 +72,31 @@ export async function getRequiredConnectionsForTenant(
   };
 }
 
+/** Reasons returned by `canTenantGoLive` are structured so the UI can
+ *  translate them. The `key` matches an i18n message id; `defaultMessage`
+ *  is the English fallback used when the key is missing. */
+export interface CanGoLiveReason {
+  key: string;
+  defaultMessage: string;
+}
+
 export interface CanGoLiveResult {
   canGoLive: boolean;
+  /** Required *connection* categories that are still missing. */
   missingCategories: ProviderCategory[];
-  reasons: string[];
+  /** Required *checklist* template ids that aren't completed/skipped yet. */
+  missingChecklistItems: string[];
+  reasons: CanGoLiveReason[];
 }
 
 /**
- * Aggregates the launch-readiness signals for a tenant. Today only the
- * required-connections check feeds in; step 11 will add checklist progress.
+ * Aggregate launch-readiness signals for a tenant.
  *
- * Returns `canGoLive=true` plus an empty `missingCategories` list when the
- * tenant has every required category configured.
+ * Two gates:
+ *   1. every `requiredAtLaunch` category in the country config has a
+ *      `connected` provider connection; and
+ *   2. every `required` checklist template has effective status
+ *      `completed` or `skipped`.
  */
 export async function canTenantGoLive(tenantId: string): Promise<CanGoLiveResult> {
   const tenant = await tenantsRepo.findById(tenantId);
@@ -90,16 +104,39 @@ export async function canTenantGoLive(tenantId: string): Promise<CanGoLiveResult
     return {
       canGoLive: false,
       missingCategories: [],
-      reasons: [`Tenant ${tenantId} not found`],
+      missingChecklistItems: [],
+      reasons: [
+        {
+          key: 'canGoLive.tenantNotFound',
+          defaultMessage: `Tenant ${tenantId} not found`,
+        },
+      ],
     };
   }
 
-  const { required, allConfigured } = await getRequiredConnectionsForTenant(tenantId);
-  const missing = required.filter((r) => !r.isConfigured).map((r) => r.category);
+  const { required } = await getRequiredConnectionsForTenant(tenantId);
+  const missingCategories = required.filter((r) => !r.isConfigured).map((r) => r.category);
+
+  const checklist = await computeChecklistProgress(tenantId);
+  const missingChecklistItems = checklist.items
+    .filter((i) => i.template.required && i.effectiveStatus === 'pending')
+    .map((i) => i.template.id);
+
+  const reasons: CanGoLiveReason[] = [
+    ...missingCategories.map((category) => ({
+      key: `canGoLive.missingConnection.${category}`,
+      defaultMessage: `Missing required ${category} connection`,
+    })),
+    ...missingChecklistItems.map((id) => ({
+      key: `canGoLive.missingChecklistItem.${id}`,
+      defaultMessage: `Missing required checklist item: ${id}`,
+    })),
+  ];
 
   return {
-    canGoLive: allConfigured,
-    missingCategories: missing,
-    reasons: missing.length === 0 ? [] : missing.map((m) => `Missing required ${m} connection`),
+    canGoLive: missingCategories.length === 0 && missingChecklistItems.length === 0,
+    missingCategories,
+    missingChecklistItems,
+    reasons,
   };
 }

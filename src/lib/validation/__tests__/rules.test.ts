@@ -231,20 +231,24 @@ describe('rule: getRequiredConnectionsForTenant / canTenantGoLive', () => {
   beforeEach(() => resetStore());
   afterEach(() => resetStore());
 
-  it('reports villa (CW) as canGoLive — only accounting is required at launch', async () => {
-    // CW config marks accounting as requiredAtLaunch=true, payments as false.
-    // Villa has xero (accounting) connected, so launch is unblocked.
-    const result = await canTenantGoLive(VILLA);
-    expect(result.canGoLive).toBe(true);
-    expect(result.missingCategories).toEqual([]);
-  });
-
   it('lists accounting as configured for villa, payments not in required set', async () => {
     const summary = await getRequiredConnectionsForTenant(VILLA);
     const accounting = summary.required.find((r) => r.category === 'accounting');
     expect(accounting?.isConfigured).toBe(true);
     const payments = summary.required.find((r) => r.category === 'payments');
     expect(payments).toBeUndefined();
+  });
+
+  it('villa connection-gate alone passes — checklist still has open required items', async () => {
+    // Connection gate: only accounting required for CW, xero is connected.
+    const summary = await getRequiredConnectionsForTenant(VILLA);
+    expect(summary.allConfigured).toBe(true);
+
+    // canGoLive combines checklist: cw-pro-content-review (required) is pending.
+    const result = await canTenantGoLive(VILLA);
+    expect(result.missingCategories).toEqual([]);
+    expect(result.missingChecklistItems).toContain('cw-pro-content-review');
+    expect(result.canGoLive).toBe(false);
   });
 
   it('flips villa to canGoLive=false when accounting connection breaks', async () => {
@@ -259,13 +263,13 @@ describe('rule: getRequiredConnectionsForTenant / canTenantGoLive', () => {
 
   it('reports restaurant (NL) as blocked because mollie is disconnected', async () => {
     // NL marks both accounting and payments as requiredAtLaunch.
-    // moneybird is connected, mollie is disconnected → blocked.
+    // moneybird is connected, mollie is disconnected → blocked on connection gate.
     const result = await canTenantGoLive(RESTAURANT);
     expect(result.canGoLive).toBe(false);
     expect(result.missingCategories).toContain('payments');
   });
 
-  it('flips restaurant to canGoLive=true when mollie is reconnected', async () => {
+  it('reconnecting mollie unblocks the connection gate but checklist still pending', async () => {
     await connectionsRepo.create({
       tenant_id: RESTAURANT,
       category: 'payments',
@@ -277,19 +281,69 @@ describe('rule: getRequiredConnectionsForTenant / canTenantGoLive', () => {
       expires_at: null,
     });
     const result = await canTenantGoLive(RESTAURANT);
-    expect(result.canGoLive).toBe(true);
     expect(result.missingCategories).toEqual([]);
+    // Checklist still has nl-pro-content-review pending.
+    expect(result.canGoLive).toBe(false);
+    expect(result.missingChecklistItems).toContain('nl-pro-content-review');
   });
 
-  it('returns canGoLive=false with a "not found" reason for an unknown tenant', async () => {
+  it('returns canGoLive=false with a structured "not found" reason for unknown tenant', async () => {
     const result = await canTenantGoLive('00000000-0000-0000-0000-000000000000');
     expect(result.canGoLive).toBe(false);
-    expect(result.reasons.join(' ')).toMatch(/not found/i);
+    expect(result.reasons.some((r) => /not found/i.test(r.defaultMessage))).toBe(true);
+    expect(result.reasons[0]?.key).toMatch(/canGoLive/);
   });
 
   it('produces empty required list when tenant id does not exist', async () => {
     const summary = await getRequiredConnectionsForTenant('00000000-0000-0000-0000-000000000000');
     expect(summary.required).toEqual([]);
     expect(summary.allConfigured).toBe(true);
+  });
+});
+
+describe('rule: canTenantGoLive — checklist gating', () => {
+  beforeEach(() => resetStore());
+  afterEach(() => resetStore());
+
+  it('marks all required manual items completed → villa is fully canGoLive', async () => {
+    const goLiveBefore = await canTenantGoLive(VILLA);
+    expect(goLiveBefore.canGoLive).toBe(false);
+
+    // Mark every required pending item as completed.
+    const { checklistRepo } = await import('@/lib/data');
+    const { computeChecklistProgress } = await import('@/lib/checklist');
+    const progress = await computeChecklistProgress(VILLA);
+    for (const item of progress.items) {
+      if (item.template.required && item.effectiveStatus === 'pending') {
+        await checklistRepo.markCompleted(VILLA, item.template.id);
+      }
+    }
+
+    const goLiveAfter = await canTenantGoLive(VILLA);
+    expect(goLiveAfter.canGoLive).toBe(true);
+    expect(goLiveAfter.missingChecklistItems).toEqual([]);
+  });
+
+  it('skipping an required item also satisfies the gate', async () => {
+    const { checklistRepo } = await import('@/lib/data');
+    const { computeChecklistProgress } = await import('@/lib/checklist');
+    const progress = await computeChecklistProgress(VILLA);
+    for (const item of progress.items) {
+      if (item.template.required && item.effectiveStatus === 'pending') {
+        await checklistRepo.markSkipped(VILLA, item.template.id, 'demo skip');
+      }
+    }
+
+    const result = await canTenantGoLive(VILLA);
+    expect(result.canGoLive).toBe(true);
+  });
+
+  it('reasons include a key per missing item so the UI can translate', async () => {
+    const result = await canTenantGoLive(RESTAURANT);
+    expect(result.reasons.length).toBeGreaterThan(0);
+    for (const r of result.reasons) {
+      expect(r.key).toMatch(/^canGoLive\./);
+      expect(r.defaultMessage.length).toBeGreaterThan(0);
+    }
   });
 });

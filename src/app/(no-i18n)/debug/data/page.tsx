@@ -19,6 +19,7 @@ import {
   tenantInsertSchema,
   ValidationError,
 } from '@/lib/validation';
+import { computeChecklistProgress } from '@/lib/checklist';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -108,6 +109,8 @@ export default async function DebugDataPage() {
 
       <ConnectionsPlayground />
 
+      <ChecklistPlayground />
+
       <AuthPlayground />
     </main>
   );
@@ -191,7 +194,7 @@ async function ConnectionsPlayground() {
                   <ul className="ml-4 list-disc space-y-0.5 text-[11px]">
                     {goLive.reasons.map((r, i) => (
                       <li key={i} className="font-mono">
-                        {r}
+                        {r.defaultMessage}
                       </li>
                     ))}
                   </ul>
@@ -408,6 +411,95 @@ function runProviderRuleExamples(): ProviderRuleExample[] {
       };
     }
   });
+}
+
+async function ChecklistPlayground() {
+  const tenants = await tenantsRepo.list();
+  const snapshots = await Promise.all(
+    tenants.map(async (t) => ({
+      tenant: t,
+      progress: await computeChecklistProgress(t.id),
+      goLive: await canTenantGoLive(t.id),
+    }))
+  );
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="checklist-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Checklist playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        <code className="font-mono">computeChecklistProgress()</code> +{' '}
+        <code className="font-mono">canTenantGoLive()</code> against the seeded checklist statuses,
+        country configs and provider connections.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {snapshots.map(({ tenant, progress, goLive }) => (
+          <Card key={tenant.id} size="sm" data-testid={`checklist-snapshot-${tenant.slug}`}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={goLive.canGoLive ? 'secondary' : 'destructive'}
+                  className="font-mono"
+                >
+                  {goLive.canGoLive ? '✓ canGoLive' : '⚠ blocked'}
+                </Badge>
+                <CardTitle className="text-sm">{tenant.name}</CardTitle>
+              </div>
+              <CardDescription className="font-mono text-xs">
+                {tenant.country} · {tenant.slug} · {progress.completed}/{progress.total} (
+                {progress.percentageComplete}%)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-xs">
+              <p className="font-mono">
+                <span className="text-muted-foreground">pendingRequired </span>
+                <span className="text-foreground">{progress.pendingRequired}</span>{' '}
+                <span className="text-muted-foreground">pendingOptional </span>
+                <span className="text-foreground">{progress.pendingOptional}</span>
+              </p>
+              {progress.items.length === 0 ? (
+                <p className="text-muted-foreground">(no templates)</p>
+              ) : (
+                <ul className="ml-4 list-disc space-y-0.5 font-mono">
+                  {progress.items.map((item) => (
+                    <li key={item.template.id}>
+                      {item.template.id}{' '}
+                      <span
+                        className={
+                          item.effectiveStatus === 'completed'
+                            ? 'text-foreground'
+                            : item.effectiveStatus === 'skipped'
+                              ? 'text-muted-foreground'
+                              : 'text-destructive'
+                        }
+                      >
+                        ({item.effectiveStatus}
+                        {item.autoCompleteResolved ? ', auto' : ''})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {goLive.reasons.length > 0 && (
+                <>
+                  <p className="text-muted-foreground mt-3 font-mono uppercase">reasons</p>
+                  <ul className="ml-4 list-disc space-y-0.5 text-[11px]">
+                    {goLive.reasons.map((r, i) => (
+                      <li key={i} className="font-mono">
+                        {r.defaultMessage}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 async function AuthPlayground() {

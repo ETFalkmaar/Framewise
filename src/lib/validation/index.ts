@@ -106,5 +106,6 @@ export {
   canTenantGoLive,
   type RequiredConnectionStatus,
   type RequiredConnectionsResult,
+  type CanGoLiveReason,
   type CanGoLiveResult,
 } from './rules/connection-rules';

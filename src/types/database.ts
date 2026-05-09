@@ -440,7 +440,15 @@ export type ChecklistStatus = 'pending' | 'in_progress' | 'completed' | 'skipped
 export interface TenantChecklistStatus {
   id: UUID;
   tenant_id: UUID;
-  checklist_item_id: UUID;
+  /**
+   * Template id from `src/lib/checklist/templates.ts` (e.g. `'cw-domain'`).
+   *
+   * Originally typed as `UUID` when the template lived in the
+   * `setup_checklist_items` table; step 11 moved templates into code so
+   * this is now a free-form string. Supabase migration in step 119 will
+   * widen the column to `text`.
+   */
+  checklist_item_id: string;
   status: ChecklistStatus;
   completed_at: ISODateTime | null;
   notes: string | null;
