@@ -14,5 +14,24 @@
   "languageSwitcher": {
     "label": "Langue",
     "selectLanguage": "Sélectionner la langue"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Bon retour sur Framewise.",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "loading": "Connexion en cours...",
+      "error": "Identifiants invalides"
+    }
+  },
+  "account": {
+    "title": "Mon compte",
+    "email": "E-mail",
+    "tenants": "Mes tenants",
+    "activeTenant": "Tenant actif",
+    "noTenants": "Aucun tenant lié à ce compte.",
+    "logout": "Se déconnecter"
   }
 }

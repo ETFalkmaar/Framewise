@@ -235,6 +235,7 @@ describe('mock data layer — validation enforcement', () => {
         email: 'not-an-email',
         name: 'Bad',
         avatar_url: null,
+        password_hash: 'Password1!',
         last_login_at: null,
       })
     ).rejects.toBeInstanceOf(ValidationError);
@@ -247,6 +248,7 @@ describe('mock data layer — validation enforcement', () => {
         email: 'framewise@example.com',
         name: 'Clone',
         avatar_url: null,
+        password_hash: 'Password1!',
         last_login_at: null,
       });
     } catch (e) {

@@ -14,5 +14,24 @@
   "languageSwitcher": {
     "label": "Taal",
     "selectLanguage": "Selecteer taal"
+  },
+  "auth": {
+    "login": {
+      "title": "Inloggen",
+      "subtitle": "Welkom terug bij Framewise.",
+      "email": "E-mailadres",
+      "password": "Wachtwoord",
+      "submit": "Inloggen",
+      "loading": "Bezig met inloggen...",
+      "error": "Ongeldige inloggegevens"
+    }
+  },
+  "account": {
+    "title": "Mijn account",
+    "email": "E-mailadres",
+    "tenants": "Mijn tenants",
+    "activeTenant": "Actieve tenant",
+    "noTenants": "Geen tenants gekoppeld aan dit account.",
+    "logout": "Uitloggen"
   }
 }

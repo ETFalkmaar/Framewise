@@ -49,6 +49,12 @@ export interface User {
   email: string;
   name: string;
   avatar_url: string | null;
+  /**
+   * Plain-text password for the mock adapter only (compared with `===`).
+   * Step 119 swaps this for a Supabase Auth-managed bcrypt/argon2 hash so
+   * application code keeps using `verifyCredentials()` unchanged.
+   */
+  password_hash: string;
   created_at: ISODateTime;
   updated_at: ISODateTime;
   last_login_at: ISODateTime | null;

@@ -118,6 +118,37 @@ The `/debug/data` route includes a "Tenant resolution playground"
 that calls the resolver against the four canonical input shapes so
 you can verify behaviour at a glance.
 
+## Authentication
+
+Mock auth lives under `src/lib/auth/` and is wired up exactly the way
+the future Supabase implementation will be — call sites use
+`getCurrentUser()`, `requireCurrentUser()`, `getCurrentUserWithTenants()`,
+`canEditPages()`, etc. without knowing the implementation details.
+
+- **Sessions**: signed `framewise_session` cookies via
+  [iron-session](https://github.com/vvo/iron-session) v8. `SESSION_PASSWORD`
+  must be set in production (32+ characters).
+- **Credentials**: passwords are stored as plain text in
+  `seeds/users.json` for the mock. Step 119 swaps this for
+  Supabase-managed bcrypt/argon2 hashes; the `password_hash` column name
+  stays.
+- **Permissions**: role-based via the `tenant_users` junction +
+  `roles.name` (`owner` / `editor` / `viewer` / `support`). The
+  `framewise@example.com` super-admin bypasses every tenant check.
+- **API routes**: `POST /api/auth/login`, `POST /api/auth/logout`,
+  `GET /api/auth/me` — login is rate-limited (5/15 min per IP) by an
+  in-memory bucket.
+
+### Test credentials (development only)
+
+| Role             | Email                           | Password          |
+| ---------------- | ------------------------------- | ----------------- |
+| Super-admin      | `framewise@example.com`         | `Framewise2025!`  |
+| Villa owner      | `owner@demo-villa.example`      | `Villa2025!`      |
+| Restaurant owner | `owner@demo-restaurant.example` | `Restaurant2025!` |
+
+Visit `/login`, `/account`, or the auth playground at `/debug/data`.
+
 ## Status
 
-In development - Step 7 of 118 (revised plan)
+In development - Step 8 of 118 (revised plan)

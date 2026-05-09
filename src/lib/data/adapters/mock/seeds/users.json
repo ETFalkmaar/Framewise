@@ -4,24 +4,28 @@
     "email": "framewise@example.com",
     "name": "Framewise Admin",
     "avatar_url": null,
+    "_password_note": "MOCK ONLY — replaced by Supabase-managed hash in step 119",
+    "password_hash": "Framewise2025!",
     "created_at": "2026-01-01T00:00:00.000Z",
     "updated_at": "2026-01-01T00:00:00.000Z",
     "last_login_at": "2026-05-09T10:00:00.000Z"
   },
   {
     "id": "a0000000-0000-0000-0000-000000000002",
-    "email": "owner@demo-villa.example.com",
+    "email": "owner@demo-villa.example",
     "name": "Villa Owner",
     "avatar_url": null,
+    "password_hash": "Villa2025!",
     "created_at": "2026-02-01T08:00:00.000Z",
     "updated_at": "2026-02-01T08:00:00.000Z",
     "last_login_at": "2026-05-08T14:23:00.000Z"
   },
   {
     "id": "a0000000-0000-0000-0000-000000000003",
-    "email": "owner@demo-restaurant.example.com",
+    "email": "owner@demo-restaurant.example",
     "name": "Restaurant Owner",
     "avatar_url": null,
+    "password_hash": "Restaurant2025!",
     "created_at": "2026-03-10T09:30:00.000Z",
     "updated_at": "2026-03-10T09:30:00.000Z",
     "last_login_at": "2026-05-07T19:00:00.000Z"

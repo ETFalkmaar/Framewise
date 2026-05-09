@@ -9,6 +9,12 @@ import { MaintenancePage } from '@/components/maintenance-page';
 import { routing, type Locale } from '@/i18n/routing';
 import { getCurrentTenantWithSubscription } from '@/lib/tenant';
 import { TenantProvider } from '@/lib/tenant/client-context';
+import {
+  AuthProvider,
+  getActiveTenantForUser,
+  getCurrentUserWithTenants,
+  toPublicUser,
+} from '@/lib/auth';
 import '../../globals.css';
 
 const inter = Inter({
@@ -66,7 +72,12 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const tenantContext = await getCurrentTenantWithSubscription();
+  const [tenantContext, authContext, activeTenant] = await Promise.all([
+    getCurrentTenantWithSubscription(),
+    getCurrentUserWithTenants(),
+    getActiveTenantForUser(),
+  ]);
+
   const tenant = tenantContext?.tenant ?? null;
   const plan = tenantContext?.plan ?? null;
   const subscription = tenantContext?.subscription ?? null;
@@ -81,13 +92,19 @@ export default async function LocaleLayout({
     >
       <body className="bg-background text-foreground flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <TenantProvider tenant={tenant} plan={plan} subscription={subscription}>
-            <header className="absolute top-0 right-0 z-20 p-4 sm:p-6">
-              <LanguageSwitcher />
-            </header>
-            {showMaintenance ? <MaintenancePage tenant={tenant!} /> : children}
-            <Toaster richColors theme="dark" />
-          </TenantProvider>
+          <AuthProvider
+            user={authContext ? toPublicUser(authContext.user) : null}
+            tenants={authContext?.tenants ?? []}
+            activeTenantId={activeTenant?.id ?? null}
+          >
+            <TenantProvider tenant={tenant} plan={plan} subscription={subscription}>
+              <header className="absolute top-0 right-0 z-20 p-4 sm:p-6">
+                <LanguageSwitcher />
+              </header>
+              {showMaintenance ? <MaintenancePage tenant={tenant!} /> : children}
+              <Toaster richColors theme="dark" />
+            </TenantProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
