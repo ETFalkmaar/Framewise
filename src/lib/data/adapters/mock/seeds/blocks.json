@@ -1,0 +1,111 @@
+[
+  {
+    "id": "10000000-0000-0000-0000-000000000001",
+    "page_id": "f0000000-0000-0000-0000-000000000001",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline": "Welcome to Demo Villa Curaçao",
+      "subline": "Your private paradise in the Caribbean",
+      "cta_label": "Check availability",
+      "cta_href": "/accommodation",
+      "image_url": "/seed/villa-hero.jpg"
+    },
+    "created_at": "2026-02-02T10:05:00.000Z",
+    "updated_at": "2026-04-15T11:30:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000002",
+    "page_id": "f0000000-0000-0000-0000-000000000001",
+    "block_type": "text",
+    "order_index": 1,
+    "data": {
+      "title": "About the villa",
+      "body": "Set on the southern coast, the villa offers panoramic ocean views, a private pool and direct beach access."
+    },
+    "created_at": "2026-02-02T10:10:00.000Z",
+    "updated_at": "2026-02-02T10:10:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000003",
+    "page_id": "f0000000-0000-0000-0000-000000000001",
+    "block_type": "gallery",
+    "order_index": 2,
+    "data": {
+      "images": ["/seed/villa-1.jpg", "/seed/villa-2.jpg", "/seed/villa-3.jpg"]
+    },
+    "created_at": "2026-02-02T10:15:00.000Z",
+    "updated_at": "2026-04-10T09:00:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000004",
+    "page_id": "f0000000-0000-0000-0000-000000000002",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline": "Accommodation",
+      "subline": "Three bedrooms, two bathrooms, sleeps six"
+    },
+    "created_at": "2026-02-02T10:35:00.000Z",
+    "updated_at": "2026-02-02T10:35:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000005",
+    "page_id": "f0000000-0000-0000-0000-000000000002",
+    "block_type": "pricing",
+    "order_index": 1,
+    "data": {
+      "from_price_cents": 35000,
+      "currency": "EUR",
+      "label": "per night"
+    },
+    "created_at": "2026-02-02T10:40:00.000Z",
+    "updated_at": "2026-02-02T10:40:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000006",
+    "page_id": "f0000000-0000-0000-0000-000000000002",
+    "block_type": "faq",
+    "order_index": 2,
+    "data": {
+      "items": [
+        {
+          "question": "Is breakfast included?",
+          "answer": "Breakfast is available on request for an additional fee."
+        },
+        {
+          "question": "Do you allow pets?",
+          "answer": "Sorry, the villa is pet-free."
+        }
+      ]
+    },
+    "created_at": "2026-02-02T10:45:00.000Z",
+    "updated_at": "2026-02-02T10:45:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000007",
+    "page_id": "f0000000-0000-0000-0000-000000000003",
+    "block_type": "contact",
+    "order_index": 0,
+    "data": {
+      "email": "hello@demo-villa.example.com",
+      "phone": "+599 9 555-0101",
+      "address": "Caracasbaaiweg 1, Willemstad, Curaçao"
+    },
+    "created_at": "2026-02-02T11:05:00.000Z",
+    "updated_at": "2026-03-20T14:00:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000008",
+    "page_id": "f0000000-0000-0000-0000-000000000003",
+    "block_type": "cta",
+    "order_index": 1,
+    "data": {
+      "headline": "Plan your stay",
+      "cta_label": "Check availability",
+      "cta_href": "/accommodation"
+    },
+    "created_at": "2026-02-02T11:10:00.000Z",
+    "updated_at": "2026-02-02T11:10:00.000Z"
+  }
+]

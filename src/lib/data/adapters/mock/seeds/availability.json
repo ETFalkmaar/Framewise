@@ -1,0 +1,302 @@
+[
+  {
+    "id": "30000000-0000-0000-0000-000000000001",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-01",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000002",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-02",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000003",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-03",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000004",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-04",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000005",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-05",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000006",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-06",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000007",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-07",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000008",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-08",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000009",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-09",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000010",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-10",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000011",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-11",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000012",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-12",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000013",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-13",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000014",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-14",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000015",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-15",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000016",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-16",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000017",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-17",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000018",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-18",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000019",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-19",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000020",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-20",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000021",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-21",
+    "status": "booked",
+    "booking_id": "20000000-0000-0000-0000-000000000001",
+    "source": "booking",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000022",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-22",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000023",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-23",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000024",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-24",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000025",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-25",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000026",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-26",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000027",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-27",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000028",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-28",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000029",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-29",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000030",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "date": "2026-06-30",
+    "status": "available",
+    "booking_id": null,
+    "source": "manual",
+    "external_uid": null,
+    "notes": null
+  }
+]

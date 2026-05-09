@@ -1,0 +1,80 @@
+[
+  {
+    "id": "b0000000-0000-0000-0000-000000000001",
+    "code": "basic",
+    "name": "Basic",
+    "price_monthly_cents": 4900,
+    "price_yearly_cents": 49000,
+    "currency": "EUR",
+    "features": {
+      "blog": false,
+      "editor": true,
+      "booking": false,
+      "webshop": false,
+      "ai_agent_advanced": false,
+      "custom_domain": true,
+      "multi_language": false
+    },
+    "support_hours_per_year": 2,
+    "max_pages": 10,
+    "max_languages": 1,
+    "has_blog": false,
+    "has_editor": true,
+    "has_booking": false,
+    "has_webshop": false,
+    "has_ai_agent_advanced": false,
+    "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-0000-0000-000000000002",
+    "code": "pro",
+    "name": "Pro",
+    "price_monthly_cents": 14900,
+    "price_yearly_cents": 149000,
+    "currency": "EUR",
+    "features": {
+      "blog": true,
+      "editor": true,
+      "booking": true,
+      "webshop": false,
+      "ai_agent_advanced": false,
+      "custom_domain": true,
+      "multi_language": true
+    },
+    "support_hours_per_year": 6,
+    "max_pages": 50,
+    "max_languages": 3,
+    "has_blog": true,
+    "has_editor": true,
+    "has_booking": true,
+    "has_webshop": false,
+    "has_ai_agent_advanced": false,
+    "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-0000-0000-000000000003",
+    "code": "enterprise",
+    "name": "Enterprise",
+    "price_monthly_cents": 34900,
+    "price_yearly_cents": 349000,
+    "currency": "EUR",
+    "features": {
+      "blog": true,
+      "editor": true,
+      "booking": true,
+      "webshop": true,
+      "ai_agent_advanced": true,
+      "custom_domain": true,
+      "multi_language": true
+    },
+    "support_hours_per_year": 12,
+    "max_pages": 200,
+    "max_languages": 5,
+    "has_blog": true,
+    "has_editor": true,
+    "has_booking": true,
+    "has_webshop": true,
+    "has_ai_agent_advanced": true,
+    "created_at": "2026-01-01T00:00:00.000Z"
+  }
+]
