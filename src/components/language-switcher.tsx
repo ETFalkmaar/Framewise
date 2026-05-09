@@ -23,7 +23,12 @@ export function LanguageSwitcher() {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="outline" size="sm" aria-label={t('selectLanguage')} className="gap-2" />
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label={t('selectLanguage')}
+              className="gap-2"
+            />
           }
         >
           <GlobeIcon className="size-4" />
