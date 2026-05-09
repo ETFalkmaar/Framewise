@@ -1,9 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveTenantForUser, getCurrentUserWithTenants, isUserSuperAdmin } from '@/lib/auth';
+import { computeChecklistProgress } from '@/lib/checklist';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { ChecklistProgressBar } from '@/components/checklist/checklist-progress-bar';
 import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
 
@@ -19,6 +21,8 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const { user, tenants } = ctx;
   const activeTenant = await getActiveTenantForUser();
   const superAdmin = isUserSuperAdmin(user.id);
+  const checklistProgress = activeTenant ? await computeChecklistProgress(activeTenant.id) : null;
+  const tSetup = await getTranslations('account.setup');
 
   return (
     <main
@@ -86,6 +90,35 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
           </CardContent>
         </Card>
       </div>
+
+      {checklistProgress && checklistProgress.total > 0 && (
+        <Card size="sm" className="mt-6" data-testid="account-card-checklist">
+          <CardHeader>
+            <CardTitle className="text-sm">{tSetup('overviewTitle')}</CardTitle>
+            <CardDescription className="text-xs">
+              {tSetup('overviewSummary', {
+                completed: checklistProgress.completed,
+                total: checklistProgress.total,
+              })}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ChecklistProgressBar
+              total={checklistProgress.total}
+              completed={checklistProgress.completed}
+              percentage={checklistProgress.percentageComplete}
+              label={tSetup('progressLabel')}
+            />
+            <Link
+              href="/account/setup"
+              data-testid="link-setup"
+              className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+            >
+              → {tSetup('viewSetup')}
+            </Link>
+          </CardContent>
+        </Card>
+      )}
 
       <Separator className="my-12" />
       <div className="space-y-3">
