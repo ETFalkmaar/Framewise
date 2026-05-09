@@ -1,0 +1,495 @@
+/**
+ * Database row types — 1:1 with the future Supabase schema.
+ *
+ * Conventions:
+ * - Field names use snake_case (matches Supabase / Postgres).
+ * - Enum-like fields are typed as string union types.
+ * - Timestamps and dates are ISO-8601 strings (`new Date().toISOString()`).
+ * - JSONB columns are typed as specific shapes where possible, otherwise
+ *   `Record<string, unknown>`.
+ *
+ * The `Database` umbrella type at the bottom mirrors Supabase's
+ * `Database` convention so generated client code can drop in later.
+ */
+
+export type ISODateTime = string;
+export type ISODate = string; // YYYY-MM-DD
+export type UUID = string;
+
+// ────────────────────────────────────────────────────────────────────────────
+// 1. tenants
+// ────────────────────────────────────────────────────────────────────────────
+export type Country = 'NL' | 'CW';
+export type LocaleCode = 'nl' | 'fr' | 'en';
+export type TenantStatus = 'onboarding' | 'live' | 'paused' | 'cancelled';
+
+/** A multi-tenant site instance (one Framewise customer site). */
+export interface Tenant {
+  id: UUID;
+  slug: string;
+  name: string;
+  country: Country;
+  vat_number: string | null;
+  crib_number: string | null;
+  subscription_plan_id: UUID;
+  status: TenantStatus;
+  custom_domain: string | null;
+  default_locale: LocaleCode;
+  enabled_locales: LocaleCode[];
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 2. users
+// ────────────────────────────────────────────────────────────────────────────
+/** Identity record for a real human user (admin, owner, editor, viewer). */
+export interface User {
+  id: UUID;
+  email: string;
+  name: string;
+  avatar_url: string | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+  last_login_at: ISODateTime | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 3. roles
+// ────────────────────────────────────────────────────────────────────────────
+export type RoleName = 'owner' | 'editor' | 'viewer' | 'support';
+
+/** Permission set for a tenant_users link. */
+export interface Role {
+  id: UUID;
+  name: RoleName;
+  permissions: Record<string, boolean>;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 4. tenant_users (junction)
+// ────────────────────────────────────────────────────────────────────────────
+/** Links a user to a tenant with a role. */
+export interface TenantUser {
+  id: UUID;
+  tenant_id: UUID;
+  user_id: UUID;
+  role_id: UUID;
+  invited_at: ISODateTime;
+  joined_at: ISODateTime | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 5. subscription_plans
+// ────────────────────────────────────────────────────────────────────────────
+export type SubscriptionPlanCode = 'basic' | 'pro' | 'enterprise';
+export type Currency = 'EUR' | 'USD' | 'ANG';
+
+export interface SubscriptionPlanFeatures {
+  blog: boolean;
+  editor: boolean;
+  booking: boolean;
+  webshop: boolean;
+  ai_agent_advanced: boolean;
+  custom_domain: boolean;
+  multi_language: boolean;
+  [key: string]: boolean;
+}
+
+/** Pricing tier offered to tenants. */
+export interface SubscriptionPlan {
+  id: UUID;
+  code: SubscriptionPlanCode;
+  name: string;
+  price_monthly_cents: number;
+  price_yearly_cents: number;
+  currency: Currency;
+  features: SubscriptionPlanFeatures;
+  support_hours_per_year: number;
+  max_pages: number;
+  max_languages: number;
+  has_blog: boolean;
+  has_editor: boolean;
+  has_booking: boolean;
+  has_webshop: boolean;
+  has_ai_agent_advanced: boolean;
+  created_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 6. subscriptions
+// ────────────────────────────────────────────────────────────────────────────
+export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'trialing';
+
+/** Active billing relationship between a tenant and a plan. */
+export interface Subscription {
+  id: UUID;
+  tenant_id: UUID;
+  plan_id: UUID;
+  status: SubscriptionStatus;
+  started_at: ISODateTime;
+  current_period_start: ISODateTime;
+  current_period_end: ISODateTime;
+  cancel_at_period_end: boolean;
+  stripe_subscription_id: string | null;
+  created_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 7. support_hours_log
+// ────────────────────────────────────────────────────────────────────────────
+/** Time log against a tenant's contractual support quota. */
+export interface SupportHoursLog {
+  id: UUID;
+  tenant_id: UUID;
+  subscription_id: UUID;
+  minutes_used: number;
+  description: string;
+  logged_by_user_id: UUID;
+  logged_at: ISODateTime;
+  period_start: ISODateTime;
+  period_end: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 8. pages
+// ────────────────────────────────────────────────────────────────────────────
+export type PageStatus = 'draft' | 'published' | 'archived';
+
+/** A single editable page on a tenant's site. */
+export interface Page {
+  id: UUID;
+  tenant_id: UUID;
+  slug: string;
+  status: PageStatus;
+  parent_id: UUID | null;
+  order_index: number;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+  published_at: ISODateTime | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 9. page_versions
+// ────────────────────────────────────────────────────────────────────────────
+/** Snapshot of a page (with all its blocks) at a given revision. */
+export interface PageVersion {
+  id: UUID;
+  page_id: UUID;
+  version_number: number;
+  snapshot: Record<string, unknown>;
+  created_by_user_id: UUID;
+  created_at: ISODateTime;
+  comment: string | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 10. blocks
+// ────────────────────────────────────────────────────────────────────────────
+export type BlockType =
+  | 'hero'
+  | 'text'
+  | 'image'
+  | 'gallery'
+  | 'cta'
+  | 'faq'
+  | 'pricing'
+  | 'contact';
+
+/** A single content block belonging to a page. */
+export interface Block {
+  id: UUID;
+  page_id: UUID;
+  block_type: BlockType;
+  order_index: number;
+  data: Record<string, unknown>;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 12. media
+// ────────────────────────────────────────────────────────────────────────────
+/** A binary asset (image, video, document) belonging to a tenant. */
+export interface Media {
+  id: UUID;
+  tenant_id: UUID;
+  file_name: string;
+  mime_type: string;
+  size_bytes: number;
+  storage_path: string;
+  public_url: string;
+  alt_text: Record<LocaleCode, string>;
+  width: number | null;
+  height: number | null;
+  uploaded_by_user_id: UUID;
+  created_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 13. translations
+// ────────────────────────────────────────────────────────────────────────────
+export type TranslationNamespace = 'block' | 'page_meta' | 'global';
+
+/** Localised content for a referenced entity (block, page meta, global key). */
+export interface Translation {
+  id: UUID;
+  tenant_id: UUID;
+  namespace: TranslationNamespace;
+  reference_id: UUID;
+  locale: LocaleCode;
+  content: Record<string, unknown>;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 14. bookings
+// ────────────────────────────────────────────────────────────────────────────
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type PaymentStatus = 'unpaid' | 'partial' | 'paid' | 'refunded';
+
+/** A guest booking against a bookable resource (villa, table, etc.). */
+export interface Booking {
+  id: UUID;
+  tenant_id: UUID;
+  status: BookingStatus;
+  start_date: ISODate;
+  end_date: ISODate;
+  persons: number;
+  guest_name: string;
+  guest_email: string;
+  guest_phone: string | null;
+  total_price_cents: number;
+  currency: Currency;
+  payment_status: PaymentStatus;
+  payment_provider: string | null;
+  payment_reference: string | null;
+  notes: string | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 15. availability
+// ────────────────────────────────────────────────────────────────────────────
+export type AvailabilityStatus = 'available' | 'blocked' | 'booked';
+export type AvailabilitySource = 'manual' | 'ical' | 'booking';
+
+/** One row per (tenant, date) for a bookable resource. */
+export interface Availability {
+  id: UUID;
+  tenant_id: UUID;
+  date: ISODate;
+  status: AvailabilityStatus;
+  booking_id: UUID | null;
+  source: AvailabilitySource;
+  external_uid: string | null;
+  notes: string | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 16. booking_settings
+// ────────────────────────────────────────────────────────────────────────────
+export interface CancellationPolicy {
+  free_until_days_before: number;
+  partial_refund_percentage: number;
+  partial_until_days_before: number;
+  [key: string]: unknown;
+}
+
+/** Per-tenant booking configuration (limits, pricing, policies). */
+export interface BookingSettings {
+  id: UUID;
+  tenant_id: UUID;
+  min_nights: number;
+  max_nights: number;
+  advance_notice_days: number;
+  base_price_cents: number;
+  weekend_surcharge_cents: number;
+  currency: Currency;
+  cancellation_policy: CancellationPolicy;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 17. agent_conversations
+// ────────────────────────────────────────────────────────────────────────────
+export interface AgentMessage {
+  role: 'user' | 'assistant' | 'tool';
+  content: string;
+  timestamp: ISODateTime;
+  tool_name?: string;
+  tool_args?: Record<string, unknown>;
+  tool_result?: unknown;
+}
+
+/** A conversation between a site visitor and the AI agent. */
+export interface AgentConversation {
+  id: UUID;
+  tenant_id: UUID;
+  session_id: string;
+  started_at: ISODateTime;
+  ended_at: ISODateTime | null;
+  transcript: AgentMessage[];
+  tools_used: string[];
+  lead_captured: boolean;
+  lead_email: string | null;
+  lead_phone: string | null;
+  summary: string | null;
+  language: LocaleCode;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 18. agent_knowledge
+// ────────────────────────────────────────────────────────────────────────────
+export type KnowledgeSourceType = 'page' | 'document' | 'manual';
+
+/** Embedding chunk used by the AI agent for retrieval. */
+export interface AgentKnowledge {
+  id: UUID;
+  tenant_id: UUID;
+  source_type: KnowledgeSourceType;
+  source_reference: string | null;
+  content: string;
+  embedding_dimensions: number;
+  embedding: number[];
+  metadata: Record<string, unknown>;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 19. provider_connections
+// ────────────────────────────────────────────────────────────────────────────
+export type ConnectionCategory = 'accounting' | 'payments' | 'phone' | 'crm' | 'newsletter';
+export type ConnectionProvider =
+  | 'moneybird'
+  | 'stripe'
+  | 'mollie'
+  | 'twilio'
+  | 'hubspot'
+  | 'mailchimp'
+  | 'exact'
+  | (string & {});
+export type ConnectionStatus = 'connected' | 'disconnected' | 'error' | 'expired';
+export type ConnectionAuthMethod = 'oauth' | 'api_key';
+
+/** External provider integration owned by a tenant. */
+export interface ProviderConnection {
+  id: UUID;
+  tenant_id: UUID;
+  category: ConnectionCategory;
+  provider: ConnectionProvider;
+  status: ConnectionStatus;
+  auth_method: ConnectionAuthMethod;
+  encrypted_token: string | null;
+  metadata: Record<string, unknown>;
+  connected_at: ISODateTime;
+  last_used_at: ISODateTime | null;
+  expires_at: ISODateTime | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 20. token_access_log
+// ────────────────────────────────────────────────────────────────────────────
+export type TokenAction = 'read' | 'refresh' | 'revoke';
+
+/** Audit log row for every access of a tenant's encrypted credentials. */
+export interface TokenAccessLog {
+  id: UUID;
+  tenant_id: UUID;
+  connection_id: UUID;
+  action: TokenAction;
+  timestamp: ISODateTime;
+  user_id: UUID | null;
+  ip_address: string | null;
+  success: boolean;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 21. setup_checklist_items (template)
+// ────────────────────────────────────────────────────────────────────────────
+export type ChecklistActionType = 'domain' | 'connection' | 'info';
+
+/** Read-only template row defining one onboarding step. */
+export interface SetupChecklistItem {
+  id: UUID;
+  country: Country;
+  plan_code: SubscriptionPlanCode;
+  category: string;
+  label_nl: string;
+  label_fr: string;
+  label_en: string;
+  required: boolean;
+  order_index: number;
+  action_type: ChecklistActionType;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 22. tenant_checklist_status
+// ────────────────────────────────────────────────────────────────────────────
+export type ChecklistStatus = 'pending' | 'in_progress' | 'completed' | 'skipped';
+
+/** Per-tenant progress on a single checklist item. */
+export interface TenantChecklistStatus {
+  id: UUID;
+  tenant_id: UUID;
+  checklist_item_id: UUID;
+  status: ChecklistStatus;
+  completed_at: ISODateTime | null;
+  notes: string | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 23. tenant_country_settings
+// ────────────────────────────────────────────────────────────────────────────
+export interface PostalAddress {
+  street: string;
+  city: string;
+  postal_code: string;
+  country: Country;
+  [key: string]: unknown;
+}
+
+/** Country-scoped settings for a tenant (currency, timezone, etc.). */
+export interface TenantCountrySettings {
+  id: UUID;
+  tenant_id: UUID;
+  country: Country;
+  currency: Currency;
+  timezone: string;
+  locale_default: LocaleCode;
+  legal_entity_name: string;
+  address: PostalAddress;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Database umbrella (mirrors Supabase Database<T> convention)
+// ────────────────────────────────────────────────────────────────────────────
+export interface Database {
+  tenants: Tenant;
+  users: User;
+  roles: Role;
+  tenant_users: TenantUser;
+  subscription_plans: SubscriptionPlan;
+  subscriptions: Subscription;
+  support_hours_log: SupportHoursLog;
+  pages: Page;
+  page_versions: PageVersion;
+  blocks: Block;
+  media: Media;
+  translations: Translation;
+  bookings: Booking;
+  availability: Availability;
+  booking_settings: BookingSettings;
+  agent_conversations: AgentConversation;
+  agent_knowledge: AgentKnowledge;
+  provider_connections: ProviderConnection;
+  token_access_log: TokenAccessLog;
+  setup_checklist_items: SetupChecklistItem;
+  tenant_checklist_status: TenantChecklistStatus;
+  tenant_country_settings: TenantCountrySettings;
+}
+
+export type TableName = keyof Database;

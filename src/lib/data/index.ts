@@ -1,0 +1,73 @@
+/**
+ * Public data-access entry point.
+ *
+ * Import repositories from `@/lib/data` (NEVER from `@/lib/data/adapters/*`)
+ * so the underlying implementation can be swapped without touching call sites.
+ *
+ * Today: mock adapter with in-memory store + JSON seeds.
+ * Step 119: replaced by the Supabase adapter, no API change.
+ */
+
+import { mockAgentConversationsRepo } from './adapters/mock/agent-conversations';
+import { mockAgentKnowledgeRepo } from './adapters/mock/agent-knowledge';
+import { mockBlocksRepo } from './adapters/mock/blocks';
+import { mockBookingsRepo } from './adapters/mock/bookings';
+import { mockChecklistRepo } from './adapters/mock/checklist';
+import { mockConnectionsRepo } from './adapters/mock/connections';
+import { mockMediaRepo } from './adapters/mock/media';
+import { mockPagesRepo } from './adapters/mock/pages';
+import { mockSubscriptionsRepo } from './adapters/mock/subscriptions';
+import { mockSupportHoursRepo } from './adapters/mock/support-hours';
+import { mockTenantsRepo } from './adapters/mock/tenants';
+import { mockTranslationsRepo } from './adapters/mock/translations';
+import { mockUsersRepo } from './adapters/mock/users';
+
+import {
+  agentConversationsRepo,
+  setAgentConversationsRepo,
+} from './repositories/agent-conversations';
+import { agentKnowledgeRepo, setAgentKnowledgeRepo } from './repositories/agent-knowledge';
+import { blocksRepo, setBlocksRepo } from './repositories/blocks';
+import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
+import { checklistRepo, setChecklistRepo } from './repositories/checklist';
+import { connectionsRepo, setConnectionsRepo } from './repositories/connections';
+import { mediaRepo, setMediaRepo } from './repositories/media';
+import { pagesRepo, setPagesRepo } from './repositories/pages';
+import { subscriptionsRepo, setSubscriptionsRepo } from './repositories/subscriptions';
+import { setSupportHoursRepo, supportHoursRepo } from './repositories/support-hours';
+import { setTenantsRepo, tenantsRepo } from './repositories/tenants';
+import { setTranslationsRepo, translationsRepo } from './repositories/translations';
+import { setUsersRepo, usersRepo } from './repositories/users';
+
+// Wire mock implementations once at module load.
+setAgentConversationsRepo(mockAgentConversationsRepo);
+setAgentKnowledgeRepo(mockAgentKnowledgeRepo);
+setBlocksRepo(mockBlocksRepo);
+setBookingsRepo(mockBookingsRepo);
+setChecklistRepo(mockChecklistRepo);
+setConnectionsRepo(mockConnectionsRepo);
+setMediaRepo(mockMediaRepo);
+setPagesRepo(mockPagesRepo);
+setSubscriptionsRepo(mockSubscriptionsRepo);
+setSupportHoursRepo(mockSupportHoursRepo);
+setTenantsRepo(mockTenantsRepo);
+setTranslationsRepo(mockTranslationsRepo);
+setUsersRepo(mockUsersRepo);
+
+export {
+  agentConversationsRepo,
+  agentKnowledgeRepo,
+  blocksRepo,
+  bookingsRepo,
+  checklistRepo,
+  connectionsRepo,
+  mediaRepo,
+  pagesRepo,
+  subscriptionsRepo,
+  supportHoursRepo,
+  tenantsRepo,
+  translationsRepo,
+  usersRepo,
+};
+
+export { resetStore, tableCounts } from './adapters/mock/store';

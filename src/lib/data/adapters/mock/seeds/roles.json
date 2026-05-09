@@ -1,0 +1,54 @@
+[
+  {
+    "id": "c0000000-0000-0000-0000-000000000001",
+    "name": "owner",
+    "permissions": {
+      "manage_pages": true,
+      "manage_blocks": true,
+      "manage_media": true,
+      "manage_bookings": true,
+      "manage_users": true,
+      "manage_subscription": true,
+      "use_agent": true
+    }
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000002",
+    "name": "editor",
+    "permissions": {
+      "manage_pages": true,
+      "manage_blocks": true,
+      "manage_media": true,
+      "manage_bookings": true,
+      "manage_users": false,
+      "manage_subscription": false,
+      "use_agent": true
+    }
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000003",
+    "name": "viewer",
+    "permissions": {
+      "manage_pages": false,
+      "manage_blocks": false,
+      "manage_media": false,
+      "manage_bookings": false,
+      "manage_users": false,
+      "manage_subscription": false,
+      "use_agent": false
+    }
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000004",
+    "name": "support",
+    "permissions": {
+      "manage_pages": true,
+      "manage_blocks": true,
+      "manage_media": true,
+      "manage_bookings": true,
+      "manage_users": false,
+      "manage_subscription": false,
+      "use_agent": true
+    }
+  }
+]
