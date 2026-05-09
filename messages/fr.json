@@ -32,6 +32,34 @@
     "tenants": "Mes tenants",
     "activeTenant": "Tenant actif",
     "noTenants": "Aucun tenant lié à ce compte.",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "viewConnections": "Gérer les connexions",
+    "connections": {
+      "title": "Connexions",
+      "subtitle": "Intégrations « bring-your-own-account » pour le tenant actif.",
+      "noTenant": "Aucun tenant sélectionné pour cette session.",
+      "allConfigured": "Toutes les connexions requises sont actives.",
+      "missing": "Connexions requises manquantes",
+      "viewAll": "Gérer les connexions",
+      "byoaDisclaimer": "Ce compte reste à votre nom. Nous n'avons accès qu'aux actions que vous autorisez. Vous pouvez révoquer cet accès à tout moment.",
+      "lastUsed": "Dernière utilisation",
+      "neverUsed": "jamais utilisé",
+      "expiresAt": "Expire",
+      "noConnection": "Non connecté",
+      "statusLabel": {
+        "connected": "Connecté",
+        "disconnected": "Déconnecté",
+        "error": "Action requise",
+        "expired": "Expiré",
+        "none": "Non connecté"
+      },
+      "categoryLabel": {
+        "accounting": "Comptabilité",
+        "payments": "Paiements",
+        "phone": "Téléphonie",
+        "crm": "CRM",
+        "newsletter": "Newsletter"
+      }
+    }
   }
 }

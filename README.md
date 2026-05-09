@@ -182,6 +182,38 @@ with their curated provider lists, every provider in the registry
 as a card, and three live calls to `assertProviderAvailable` so
 you can verify behaviour at a glance.
 
+## Provider connections
+
+Each tenant brings its own third-party accounts ("BYOA"): we never
+hold credit cards or platform-wide credentials. The data layer
+keeps those links in `provider_connections`, scoped per tenant and
+per category (accounting, payments, phone, CRM, newsletter).
+
+- **Repository** (`@/lib/data` → `connectionsRepo`): typical CRUD
+  plus `findByCategory`, `findByProvider`, `findActive`,
+  `markExpired`, `markError`, `revoke`. Status transitions are
+  validated (`connected ↔ disconnected/error/expired` only — no
+  jumping straight from `disconnected` to `error`).
+- **Cross-entity rule** (`assertProviderAvailable`): every create
+  call checks the country registry from step 9, so a Curaçao
+  tenant cannot accidentally configure Mollie (NL-only).
+- **Launch readiness** (`canTenantGoLive`,
+  `getRequiredConnectionsForTenant`): aggregates the country's
+  `requiredAtLaunch` legal requirements against the tenant's
+  active connections. Step 11 will fold checklist progress into
+  the same call.
+- **Per-tenant country settings** (`tenantCountrySettingsRepo`):
+  one row per tenant with currency, IANA timezone, default locale,
+  legal entity name, and postal address. `upsert()` validates
+  that the locale and currency are supported by the country.
+
+The user-facing read-only surface is
+`/<locale>/account/connections`. It groups connections by
+category, renders a status dot per provider (green = connected,
+red = error/expired, grey = disconnected/none), and shows the
+BYOA disclaimer per card. Connect/disconnect actions are added in
+step 14+.
+
 ## Status
 
-In development - Step 9 of 118 (revised plan)
+In development - Step 10 of 118 (revised plan)

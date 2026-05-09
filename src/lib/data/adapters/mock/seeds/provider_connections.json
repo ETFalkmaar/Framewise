@@ -1,0 +1,93 @@
+[
+  {
+    "id": "c0000000-0000-0000-0000-000000000001",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "category": "accounting",
+    "provider": "xero",
+    "status": "connected",
+    "auth_method": "oauth",
+    "encrypted_token": "mock_token_villa_xero",
+    "metadata": { "organisation_name": "Villa Bonbini B.V." },
+    "connected_at": "2026-03-04T09:12:00.000Z",
+    "last_used_at": "2026-05-08T14:55:00.000Z",
+    "expires_at": null
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000002",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "category": "payments",
+    "provider": "stripe",
+    "status": "error",
+    "auth_method": "oauth",
+    "encrypted_token": "mock_token_villa_stripe",
+    "metadata": { "last_error": "stripe_atlas_not_completed" },
+    "connected_at": "2026-03-05T10:30:00.000Z",
+    "last_used_at": "2026-04-29T08:14:00.000Z",
+    "expires_at": null
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000003",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "category": "phone",
+    "provider": "telnyx",
+    "status": "expired",
+    "auth_method": "api_key",
+    "encrypted_token": "mock_token_villa_telnyx",
+    "metadata": { "purchased_number": "+5999XXXXXXX" },
+    "connected_at": "2026-02-10T11:00:00.000Z",
+    "last_used_at": "2026-04-30T18:00:00.000Z",
+    "expires_at": "2026-05-01T00:00:00.000Z"
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000004",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "category": "crm",
+    "provider": "hubspot",
+    "status": "connected",
+    "auth_method": "oauth",
+    "encrypted_token": "mock_token_villa_hubspot",
+    "metadata": { "portal_id": "demo-villa-portal" },
+    "connected_at": "2026-03-12T13:00:00.000Z",
+    "last_used_at": "2026-05-09T09:30:00.000Z",
+    "expires_at": null
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000005",
+    "tenant_id": "22222222-2222-2222-2222-222222222222",
+    "category": "accounting",
+    "provider": "moneybird",
+    "status": "connected",
+    "auth_method": "api_key",
+    "encrypted_token": "mock_token_restaurant_moneybird",
+    "metadata": { "administration_id": "demo-administration-1" },
+    "connected_at": "2026-03-15T08:00:00.000Z",
+    "last_used_at": "2026-05-09T07:55:00.000Z",
+    "expires_at": null
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000006",
+    "tenant_id": "22222222-2222-2222-2222-222222222222",
+    "category": "payments",
+    "provider": "mollie",
+    "status": "disconnected",
+    "auth_method": "api_key",
+    "encrypted_token": null,
+    "metadata": { "previous_profile_id": "pfl_demo_restaurant" },
+    "connected_at": "2026-03-16T10:00:00.000Z",
+    "last_used_at": "2026-04-20T14:00:00.000Z",
+    "expires_at": null
+  },
+  {
+    "id": "c0000000-0000-0000-0000-000000000007",
+    "tenant_id": "22222222-2222-2222-2222-222222222222",
+    "category": "crm",
+    "provider": "hubspot",
+    "status": "connected",
+    "auth_method": "oauth",
+    "encrypted_token": "mock_token_restaurant_hubspot",
+    "metadata": { "portal_id": "demo-restaurant-portal" },
+    "connected_at": "2026-03-20T11:30:00.000Z",
+    "last_used_at": "2026-05-09T06:45:00.000Z",
+    "expires_at": null
+  }
+]

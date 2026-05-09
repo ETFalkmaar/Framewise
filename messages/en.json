@@ -32,6 +32,34 @@
     "tenants": "My tenants",
     "activeTenant": "Active tenant",
     "noTenants": "No tenants linked to this account.",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "viewConnections": "Manage connections",
+    "connections": {
+      "title": "Connections",
+      "subtitle": "Bring-your-own-account integrations for the active tenant.",
+      "noTenant": "No tenant selected for this session.",
+      "allConfigured": "All required connections are active.",
+      "missing": "Missing required connections",
+      "viewAll": "Manage connections",
+      "byoaDisclaimer": "This account stays in your name. We only have access to perform the actions you authorise. You can revoke access at any time.",
+      "lastUsed": "Last used",
+      "neverUsed": "never used",
+      "expiresAt": "Expires",
+      "noConnection": "Not connected",
+      "statusLabel": {
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "error": "Action required",
+        "expired": "Expired",
+        "none": "Not connected"
+      },
+      "categoryLabel": {
+        "accounting": "Accounting",
+        "payments": "Payments",
+        "phone": "Phone",
+        "crm": "CRM",
+        "newsletter": "Newsletter"
+      }
+    }
   }
 }

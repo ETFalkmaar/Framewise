@@ -3,14 +3,17 @@ import {
   assertFeature,
   assertProviderAvailable,
   assertTransition,
+  canTenantGoLive,
   canTransitionTo,
+  categoriesAvailableForCountry,
   checkBookingAvailability,
+  getRequiredConnectionsForTenant,
   isProviderAvailable,
   tenantHasFeature,
   VALIDATION_ERROR_CODES,
   ValidationError,
 } from '@/lib/validation';
-import { resetStore } from '@/lib/data';
+import { connectionsRepo, resetStore } from '@/lib/data';
 import type { SubscriptionPlan, Tenant } from '@/types/database';
 
 const VILLA_ID = '11111111-1111-1111-1111-111111111111';
@@ -202,5 +205,91 @@ describe('rule: assertProviderAvailable', () => {
       expect(ve.code).toBe(VALIDATION_ERROR_CODES.PROVIDER_NOT_AVAILABLE_IN_COUNTRY);
       expect(ve.field).toBe('country_code');
     }
+  });
+});
+
+const VILLA = '11111111-1111-1111-1111-111111111111';
+const RESTAURANT = '22222222-2222-2222-2222-222222222222';
+
+describe('rule: categoriesAvailableForCountry', () => {
+  it('returns a category for every populated entry in the NL config', () => {
+    const cats = categoriesAvailableForCountry('NL').sort();
+    expect(cats).toEqual(['accounting', 'crm', 'newsletter', 'payments', 'phone']);
+  });
+
+  it('returns the same set for CW (same five categories populated)', () => {
+    const cats = categoriesAvailableForCountry('CW').sort();
+    expect(cats).toEqual(['accounting', 'crm', 'newsletter', 'payments', 'phone']);
+  });
+
+  it('returns [] for an unknown country code', () => {
+    expect(categoriesAvailableForCountry('XX' as 'NL')).toEqual([]);
+  });
+});
+
+describe('rule: getRequiredConnectionsForTenant / canTenantGoLive', () => {
+  beforeEach(() => resetStore());
+  afterEach(() => resetStore());
+
+  it('reports villa (CW) as canGoLive — only accounting is required at launch', async () => {
+    // CW config marks accounting as requiredAtLaunch=true, payments as false.
+    // Villa has xero (accounting) connected, so launch is unblocked.
+    const result = await canTenantGoLive(VILLA);
+    expect(result.canGoLive).toBe(true);
+    expect(result.missingCategories).toEqual([]);
+  });
+
+  it('lists accounting as configured for villa, payments not in required set', async () => {
+    const summary = await getRequiredConnectionsForTenant(VILLA);
+    const accounting = summary.required.find((r) => r.category === 'accounting');
+    expect(accounting?.isConfigured).toBe(true);
+    const payments = summary.required.find((r) => r.category === 'payments');
+    expect(payments).toBeUndefined();
+  });
+
+  it('flips villa to canGoLive=false when accounting connection breaks', async () => {
+    const villaConnections = await connectionsRepo.listByTenant(VILLA);
+    const xero = villaConnections.find((c) => c.provider === 'xero')!;
+    await connectionsRepo.markError(xero.id, 'demo break');
+
+    const result = await canTenantGoLive(VILLA);
+    expect(result.canGoLive).toBe(false);
+    expect(result.missingCategories).toEqual(['accounting']);
+  });
+
+  it('reports restaurant (NL) as blocked because mollie is disconnected', async () => {
+    // NL marks both accounting and payments as requiredAtLaunch.
+    // moneybird is connected, mollie is disconnected → blocked.
+    const result = await canTenantGoLive(RESTAURANT);
+    expect(result.canGoLive).toBe(false);
+    expect(result.missingCategories).toContain('payments');
+  });
+
+  it('flips restaurant to canGoLive=true when mollie is reconnected', async () => {
+    await connectionsRepo.create({
+      tenant_id: RESTAURANT,
+      category: 'payments',
+      provider: 'mollie',
+      status: 'connected',
+      auth_method: 'api_key',
+      encrypted_token: 'reconnect_token',
+      metadata: {},
+      expires_at: null,
+    });
+    const result = await canTenantGoLive(RESTAURANT);
+    expect(result.canGoLive).toBe(true);
+    expect(result.missingCategories).toEqual([]);
+  });
+
+  it('returns canGoLive=false with a "not found" reason for an unknown tenant', async () => {
+    const result = await canTenantGoLive('00000000-0000-0000-0000-000000000000');
+    expect(result.canGoLive).toBe(false);
+    expect(result.reasons.join(' ')).toMatch(/not found/i);
+  });
+
+  it('produces empty required list when tenant id does not exist', async () => {
+    const summary = await getRequiredConnectionsForTenant('00000000-0000-0000-0000-000000000000');
+    expect(summary.required).toEqual([]);
+    expect(summary.allConfigured).toBe(true);
   });
 });

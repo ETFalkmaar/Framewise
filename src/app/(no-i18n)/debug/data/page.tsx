@@ -2,16 +2,20 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
   bookingsRepo,
+  connectionsRepo,
   pagesRepo,
   subscriptionsRepo,
   tableCounts,
+  tenantCountrySettingsRepo,
   tenantsRepo,
   usersRepo,
 } from '@/lib/data';
 import {
   assertProviderAvailable,
   bookingInsertSchema,
+  canTenantGoLive,
   checkBookingAvailability,
+  getRequiredConnectionsForTenant,
   tenantInsertSchema,
   ValidationError,
 } from '@/lib/validation';
@@ -102,8 +106,102 @@ export default async function DebugDataPage() {
 
       <CountriesAndProviders />
 
+      <ConnectionsPlayground />
+
       <AuthPlayground />
     </main>
+  );
+}
+
+async function ConnectionsPlayground() {
+  const tenants = await tenantsRepo.list();
+  const tenantSnapshots = await Promise.all(
+    tenants.map(async (t) => {
+      const [connections, settings, goLive, required] = await Promise.all([
+        connectionsRepo.listByTenant(t.id),
+        tenantCountrySettingsRepo.findByTenant(t.id),
+        canTenantGoLive(t.id),
+        getRequiredConnectionsForTenant(t.id),
+      ]);
+      return { tenant: t, connections, settings, goLive, required };
+    })
+  );
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="connections-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Connections playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Live calls to <code className="font-mono">canTenantGoLive()</code> and{' '}
+        <code className="font-mono">getRequiredConnectionsForTenant()</code> against the seeded
+        provider connections and country settings.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {tenantSnapshots.map(({ tenant, connections, settings, goLive, required }) => (
+          <Card key={tenant.id} size="sm" data-testid={`connections-snapshot-${tenant.slug}`}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={goLive.canGoLive ? 'secondary' : 'destructive'}
+                  className="font-mono"
+                >
+                  {goLive.canGoLive ? '✓ canGoLive' : '⚠ blocked'}
+                </Badge>
+                <CardTitle className="text-sm">{tenant.name}</CardTitle>
+              </div>
+              <CardDescription className="font-mono text-xs">
+                {tenant.country} · {tenant.slug} · settings:{' '}
+                {settings ? settings.legal_entity_name : '(none)'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-xs">
+              <p className="text-muted-foreground font-mono uppercase">required</p>
+              <ul className="ml-4 list-disc space-y-0.5 font-mono">
+                {required.required.length === 0 ? (
+                  <li className="text-muted-foreground">(none for this country)</li>
+                ) : (
+                  required.required.map((r) => (
+                    <li key={r.category}>
+                      {r.category}{' '}
+                      <span className={r.isConfigured ? 'text-foreground' : 'text-destructive'}>
+                        ({r.isConfigured ? 'configured' : 'missing'})
+                      </span>
+                    </li>
+                  ))
+                )}
+              </ul>
+              <p className="text-muted-foreground mt-3 font-mono uppercase">connections</p>
+              <ul className="ml-4 list-disc space-y-0.5 font-mono">
+                {connections.length === 0 ? (
+                  <li className="text-muted-foreground">(none)</li>
+                ) : (
+                  connections.map((c) => (
+                    <li key={c.id}>
+                      {c.category}/{c.provider}{' '}
+                      <span className="text-muted-foreground">({c.status})</span>
+                    </li>
+                  ))
+                )}
+              </ul>
+              {goLive.reasons.length > 0 && (
+                <>
+                  <p className="text-muted-foreground mt-3 font-mono uppercase">reasons</p>
+                  <ul className="ml-4 list-disc space-y-0.5 text-[11px]">
+                    {goLive.reasons.map((r, i) => (
+                      <li key={i} className="font-mono">
+                        {r}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
   );
 }
 
