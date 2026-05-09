@@ -1,0 +1,18 @@
+{
+  "common": {
+    "comingSoon": "Coming soon",
+    "loading": "Loading...",
+    "language": "Language"
+  },
+  "homepage": {
+    "title": "Framewise",
+    "tagline": "Smart websites, built right",
+    "cta": "Coming soon",
+    "metaTitle": "Framewise - Smart websites, built right",
+    "metaDescription": "Multi-tenant website builder with built-in AI assistant. Coming soon."
+  },
+  "languageSwitcher": {
+    "label": "Language",
+    "selectLanguage": "Select language"
+  }
+}

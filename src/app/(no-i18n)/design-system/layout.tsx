@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
-import './globals.css';
+import '../../globals.css';
 
 const inter = Inter({
   variable: '--font-sans',
@@ -14,8 +14,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Framewise - Smart websites, built right',
-  description: 'Multi-tenant website builder with AI agent. Coming soon.',
+  title: 'Framewise Design System',
+  description: 'Developer-only design system showcase. Not indexed by search engines.',
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
@@ -23,14 +24,14 @@ export const viewport: Viewport = {
   colorScheme: 'dark',
 };
 
-export default function RootLayout({
+export default function DesignSystemLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html
-      lang="nl"
+      lang="en"
       className={`dark ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="bg-background text-foreground flex min-h-full flex-col">
