@@ -224,6 +224,32 @@
           "configWarning": "This integration needs Framewise to register a Stripe Connect platform first. Please contact support.",
           "oauthCta": "Connect with Stripe",
           "oauthRedirecting": "Redirecting to Stripe…"
+        },
+        "paypal-business": {
+          "title": "PayPal Business",
+          "description": "Global payment method — works directly from Curaçao, no Stripe Atlas detour required.",
+          "instructions": {
+            "title": "Connect to PayPal",
+            "subtitle": "OAuth handshake with your own PayPal Business account. Five steps, ~30 seconds.",
+            "step1": "Click the \"Connect with PayPal\" button below.",
+            "step2": "Sign in to your PayPal Business account (Personal accounts won't work).",
+            "step3": "Confirm which details Framewise may see (name, email, merchant info).",
+            "step4": "Grant Framewise access.",
+            "step5": "You'll be redirected back to Framewise as soon as the handshake completes.",
+            "tip": "We default to PayPal's sandbox. Set PAYPAL_ENVIRONMENT=live in production to process real payments."
+          },
+          "byoaDisclaimer": "Money stays on YOUR PayPal account. Framewise only holds a read-token to fetch account info.",
+          "businessAccountWarning": "Only PayPal Business accounts are supported — Personal accounts cannot receive payments.",
+          "sandboxWarning": "Sandbox mode does not process real payments. Perfect for testing and demos.",
+          "cwAdvantage": "For Curaçao customers, PayPal works directly — no Stripe Atlas detour through an EU entity required.",
+          "configWarningTitle": "PayPal Connect not yet configured",
+          "configWarning": "This integration needs Framewise to register a PayPal app first. Please contact support.",
+          "oauthCta": "Connect with PayPal",
+          "oauthRedirecting": "Redirecting to PayPal…",
+          "environmentBadge": {
+            "sandbox": "sandbox",
+            "live": "live"
+          }
         }
       },
       "keyTypeBadge": {

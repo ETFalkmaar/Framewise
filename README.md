@@ -566,6 +566,77 @@ banner instead — perfect for previewing the UI without a Stripe
 account. Tests stub all HTTP via `fetchImpl`; no real OAuth ever
 fires in CI.
 
+### PayPal Business (step 19)
+
+The second OAuth payment connector and the **primary CW route**:
+Stripe isn't officially available for Curaçao-based legal entities
+(only via Stripe Atlas / EU detours), but PayPal Business works
+directly. Available in NL **and** CW.
+
+- **Two environments**: `sandbox` and `live`. The active one is
+  resolved once from `PAYPAL_ENVIRONMENT` (default `sandbox`) and
+  threaded through the rest of the connector. Authorize URL,
+  token URL, API base URL, and the connection-card badge all flip
+  together — no chance of mixing test and live.
+- **OAuth flow**: customer clicks "Connect with PayPal" →
+  `/api/connectors/oauth/start` → `(www.|sandbox.)paypal.com/connect`
+  with scopes `openid` + `profile` + `email` +
+  `https://uri.paypal.com/services/paypalattributes` → callback →
+  Basic-auth POST to `api-m{.sandbox}.paypal.com/v1/oauth2/token` →
+  `/v1/identity/oauth2/userinfo` probe → vault-stored credentials
+  - `metadata.environment` badge.
+- **Two error envelopes** (`mapPayPalError`): PayPal mixes shapes.
+  OAuth endpoints return `{ error, error_description }`; REST API
+  endpoints return `{ name, message, details }`. The mapper probes
+  both before falling back to the HTTP status text. 400/422 →
+  `VALIDATION_FAILED`, 401 → `InvalidCredentialsError`, 403 →
+  `INSUFFICIENT_PERMISSIONS`, 404 → `RESOURCE_NOT_FOUND`, 429 →
+  `RATE_LIMITED` (with `retry-after`), 5xx → `PROVIDER_ERROR`,
+  network → `NETWORK_ERROR` via `paypalNetworkError`.
+- **Redirect-URI pinning**: PayPal's token endpoint REQUIRES the
+  `redirect_uri` to match exactly what the authorize call used.
+  Stripe doesn't care, so step 18 ignored it; step 19 adds a
+  per-connector `lastRedirectUri` cache that `getAuthorizeUrl`
+  populates and `handleOAuthCallback` echoes back. Within a single
+  Lambda invocation this works because the cookie keeps the OAuth
+  state. Cold-start fallback reconstructs the canonical URL from
+  `NEXT_PUBLIC_BASE_URL` so the framework never breaks.
+- **Configuration gate**: when `PAYPAL_CLIENT_ID` /
+  `PAYPAL_CLIENT_SECRET` are blank the wizard still renders but
+  the "Connect with PayPal" button is disabled and a
+  `<PayPalConfigWarning />` banner explains the gap. Same pattern
+  as Stripe.
+- **Metadata**: `user_id`, `payer_id`, `name`, `email`,
+  `email_verified`, `environment`, `account_country` — surfaced
+  on the connection card. The amber/emerald badge logic in
+  `connection-status-card.tsx` now keys off all three shapes
+  (Mollie's `key_type`, Stripe's `livemode`, PayPal's
+  `environment`) without per-provider branching.
+- **UI**: 5-step `<PayPalInstructions />` card with side-by-side
+  BYOA + Business-only warnings, sandbox notice (when active),
+  and a CW-specific advantage callout pointing out the
+  no-Stripe-Atlas-detour benefit.
+
+#### Testing PayPal Business locally
+
+1. Sign up for a free PayPal Developer account at
+   developer.paypal.com (no business required for the sandbox).
+2. My Apps & Credentials → Sandbox → Create App → type "Merchant".
+3. Copy the **Client ID** (`AY…`) and **Secret** → paste into
+   `.env.local` as `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET`.
+4. Leave `PAYPAL_ENVIRONMENT` blank (default `sandbox`) or set it
+   to `live` once your live app is approved.
+5. Restart the dev server. `/account/connections/add/paypal-business`
+   now shows an enabled "Connect with PayPal" button. Clicking it
+   redirects you to a real sandbox OAuth page — completing the
+   handshake stores the merchant's display name + amber `sandbox`
+   badge on the connections page.
+
+Without those env vars the wizard renders the config-incomplete
+banner instead — perfect for previewing the UI without a PayPal
+developer account. Tests stub all HTTP via `fetchImpl`; no real
+OAuth ever fires in CI.
+
 ## Status
 
-In development - Step 18 of 118 (revised plan)
+In development - Step 19 of 118 (revised plan)

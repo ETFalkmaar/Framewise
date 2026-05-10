@@ -224,6 +224,32 @@
           "configWarning": "Deze koppeling vereist dat Framewise een Stripe Connect-platform heeft geregistreerd. Neem contact op met support.",
           "oauthCta": "Verbind met Stripe",
           "oauthRedirecting": "Doorsturen naar Stripe…"
+        },
+        "paypal-business": {
+          "title": "PayPal Business",
+          "description": "Wereldwijde betaalmethode — werkt direct vanuit Curaçao, geen Stripe Atlas-omweg.",
+          "instructions": {
+            "title": "Verbinding maken met PayPal",
+            "subtitle": "OAuth-koppeling met je eigen PayPal Business-account. Vijf stappen, ~30 seconden.",
+            "step1": "Klik op de knop \"Verbind met PayPal\" hieronder.",
+            "step2": "Log in op je PayPal Business-account (Personal accounts werken niet).",
+            "step3": "Bevestig welke gegevens Framewise mag zien (naam, e-mail, merchant-info).",
+            "step4": "Geef Framewise toestemming.",
+            "step5": "Je wordt automatisch teruggestuurd naar Framewise als de koppeling klaar is.",
+            "tip": "Standaard gebruiken we de PayPal-sandbox. Zet PAYPAL_ENVIRONMENT=live in productie om echt geld te verwerken."
+          },
+          "byoaDisclaimer": "Geld blijft op jouw eigen PayPal-rekening. Framewise heeft alleen leestoegang tot account-info.",
+          "businessAccountWarning": "Alleen PayPal Business-accounts ondersteund — Personal accounts kunnen geen betalingen ontvangen.",
+          "sandboxWarning": "Sandbox-modus verwerkt geen echte betalingen. Perfect voor testen en demo's.",
+          "cwAdvantage": "Voor klanten in Curaçao werkt PayPal direct — geen Stripe Atlas-omweg via een EU-entiteit nodig.",
+          "configWarningTitle": "PayPal Connect nog niet geconfigureerd",
+          "configWarning": "Deze koppeling vereist dat Framewise een PayPal-app heeft geregistreerd. Neem contact op met support.",
+          "oauthCta": "Verbind met PayPal",
+          "oauthRedirecting": "Doorsturen naar PayPal…",
+          "environmentBadge": {
+            "sandbox": "sandbox",
+            "live": "live"
+          }
         }
       },
       "keyTypeBadge": {

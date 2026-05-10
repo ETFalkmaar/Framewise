@@ -91,25 +91,40 @@ export function ConnectionStatusCard({
                     primary_administration_name?: string;
                     organization_name?: string;
                     business_name?: string;
+                    /** PayPal-shaped: merchant display name from /v1/identity/oauth2/userinfo. */
+                    name?: string;
                     account?: string;
                     key_type?: 'test' | 'live';
                     /** Stripe-shaped: `false` for test-mode connected accounts. */
                     livemode?: boolean;
+                    /** PayPal-shaped: 'sandbox' (= test) | 'live'. */
+                    environment?: 'sandbox' | 'live';
                   }
                 | undefined;
               const accountLabel =
                 meta?.primary_administration_name ??
                 meta?.organization_name ??
                 meta?.business_name ??
+                meta?.name ??
                 meta?.account ??
                 null;
               if (!accountLabel || !labels.connectedTo) return null;
-              // Mollie surfaces `key_type` ("test" | "live"); Stripe
-              // surfaces `livemode` (false ↔ test, true ↔ live). Both
-              // map to the same amber/emerald badge.
+              // Three providers, three metadata shapes — all map to
+              // the same amber/emerald badge:
+              //   Mollie  → metadata.key_type    ('test' | 'live')
+              //   Stripe  → metadata.livemode    (boolean)
+              //   PayPal  → metadata.environment ('sandbox' | 'live')
               const mode: 'test' | 'live' | null =
                 meta?.key_type ??
-                (meta?.livemode === false ? 'test' : meta?.livemode === true ? 'live' : null);
+                (meta?.livemode === false
+                  ? 'test'
+                  : meta?.livemode === true
+                    ? 'live'
+                    : meta?.environment === 'sandbox'
+                      ? 'test'
+                      : meta?.environment === 'live'
+                        ? 'live'
+                        : null);
               return (
                 <li
                   className="text-muted-foreground flex flex-wrap items-center gap-1"

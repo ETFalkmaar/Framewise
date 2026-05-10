@@ -224,6 +224,32 @@
           "configWarning": "Cette intégration nécessite que Framewise enregistre une plateforme Stripe Connect. Veuillez contacter le support.",
           "oauthCta": "Connecter Stripe",
           "oauthRedirecting": "Redirection vers Stripe…"
+        },
+        "paypal-business": {
+          "title": "PayPal Business",
+          "description": "Moyen de paiement mondial — fonctionne directement depuis Curaçao, sans détour par Stripe Atlas.",
+          "instructions": {
+            "title": "Se connecter à PayPal",
+            "subtitle": "Authentification OAuth avec votre propre compte PayPal Business. Cinq étapes, ~30 secondes.",
+            "step1": "Cliquez sur le bouton « Connecter PayPal » ci-dessous.",
+            "step2": "Connectez-vous à votre compte PayPal Business (les comptes Personal ne fonctionnent pas).",
+            "step3": "Confirmez quelles données Framewise peut voir (nom, e-mail, infos marchand).",
+            "step4": "Accordez l'accès à Framewise.",
+            "step5": "Vous serez redirigé automatiquement vers Framewise dès que la liaison sera terminée.",
+            "tip": "Par défaut, nous utilisons le sandbox PayPal. Définissez PAYPAL_ENVIRONMENT=live en production pour traiter les paiements réels."
+          },
+          "byoaDisclaimer": "L'argent reste sur VOTRE compte PayPal. Framewise détient seulement un jeton de lecture pour récupérer les infos du compte.",
+          "businessAccountWarning": "Seuls les comptes PayPal Business sont pris en charge — les comptes Personal ne peuvent pas recevoir de paiements.",
+          "sandboxWarning": "Le mode sandbox ne traite pas de paiements réels. Idéal pour les tests et les démos.",
+          "cwAdvantage": "Pour les clients de Curaçao, PayPal fonctionne directement — aucun détour par Stripe Atlas via une entité UE n'est nécessaire.",
+          "configWarningTitle": "PayPal Connect pas encore configuré",
+          "configWarning": "Cette intégration nécessite que Framewise enregistre une application PayPal. Veuillez contacter le support.",
+          "oauthCta": "Connecter PayPal",
+          "oauthRedirecting": "Redirection vers PayPal…",
+          "environmentBadge": {
+            "sandbox": "sandbox",
+            "live": "live"
+          }
         }
       },
       "keyTypeBadge": {
