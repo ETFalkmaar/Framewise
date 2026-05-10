@@ -411,6 +411,55 @@ access token — no OAuth dance, no client secret to provision.
    credentials via the vault. CI runs the same connector against a
    mocked `fetch` — no real token is ever needed in pipelines.
 
+### e-Boekhouden (step 16)
+
+Second NL accounting connector. Same API-key wizard shape as
+Moneybird from the user's perspective; under the hood a two-token
+session model that's noticeably different.
+
+- **Two tokens**:
+  - **User API Token** — entered by the customer in the wizard.
+  - **Source API Token** — Framewise's integrator credential, read
+    from `EBOEKHOUDEN_SOURCE_API_TOKEN`. Request via
+    `support@e-boekhouden.nl` (free, ~1-2 business days). Without
+    it the wizard renders cleanly and submissions fail with a
+    friendly `CONFIGURATION_INCOMPLETE` error — no UX damage.
+- **Session lifecycle**: `EBoekhoudenClient` exchanges both tokens
+  for a short-lived bearer via `POST /session`, caches it for **55
+  minutes** (5-min safety margin under the 60-min upstream
+  expiry) in a module-level Map keyed by SHA-256 of the User API
+  Token. Cache resets on cold start — sessions never outlive the
+  process that minted them.
+- **Auto-recovery**: any authenticated request that returns 401
+  triggers exactly one retry with a freshly-minted session before
+  surfacing `InvalidCredentialsError`.
+- **Error mapping** (`mapEBoekhoudenError`): 400 →
+  `VALIDATION_FAILED` (with body `errors` flattened), 401 →
+  `InvalidCredentialsError`, 403 → `INSUFFICIENT_PERMISSIONS`, 404
+  → `RESOURCE_NOT_FOUND`, 429 → `RATE_LIMITED` (1000/min, with
+  retry-after detail), 5xx → `PROVIDER_ERROR`. Network failures →
+  `NETWORK_ERROR` via `networkError(reason)`.
+- **`testConnection`** does session-create + `GET /administration`
+  - `endSession` cleanup, caching the administration name + VAT
+    number on `provider_connections.metadata`.
+- **UI**: 5-step `<EBoekhoudenInstructions />` card above the
+  wizard. The card includes an amber `sourceTokenWarning` banner
+  when `EBOEKHOUDEN_SOURCE_API_TOKEN` is missing, so the customer
+  knows the issue is on Framewise's side.
+
+#### Testing e-Boekhouden locally
+
+1. Sign up for an e-Boekhouden trial at e-boekhouden.nl.
+2. Beheer → Webkoppelingen → Beheer Webkoppelingen → "Nieuwe API
+   koppeling toevoegen". Pick Framewise (once Framewise is
+   registered with e-Boekhouden) and copy the User API Token.
+3. Set `EBOEKHOUDEN_SOURCE_API_TOKEN` in `.env.local` to the
+   integrator token Framewise received from
+   `support@e-boekhouden.nl`. Without it, every wizard submission
+   returns `CONFIGURATION_INCOMPLETE` — by design.
+4. CI runs the connector against a stubbed `fetch`; no real
+   tokens are needed in pipelines.
+
 ## Status
 
-In development - Step 15 of 118 (revised plan)
+In development - Step 16 of 118 (revised plan)

@@ -170,6 +170,23 @@
             "testFailedTitle": "Échec de la connexion",
             "testFailedMessage": "Vérifiez que le token a été copié sans espaces autour."
           }
+        },
+        "e-boekhouden": {
+          "title": "e-Boekhouden",
+          "description": "Comptabilité en ligne pour indépendants et PME.",
+          "instructions": {
+            "title": "Se connecter à e-Boekhouden",
+            "subtitle": "Cinq étapes. Le token est chiffré avant de quitter votre navigateur.",
+            "step1": "Connectez-vous à votre compte e-Boekhouden sur e-boekhouden.nl.",
+            "step2": "Ouvrez Beheer → Webkoppelingen.",
+            "step3": "Cliquez sur « Beheer Webkoppelingen ».",
+            "step4": "« Nieuwe API koppeling toevoegen » — sélectionnez Framewise comme application.",
+            "step5": "Copiez le User API Token généré et collez-le dans le champ ci-dessous.",
+            "tip": "Les sessions sont mises en cache pendant 55 minutes pour éviter les limites de taux.",
+            "testFailedTitle": "Échec de la connexion",
+            "testFailedMessage": "Vérifiez que le User API Token a été copié intégralement."
+          },
+          "sourceTokenWarning": "Ce connecteur nécessite également un Source API Token au niveau intégrateur. Framewise doit le demander via support@e-boekhouden.nl (gratuit, ~1 à 2 jours ouvrés). En attendant, chaque soumission échoue avec CONFIGURATION_INCOMPLETE."
         }
       },
       "statusLabel": {

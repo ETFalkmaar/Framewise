@@ -845,6 +845,7 @@ async function ConnectorFrameworkPlayground() {
       </div>
 
       <MoneybirdConnectorDebug />
+      <EBoekhoudenConnectorDebug />
     </section>
   );
 }
@@ -905,6 +906,81 @@ function MoneybirdConnectorDebug() {
         <p className="text-muted-foreground italic">
           testConnection is wired to the real Moneybird API; no debug call here so /debug/data never
           burns rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function EBoekhoudenConnectorDebug() {
+  const ebh = getConnector('e-boekhouden');
+  if (!ebh) {
+    return (
+      <Card size="sm" data-testid="e-boekhouden-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">e-Boekhouden connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 16+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const sourceTokenConfigured = Boolean(process.env.EBOEKHOUDEN_SOURCE_API_TOKEN);
+
+  return (
+    <Card size="sm" data-testid="e-boekhouden-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">e-Boekhouden connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          Two-token REST API with 55-min session cache.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{ebh.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{ebh.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{ebh.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">{(ebh.availableIn ?? []).join(', ') || '(any)'}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">apiKey.fields </span>
+          <span className="text-foreground">{ebh.apiKey?.fields.length ?? 0}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api base </span>
+          <span className="text-foreground">https://api.e-boekhouden.nl/v1</span>
+        </p>
+        <p className="font-mono" data-testid="e-boekhouden-source-token-status">
+          <span className="text-muted-foreground">EBOEKHOUDEN_SOURCE_API_TOKEN </span>
+          <span
+            className={
+              sourceTokenConfigured
+                ? 'text-emerald-700 dark:text-emerald-300'
+                : 'text-amber-700 dark:text-amber-300'
+            }
+          >
+            {sourceTokenConfigured ? '✓ configured' : '⚠ not configured'}
+          </span>
+        </p>
+        <p className="text-muted-foreground italic">
+          {sourceTokenConfigured
+            ? 'Both tokens present; testConnection will reach the real API.'
+            : 'Without the integrator token, testConnection returns CONFIGURATION_INCOMPLETE.'}
         </p>
       </CardContent>
     </Card>

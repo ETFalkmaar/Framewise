@@ -170,6 +170,23 @@
             "testFailedTitle": "Verbinding mislukt",
             "testFailedMessage": "Controleer of de token zonder omringende spaties is gekopieerd."
           }
+        },
+        "e-boekhouden": {
+          "title": "e-Boekhouden",
+          "description": "Online boekhouden voor zzp en MKB.",
+          "instructions": {
+            "title": "Verbinding maken met e-Boekhouden",
+            "subtitle": "Vijf stappen. De token wordt versleuteld voordat hij je browser verlaat.",
+            "step1": "Log in op je e-Boekhouden-account via e-boekhouden.nl.",
+            "step2": "Ga naar Beheer → Webkoppelingen.",
+            "step3": "Klik op \"Beheer Webkoppelingen\".",
+            "step4": "\"Nieuwe API koppeling toevoegen\" — selecteer Framewise als applicatie.",
+            "step5": "Kopieer de gegenereerde User API Token en plak hem hieronder.",
+            "tip": "Sessies worden 55 minuten gecached zodat we niet bij elke aanvraag een nieuwe sessie hoeven te maken.",
+            "testFailedTitle": "Verbinding mislukt",
+            "testFailedMessage": "Controleer of de User API Token volledig is gekopieerd."
+          },
+          "sourceTokenWarning": "Deze koppeling vereist ook een integrator Source API Token. Framewise moet die aanvragen via support@e-boekhouden.nl (gratis, ~1-2 werkdagen). Tot die is geconfigureerd faalt elke submit met CONFIGURATION_INCOMPLETE."
         }
       },
       "statusLabel": {
