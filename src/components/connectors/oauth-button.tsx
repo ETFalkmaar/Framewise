@@ -9,6 +9,13 @@ export interface OAuthButtonProps {
     starting: string;
     failed: string;
   };
+  /**
+   * When true, the button stays visible but cannot be clicked. Used by
+   * Stripe when Framewise's Connect platform credentials are missing —
+   * the wizard still renders so the user sees what they're missing,
+   * but the OAuth handshake would fail anyway.
+   */
+  disabled?: boolean;
 }
 
 /**
@@ -16,7 +23,7 @@ export interface OAuthButtonProps {
  * then redirects the browser to the returned `authorizeUrl`. The cookie
  * for state validation is set by the server response.
  */
-export function OAuthButton({ providerId, copy }: OAuthButtonProps) {
+export function OAuthButton({ providerId, copy, disabled = false }: OAuthButtonProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,8 +54,9 @@ export function OAuthButton({ providerId, copy }: OAuthButtonProps) {
       <button
         type="button"
         onClick={start}
-        disabled={pending}
+        disabled={pending || disabled}
         data-testid={`oauth-start-${providerId}`}
+        title={disabled ? 'Configuration incomplete' : undefined}
         className="bg-primary text-primary-foreground inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
         🔐 {pending ? copy.starting : copy.start}

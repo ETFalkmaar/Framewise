@@ -96,6 +96,43 @@ export interface ConnectorDefinition {
    * 15–23 will plug in real exchanges.
    */
   refreshAccess?: (refreshToken: string) => Promise<RefreshAccessResult>;
+
+  /**
+   * Optional per-connector authorize-URL builder. When present the
+   * framework calls this from `initiateOAuthFlow` instead of building
+   * a generic URL from `oauth.authorizeUrl + oauth.scopes`. Required
+   * for any provider where the URL needs a real `client_id` from env
+   * vars (Stripe, Google, …) or non-trivial query parameters.
+   *
+   * Throwing here aborts the flow with a typed `ConnectorError`.
+   */
+  getAuthorizeUrl?: (input: { state: string; callbackUrl: string }) => Promise<string> | string;
+
+  /**
+   * Optional per-connector callback handler. When present the
+   * framework calls this from `handleOAuthCallback` instead of running
+   * the generic mock token exchange. The connector is responsible for
+   *  swapping the code for credentials AND probing the API to derive
+   * useful metadata. Returning `{ ok: false, error: … }` aborts the
+   * persistence step and surfaces the error to the user.
+   */
+  handleOAuthCallback?: (input: {
+    code: string;
+    state: string;
+    context: ConnectorContext;
+  }) => Promise<OAuthCallbackResult>;
+}
+
+/**
+ * Outcome of a connector-defined `handleOAuthCallback` override. The
+ * framework persists `credentials` to the vault and stores `metadata`
+ * on the `provider_connections` row.
+ */
+export interface OAuthCallbackResult {
+  ok: boolean;
+  error?: string;
+  credentials?: Record<string, string>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

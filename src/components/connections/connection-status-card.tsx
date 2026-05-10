@@ -90,17 +90,26 @@ export function ConnectionStatusCard({
                 | {
                     primary_administration_name?: string;
                     organization_name?: string;
+                    business_name?: string;
                     account?: string;
                     key_type?: 'test' | 'live';
+                    /** Stripe-shaped: `false` for test-mode connected accounts. */
+                    livemode?: boolean;
                   }
                 | undefined;
               const accountLabel =
                 meta?.primary_administration_name ??
                 meta?.organization_name ??
+                meta?.business_name ??
                 meta?.account ??
                 null;
               if (!accountLabel || !labels.connectedTo) return null;
-              const keyType = meta?.key_type;
+              // Mollie surfaces `key_type` ("test" | "live"); Stripe
+              // surfaces `livemode` (false ↔ test, true ↔ live). Both
+              // map to the same amber/emerald badge.
+              const mode: 'test' | 'live' | null =
+                meta?.key_type ??
+                (meta?.livemode === false ? 'test' : meta?.livemode === true ? 'live' : null);
               return (
                 <li
                   className="text-muted-foreground flex flex-wrap items-center gap-1"
@@ -109,7 +118,7 @@ export function ConnectionStatusCard({
                   <span>
                     {labels.connectedTo}: <span className="text-foreground">{accountLabel}</span>
                   </span>
-                  {keyType === 'test' && labels.testModeBadge && (
+                  {mode === 'test' && labels.testModeBadge && (
                     <Badge
                       variant="outline"
                       className="border-amber-500/40 bg-amber-500/5 font-mono text-[9px] text-amber-700 dark:text-amber-300"
@@ -118,7 +127,7 @@ export function ConnectionStatusCard({
                       {labels.testModeBadge}
                     </Badge>
                   )}
-                  {keyType === 'live' && labels.liveBadge && (
+                  {mode === 'live' && labels.liveBadge && (
                     <Badge
                       variant="outline"
                       className="border-emerald-500/40 bg-emerald-500/5 font-mono text-[9px] text-emerald-700 dark:text-emerald-300"

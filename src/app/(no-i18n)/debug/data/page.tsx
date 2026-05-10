@@ -25,9 +25,12 @@ import { mediaRepo, tokenAccessLogRepo } from '@/lib/data';
 import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import {
   ConnectorError,
+  buildStripeAuthorizeUrl,
   getAllConnectors,
   getConnector,
+  getStripeOAuthConfig,
   mockApiKeyConnector,
+  STRIPE_AUTHORIZE_URL,
   submitApiKeyCredentials,
 } from '@/lib/connectors';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
@@ -847,6 +850,7 @@ async function ConnectorFrameworkPlayground() {
       <MoneybirdConnectorDebug />
       <EBoekhoudenConnectorDebug />
       <MollieConnectorDebug />
+      <StripeConnectorDebug />
     </section>
   );
 }
@@ -1048,6 +1052,111 @@ function MollieConnectorDebug() {
         <p className="text-muted-foreground italic">
           testConnection performs a parallel GET /organizations/me + GET /methods round-trip against
           api.mollie.com; no debug call here so /debug/data never burns rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StripeConnectorDebug() {
+  const stripe = getConnector('stripe');
+  if (!stripe) {
+    return (
+      <Card size="sm" data-testid="stripe-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">Stripe Connect connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 18+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const config = getStripeOAuthConfig();
+  const clientIdConfigured = Boolean(process.env.STRIPE_CLIENT_ID?.trim());
+  const secretConfigured = Boolean(process.env.STRIPE_SECRET_KEY?.trim());
+  // Build a sample authorize URL with a dummy state so operators can
+  // inspect the exact URL we'd send to Stripe — useful for debugging
+  // without ever firing a real OAuth round-trip.
+  const sampleAuthorizeUrl = config
+    ? buildStripeAuthorizeUrl({
+        clientId: config.clientId,
+        redirectUri: 'https://framewise.example/api/connectors/oauth/callback?providerId=stripe',
+        state: 'example_state_xxxx',
+        scope: 'read_write',
+      })
+    : null;
+
+  return (
+    <Card size="sm" data-testid="stripe-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Stripe Connect connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          First OAuth provider — Standard accounts, BYOA. Customer keeps full Stripe Dashboard.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{stripe.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{stripe.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{stripe.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(stripe.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">scopes </span>
+          <span className="text-foreground">
+            [{(stripe.oauth?.scopes ?? []).map((s) => `'${s}'`).join(', ')}]
+          </span>
+          <span className="text-muted-foreground"> · pkce </span>
+          <span className="text-foreground">{stripe.oauth?.pkce ? 'true' : 'false'}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">authorize base </span>
+          <span className="text-foreground">{STRIPE_AUTHORIZE_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">STRIPE_CLIENT_ID </span>
+          <Badge
+            variant={clientIdConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="stripe-debug-client-id"
+          >
+            {clientIdConfigured ? 'configured' : 'not configured'}
+          </Badge>
+          <span className="text-muted-foreground"> · STRIPE_SECRET_KEY </span>
+          <Badge
+            variant={secretConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="stripe-debug-secret-key"
+          >
+            {secretConfigured ? 'configured' : 'not configured'}
+          </Badge>
+        </p>
+        {sampleAuthorizeUrl && (
+          <p className="font-mono break-all" data-testid="stripe-debug-sample-url">
+            <span className="text-muted-foreground">sample authorize URL </span>
+            <span className="text-foreground">{sampleAuthorizeUrl}</span>
+          </p>
+        )}
+        <p className="text-muted-foreground italic">
+          handleOAuthCallback exchanges the code at connect.stripe.com/oauth/token then probes
+          /v1/account; no debug call here so /debug/data never burns through Stripe rate limits.
         </p>
       </CardContent>
     </Card>

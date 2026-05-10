@@ -204,6 +204,26 @@
           },
           "testKeyWarning": "Alleen sandbox. Geen echt geld; ideaal voor demo's en CI.",
           "liveKeyWarning": "Productie. Echte transacties. Vereist KvK + bankrekening op het Mollie-account."
+        },
+        "stripe": {
+          "title": "Stripe",
+          "description": "Wereldwijde betalingen — kaarten, iDEAL, SEPA, Apple Pay, Google Pay.",
+          "instructions": {
+            "title": "Verbinding maken met Stripe",
+            "subtitle": "OAuth-koppeling met je eigen Stripe Standard-account. Vijf stappen, ~30 seconden.",
+            "step1": "Klik op de knop \"Verbind met Stripe\" hieronder.",
+            "step2": "Log in op je Stripe-account (of maak er een aan op stripe.com).",
+            "step3": "Selecteer welk account je wilt koppelen aan Framewise.",
+            "step4": "Geef Framewise leestoegang tot betalingen en account-info.",
+            "step5": "Je wordt automatisch teruggestuurd naar Framewise als de koppeling klaar is.",
+            "tip": "We herkennen automatisch of je een test- of live-account koppelt en plaatsen een badge zodat je het verschil meteen ziet."
+          },
+          "byoaDisclaimer": "Geld komt op JOUW Stripe-rekening. Framewise heeft alleen leestoegang en kan geen betalingen verplaatsen.",
+          "modeWarning": "Stripe heeft aparte test- en live-accounts. We tonen de modus altijd duidelijk in de connectie-card.",
+          "configWarningTitle": "Stripe Connect nog niet geconfigureerd",
+          "configWarning": "Deze koppeling vereist dat Framewise een Stripe Connect-platform heeft geregistreerd. Neem contact op met support.",
+          "oauthCta": "Verbind met Stripe",
+          "oauthRedirecting": "Doorsturen naar Stripe…"
         }
       },
       "keyTypeBadge": {
