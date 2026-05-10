@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -5,6 +6,11 @@ import { getCurrentTenant } from '@/lib/tenant';
 import { resolvePage } from '@/lib/public-site/resolve-page';
 import { type Locale } from '@/i18n/routing';
 import { PublicPageRenderer } from '@/components/public-site/public-page-renderer';
+import { resolveBaseUrl } from '@/lib/seo/base-url';
+import { buildPageMetadata } from '@/lib/seo/metadata';
+import { buildOrganizationLD, buildWebPageLD } from '@/lib/seo/jsonld';
+
+const ALL_LOCALES: Locale[] = ['nl', 'fr', 'en'];
 
 /**
  * Canonical public catch-all for subdomain / custom-domain tenants.
@@ -28,6 +34,29 @@ import { PublicPageRenderer } from '@/components/public-site/public-page-rendere
  * `/<locale>/login` or `/<locale>/account` take precedence so we
  * don't shadow them.
  */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale; slug: string[] }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  const tenant = await getCurrentTenant();
+  if (!tenant) return {};
+
+  const pageSlug = (slug ?? []).join('/');
+  const resolved = await resolvePage({ tenantId: tenant.id, pageSlug, locale });
+  if (!resolved) return {};
+
+  return buildPageMetadata({
+    resolved,
+    locale,
+    baseUrl: resolveBaseUrl(),
+    pathname: pageSlug ? `/${pageSlug}` : '/',
+    allLocales: ALL_LOCALES,
+  });
+}
+
 export default async function PublicCatchAllPage({
   params,
 }: {
@@ -48,5 +77,24 @@ export default async function PublicCatchAllPage({
   });
   if (!resolved) notFound();
 
-  return <PublicPageRenderer resolved={resolved} />;
+  const baseUrl = resolveBaseUrl();
+  const pathname = pageSlug ? `/${pageSlug}` : '/';
+  const orgLd = buildOrganizationLD({ tenant: resolved.tenant, baseUrl });
+  const pageLd = buildWebPageLD({ resolved, locale, baseUrl, pathname });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        data-testid="jsonld-organization"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }}
+      />
+      <script
+        type="application/ld+json"
+        data-testid="jsonld-webpage"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageLd) }}
+      />
+      <PublicPageRenderer resolved={resolved} />
+    </>
+  );
 }

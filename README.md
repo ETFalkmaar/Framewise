@@ -1075,6 +1075,76 @@ Completes the block library with the 4 remaining types:
 Adds 27 tests (registry expansion, new `types.test.ts`,
 resolve-page parsers for all 4 new blocks) — total 768.
 
+### SEO & metadata (step 26 — fase 9 part 3/6)
+
+The public renderer now emits a full SEO head per page: title, description,
+OpenGraph, Twitter cards, hreflang alternates, a canonical URL, and two
+JSON-LD blocks (`Organization` and `WebPage`). Three new helpers in
+`src/lib/seo/`:
+
+- **`og-image.ts`** — `resolveOgImage()` walks a deterministic fallback
+  chain (`page.seo_meta.og_image_url` → `tenant.og_image_url` → first
+  image found in the page's blocks → Picsum default keyed on the tenant
+  slug) so every page gets a 1200x630 social card even before the
+  customer has uploaded one.
+- **`metadata.ts`** — `buildPageMetadata()` returns Next.js's `Metadata`
+  shape. Title falls back through `seo_meta.title_translations` → first
+  hero block headline → tenant name. Description follows the same chain
+  via `seo_meta.description_translations` → first text block content
+  (truncated at 160 chars). `noindex` on `seo_meta.noindex = true`.
+- **`jsonld.ts`** — `buildOrganizationLD()` (`@type` derived from
+  `tenant.organization_type`: `LodgingBusiness` for villas, `Restaurant`
+  for restaurants, `Organization` as default) and `buildWebPageLD()`
+  (`inLanguage` per locale, `isPartOf` linking to the tenant homepage).
+  Rendered through `<script type="application/ld+json">`.
+- **`base-url.ts`** — picks the absolute origin from
+  `NEXT_PUBLIC_BASE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` →
+  `VERCEL_URL` → `http://localhost:3000`. Override with
+  `NEXT_PUBLIC_BASE_URL` to pin the canonical domain in production.
+
+#### Schema additions
+
+- `Tenant`: `og_image_url`, `organization_type` (`'LocalBusiness' |
+  'Restaurant' | 'LodgingBusiness' | 'Organization'`), `twitter_handle`.
+- `Page`: `seo_meta` JSONB (`{ title_translations?,
+  description_translations?, og_image_url?, canonical_path?, noindex? }`).
+
+All four are nullable and default to "use the fallback" — existing
+tenants and pages keep working without a migration.
+
+#### `generateMetadata` wiring
+
+All three public routes export the same shape:
+
+```tsx
+export async function generateMetadata({ params }) {
+  const { locale, slug } = await params;
+  const tenant = await getCurrentTenant();
+  if (!tenant) return {};
+  const resolved = await resolvePage({ tenantId: tenant.id, pageSlug, locale });
+  if (!resolved) return {};
+  return buildPageMetadata({
+    resolved,
+    locale,
+    baseUrl: resolveBaseUrl(),
+    pathname: /* per-route */,
+    allLocales: ['nl', 'fr', 'en'],
+  });
+}
+```
+
+The same routes inject two `<script type="application/ld+json">` tags
+above `<PublicPageRenderer />` (`Organization` + `WebPage`).
+
+#### hreflang strategy
+
+`alternates.languages` always emits all three locales (nl/fr/en) using
+the existing `localePrefix: 'as-needed'` rule from
+`src/i18n/routing.ts`: `nl` has no prefix; `fr` and `en` are prefixed.
+
+Adds 56 tests (og-image: 9, metadata: 22, jsonld: 16, base-url: 6,
+plus 3 page-schema tests covering `seo_meta`) — total 824.
+
 ## Status
 
-In development - Step 25 of 96 (revised plan) — FASE 9 deel 2/6 (8 blocks live)
+In development - Step 26 of 96 (revised plan) — FASE 9 deel 3/6 (SEO live)

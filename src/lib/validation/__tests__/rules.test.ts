@@ -30,6 +30,9 @@ const fakeTenant: Tenant = {
   custom_domain: null,
   default_locale: 'en',
   enabled_locales: ['en'],
+  og_image_url: null,
+  organization_type: null,
+  twitter_handle: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };

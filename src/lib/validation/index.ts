@@ -40,8 +40,10 @@ export {
 export {
   pageInsertSchema,
   pageUpdateSchema,
+  pageSeoMetaSchema,
   type PageInsert,
   type PageUpdate,
+  type PageSeoMeta,
 } from './schemas/page';
 export {
   blockInsertSchema,
