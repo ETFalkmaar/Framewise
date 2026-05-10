@@ -713,6 +713,104 @@ banner instead — perfect for previewing the UI without a HubSpot
 developer account. Tests stub all HTTP via `fetchImpl`; no real
 OAuth ever fires in CI.
 
+### Pipedrive CRM (step 21)
+
+The second CRM connector. Sales-focused (deal pipelines as the
+central abstraction), where HubSpot covers the marketing-CRM angle.
+Both live side-by-side under the `crm` category — customers pick
+the one that fits their team. Internationally available (NL + CW).
+
+- **Region-aware API**: every Pipedrive company runs on its own
+  `<company>.pipedrive.com` host. The OAuth token response carries
+  `api_domain` (e.g. `https://demo-restaurant.pipedrive.com`) — we
+  cache it on the connection's credentials so subsequent REST
+  calls land on the right region without re-deriving. The
+  `PipedriveClient` constructor requires `apiDomain` upfront; tests
+  assert it's passed through to every fetch.
+- **OAuth flow**: customer clicks "Connect with Pipedrive" →
+  `/api/connectors/oauth/start` → `oauth.pipedrive.com/oauth/authorize`
+  (NO `scope` query param — scopes are configured in the app
+  registration, not the URL) → callback → Basic-auth POST to
+  `oauth.pipedrive.com/oauth/token` → `/api/v1/users/me` probe on
+  the region-specific host → vault-stored credentials with
+  `api_domain` baked in.
+- **Refresh tokens** always issued; access tokens last 1 hour.
+  Both `metadata.expires_at` and `credentials.expires_at` populated
+  for the refresh-on-401 logic in step 22+.
+- **Three-shape error envelope** (`mapPipedriveError`): REST
+  endpoints return `{success:false, error, error_info, errorCode}`
+  while OAuth-style errors use `{error, error_description}`. The
+  mapper prefers `error_info` (more specific text) but folds
+  `error` (the short code-style label) into the user-facing
+  message when both are present. 400/422 → `VALIDATION_FAILED`,
+  401 → `InvalidCredentialsError`, 403 → `INSUFFICIENT_PERMISSIONS`,
+  404 → `RESOURCE_NOT_FOUND`, 429 → `RATE_LIMITED` (with
+  `retry-after`), 5xx → `PROVIDER_ERROR`, network →
+  `NETWORK_ERROR`.
+- **Strict response validation**: `exchangeCodeForToken` validates
+  that the response includes both `refresh_token` AND `api_domain`
+  — without either we cannot drive the rest of the connector. Same
+  rogue-proxy guard as HubSpot, but doubled (PayPal/Stripe only
+  guard the access_token).
+- **Response-envelope unwrapping**: the client unwraps Pipedrive's
+  standard `{success, data, additional_data}` envelope so callers
+  see clean domain objects. If `success: false` lands with a 200
+  (which Pipedrive does for some validation cases), the client
+  routes it through `mapPipedriveError` so the error path is
+  uniform.
+- **Redirect-URI pinning**: same instance-cache pattern as
+  PayPal/HubSpot.
+- **No mode badge**: Pipedrive companies are always "live"
+  (sandbox companies are a developer feature, not a separate
+  environment). The connection card shows `<company_name>` (or
+  `<company_domain>` as fallback) without any coloured badge.
+- **Configuration gate**: when `PIPEDRIVE_CLIENT_ID` /
+  `PIPEDRIVE_CLIENT_SECRET` are blank the wizard still renders
+  but the OAuth button is disabled and a `<PipedriveConfigWarning />`
+  banner explains the gap.
+- **Metadata**: `user_id` (numeric `id` cast to string),
+  `user_name`, `company_id` (cast to string), `company_name`,
+  `company_domain`, `api_domain`, `locale`, `currency`,
+  `expires_at`.
+- **UI**: 5-step `<PipedriveInstructions />` with side-by-side
+  BYOA + 14-day-trial notices, a sales-focused positioning hint
+  (recommends HubSpot for marketing-CRM), and an auto-sync
+  callout describing the AI-agent → Pipedrive contact → deal flow.
+
+#### When to pick HubSpot vs Pipedrive
+
+- **HubSpot** — marketing-CRM. Free tier covers everything most
+  small businesses need, and the marketing/email automation tools
+  are best-in-class. Pick this if your customer is unsure or
+  marketing-focused.
+- **Pipedrive** — sales-CRM. Visual deal pipeline is the central
+  UI, and the integrations / reporting are deal-flow-oriented.
+  Pick this if your customer has a sales team that lives in
+  pipelines all day.
+
+#### Testing Pipedrive locally
+
+1. Sign up for a free Pipedrive Developer account at
+   developers.pipedrive.com.
+2. Marketplace Manager → Create App → fill in basic info, set
+   the redirect URI to
+   `http://localhost:3000/api/connectors/oauth/callback?providerId=pipedrive`
+   (or whichever dev port you use), and tick scopes `base`,
+   `contacts:read`, `contacts:full`.
+3. Copy the **Client ID** and **Client Secret** → paste into
+   `.env.local` as `PIPEDRIVE_CLIENT_ID` /
+   `PIPEDRIVE_CLIENT_SECRET`.
+4. Restart the dev server. `/account/connections/add/pipedrive`
+   now shows an enabled "Connect with Pipedrive" button. Clicking
+   it redirects you to Pipedrive's OAuth page; after consent the
+   handshake stores `<company>.pipedrive.com` + the company name
+   on the connection.
+
+Without those env vars the wizard renders the config-incomplete
+banner instead — perfect for previewing the UI without a Pipedrive
+developer account. Tests stub all HTTP via `fetchImpl`; no real
+OAuth ever fires in CI.
+
 ## Status
 
-In development - Step 20 of 118 (revised plan)
+In development - Step 21 of 118 (revised plan)

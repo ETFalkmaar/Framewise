@@ -273,6 +273,31 @@
           "oauthCta": "Verbind met HubSpot",
           "oauthRedirecting": "Doorsturen naar HubSpot…",
           "portalLabel": "Hub"
+        },
+        "pipedrive": {
+          "title": "Pipedrive",
+          "description": "Sales-gericht CRM met visuele deal-pijplijn — geen gratis tier, wel 14-dagen proefperiode.",
+          "instructions": {
+            "title": "Verbinding maken met Pipedrive",
+            "subtitle": "OAuth-koppeling met je eigen Pipedrive company. Vijf stappen, ~30 seconden.",
+            "step1": "Klik op de knop \"Verbind met Pipedrive\" hieronder.",
+            "step2": "Log in op je Pipedrive-account (of start een 14-dagen trial op pipedrive.com).",
+            "step3": "Selecteer welke Pipedrive company je wilt koppelen aan Framewise.",
+            "step4": "Bevestig dat Framewise contacts mag lezen + aanmaken (read + full).",
+            "step5": "Je wordt automatisch teruggestuurd naar Framewise als de koppeling klaar is.",
+            "tip": "Pipedrive heeft per company een eigen API-domein (`<bedrijf>.pipedrive.com`). We slaan dat tijdens de koppeling op zodat we naderhand naar het juiste regio-endpoint praten."
+          },
+          "byoaDisclaimer": "Contacts blijven in jouw eigen Pipedrive company. Framewise heeft alleen read+full toegang voor lead-sync.",
+          "trialNotice": "Pipedrive heeft geen permanente gratis tier — een 14-dagen trial is voldoende om de integratie te evalueren.",
+          "salesFocusedTitle": "Sales-gericht",
+          "salesFocused": "Pipedrive blinkt uit in deal-pijplijn-management. Voor marketing-CRM gebruik HubSpot.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncBody": "Wanneer de AI-agent een lead vangt, wordt deze automatisch een contact in je Pipedrive en kan je het direct converteren naar een deal.",
+          "configWarningTitle": "Pipedrive nog niet geconfigureerd",
+          "configWarning": "Deze koppeling vereist dat Framewise een Pipedrive-app heeft geregistreerd. Neem contact op met support.",
+          "oauthCta": "Verbind met Pipedrive",
+          "oauthRedirecting": "Doorsturen naar Pipedrive…",
+          "companyLabel": "Bedrijf"
         }
       },
       "keyTypeBadge": {

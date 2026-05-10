@@ -8,6 +8,7 @@ import {
   getConnector,
   getHubSpotOAuthConfig,
   getPayPalOAuthConfig,
+  getPipedriveOAuthConfig,
   getStripeOAuthConfig,
 } from '@/lib/connectors';
 import { getProviderById } from '@/lib/countries';
@@ -32,6 +33,10 @@ import {
   HubSpotConfigWarning,
   HubSpotInstructions,
 } from '@/components/connectors/hubspot/instructions';
+import {
+  PipedriveConfigWarning,
+  PipedriveInstructions,
+} from '@/components/connectors/pipedrive/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -109,6 +114,7 @@ export default async function ConnectorConnectPage({
       {connector.id === 'stripe' && <StripeInstructions />}
       {connector.id === 'paypal-business' && <PayPalInstructions />}
       {connector.id === 'hubspot' && <HubSpotInstructions />}
+      {connector.id === 'pipedrive' && <PipedriveInstructions />}
 
       {connector.authMethod === 'oauth' && (
         <section data-testid="oauth-flow">
@@ -118,6 +124,9 @@ export default async function ConnectorConnectPage({
           )}
           {connector.id === 'hubspot' && getHubSpotOAuthConfig() === null && (
             <HubSpotConfigWarning />
+          )}
+          {connector.id === 'pipedrive' && getPipedriveOAuthConfig() === null && (
+            <PipedriveConfigWarning />
           )}
           <OAuthButton
             providerId={connector.id}
@@ -129,7 +138,8 @@ export default async function ConnectorConnectPage({
             disabled={
               (connector.id === 'stripe' && getStripeOAuthConfig() === null) ||
               (connector.id === 'paypal-business' && getPayPalOAuthConfig() === null) ||
-              (connector.id === 'hubspot' && getHubSpotOAuthConfig() === null)
+              (connector.id === 'hubspot' && getHubSpotOAuthConfig() === null) ||
+              (connector.id === 'pipedrive' && getPipedriveOAuthConfig() === null)
             }
           />
         </section>

@@ -228,3 +228,32 @@ export type {
   HubSpotClientOptions,
   HubSpotOAuthConfig,
 } from './providers/hubspot';
+
+// Pipedrive CRM (step 21) — second CRM connector. Sales-focused
+// alternative to HubSpot. Region-aware: every Pipedrive company has
+// its own `<company>.pipedrive.com` API host; the OAuth token
+// response carries `api_domain` which we cache on the credentials.
+export {
+  pipedriveConnector,
+  PipedriveConnector,
+  PipedriveClient,
+  PIPEDRIVE_ERROR_CODES,
+  PIPEDRIVE_AUTHORIZE_URL,
+  PIPEDRIVE_TOKEN_URL,
+  DEFAULT_PIPEDRIVE_SCOPES,
+  buildAuthorizeUrl as buildPipedriveAuthorizeUrl,
+  exchangeCodeForToken as exchangePipedriveCodeForToken,
+  getPipedriveOAuthConfig,
+  configurationIncomplete as pipedriveConfigurationIncomplete,
+  mapPipedriveError,
+  pipedriveNetworkError,
+} from './providers/pipedrive';
+export type {
+  PipedriveCredentials,
+  PipedriveEnvelope,
+  PipedriveMetadata,
+  PipedriveOAuthTokenResponse,
+  PipedriveUser,
+  PipedriveClientOptions,
+  PipedriveOAuthConfig,
+} from './providers/pipedrive';
