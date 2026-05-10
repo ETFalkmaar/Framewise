@@ -1328,6 +1328,41 @@ status (the site-live gate ships in step 32).
 
 Adds 42 tests (validation: 24, create-tenant: 18) — total 933.
 
+### Setup checklist UI (step 31 — fase 10 part 2/5)
+
+The customer-facing `/account/setup` page now groups the onboarding
+checklist by category in addition to the existing required/optional
+split. Step 11 already shipped the underlying engine: per-(country, plan)
+templates in `src/lib/checklist/templates.ts`, an `ensureChecklistForTenant`
+seeder, and `computeChecklistProgress` with auto-detect against
+`provider_connections` + `tenants.{vat_number,crib_number,custom_domain}`.
+Step 31 adds the UI shell on top of that and a small `ui-helpers`
+module so the page doesn't have to recompute the grouping itself.
+
+- `src/lib/checklist/ui-helpers.ts` — `groupChecklistByCategory()`
+  (uses a stable `CATEGORY_ORDER`), `allRequiredDone()`,
+  `firstPendingRequired()`, plus emoji icons re-exported from the
+  barrel as `CATEGORY_ICON`. Categories with zero items are
+  omitted — Basic plans get no CRM/newsletter sections.
+- `src/components/checklist/checklist-category.tsx` — server
+  component that renders one category section: header with
+  icon + "X/Y done" counter + "required pending" pill, then a
+  1-col grid of the existing `<ChecklistItemCard />`.
+- `/account/setup` page extended with a success-state card
+  (rendered when `canTenantGoLive`), the new "By category"
+  section, and the per-category server-action passthrough so
+  manual items keep their toggle buttons.
+- Translations: `account.setup.categoryName.*`, `categoryProgress`,
+  `pendingRequiredBadge`, `categorySection.{title,subtitle}`,
+  `successTitle`, `successBody` in NL / FR / EN.
+
+Auto-detect is unchanged from step 11 (`resolveAutoComplete` in
+`progress.ts`): connector → connected, tenant field → non-empty,
+manual → never auto-completes. The publish action itself ships in
+step 32; the success card only hints "ask Framewise to publish".
+
+Adds 17 tests (ui-helpers: 17) — total 950.
+
 ## Status
 
-In development - Step 30 of 96 (revised plan) — FASE 10 deel 1/5 (super-admin onboarding wizard)
+In development - Step 31 of 96 (revised plan) — FASE 10 deel 2/5 (setup checklist UI)

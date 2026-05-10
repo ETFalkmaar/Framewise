@@ -61,6 +61,24 @@
       "optionalSection": "Optionnel",
       "emptyRequired": "Aucun élément obligatoire pour ce forfait.",
       "emptyOptional": "Aucun élément optionnel pour ce forfait.",
+      "categorySection": {
+        "title": "Par catégorie",
+        "subtitle": "Les éléments sont regroupés par domaine pour traiter chaque thème séparément."
+      },
+      "categoryProgress": "{completed} sur {total} terminé(s)",
+      "pendingRequiredBadge": "obligatoire en attente",
+      "categoryName": {
+        "domain": "Domaine",
+        "legal": "Juridique",
+        "accounting": "Comptabilité",
+        "payments": "Paiements",
+        "crm": "CRM",
+        "newsletter": "Newsletter",
+        "phone": "Téléphonie",
+        "content": "Contenu"
+      },
+      "successTitle": "Tout est prêt pour la mise en ligne",
+      "successBody": "Tous les éléments obligatoires sont terminés. Demandez à Framewise de publier le site — le bouton de publication arrive à l'étape 32.",
       "requiredBadge": "obligatoire",
       "optionalBadge": "optionnel",
       "autoCompletedHint": "Validé automatiquement une fois l'étape terminée dans {action}.",

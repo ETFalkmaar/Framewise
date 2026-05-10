@@ -61,6 +61,24 @@
       "optionalSection": "Optioneel",
       "emptyRequired": "Geen vereiste items voor dit pakket.",
       "emptyOptional": "Geen optionele items voor dit pakket.",
+      "categorySection": {
+        "title": "Per categorie",
+        "subtitle": "Items zijn gegroepeerd per onderdeel zodat je per stuk kunt afwerken."
+      },
+      "categoryProgress": "{completed} van {total} voltooid",
+      "pendingRequiredBadge": "verplicht open",
+      "categoryName": {
+        "domain": "Domein",
+        "legal": "Juridisch",
+        "accounting": "Boekhouding",
+        "payments": "Betalingen",
+        "crm": "CRM",
+        "newsletter": "Nieuwsbrief",
+        "phone": "Telefonie",
+        "content": "Content"
+      },
+      "successTitle": "Alles staat klaar om live te gaan",
+      "successBody": "Alle verplichte items zijn afgerond. Vraag Framewise om de site te publiceren — de publicatie-knop komt in stap 32.",
       "requiredBadge": "vereist",
       "optionalBadge": "optioneel",
       "autoCompletedHint": "Wordt automatisch afgevinkt zodra je de stap voltooit in {action}.",

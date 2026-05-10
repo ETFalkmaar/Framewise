@@ -4,13 +4,16 @@ import { type Locale } from '@/i18n/routing';
 import { getActiveTenantForUser } from '@/lib/auth';
 import { canTenantGoLive } from '@/lib/validation';
 import {
-  computeChecklistProgress,
+  type ChecklistCategoryGroup,
   type ChecklistItemTemplate,
   type EffectiveChecklistStatus,
+  computeChecklistProgress,
+  groupChecklistByCategory,
 } from '@/lib/checklist';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { ChecklistCategorySection } from '@/components/checklist/checklist-category';
 import { ChecklistProgressBar } from '@/components/checklist/checklist-progress-bar';
 import { ChecklistStatusBanner } from '@/components/checklist/checklist-status-banner';
 import { ChecklistItemCard } from '@/components/checklist/checklist-item-card';
@@ -78,6 +81,23 @@ export default async function SetupPage({ params }: { params: Promise<{ locale: 
 
   const required = progress.items.filter((i) => i.template.required);
   const optional = progress.items.filter((i) => !i.template.required);
+  const categoryGroups = groupChecklistByCategory(progress.items);
+
+  const categoryCopy = {
+    title: {
+      domain: t('categoryName.domain'),
+      legal: t('categoryName.legal'),
+      accounting: t('categoryName.accounting'),
+      payments: t('categoryName.payments'),
+      crm: t('categoryName.crm'),
+      newsletter: t('categoryName.newsletter'),
+      phone: t('categoryName.phone'),
+      content: t('categoryName.content'),
+    },
+    progress: t('categoryProgress', { completed: '{completed}', total: '{total}' }),
+    pendingRequired: t('pendingRequiredBadge'),
+    itemCopy: cardCopy,
+  };
 
   return (
     <main
@@ -117,6 +137,21 @@ export default async function SetupPage({ params }: { params: Promise<{ locale: 
         className="mb-10"
       />
 
+      {goLive.canGoLive && progress.total > 0 && (
+        <Card
+          size="sm"
+          data-testid="checklist-success-state"
+          className="mb-10 border-emerald-500/40 bg-emerald-500/5"
+        >
+          <CardHeader>
+            <CardTitle className="text-sm text-emerald-700 dark:text-emerald-300">
+              🎉 {t('successTitle')}
+            </CardTitle>
+            <CardDescription className="text-xs">{t('successBody')}</CardDescription>
+          </CardHeader>
+        </Card>
+      )}
+
       <ChecklistSection
         testId="checklist-section-required"
         title={t('requiredSection')}
@@ -134,6 +169,28 @@ export default async function SetupPage({ params }: { params: Promise<{ locale: 
         cardCopy={cardCopy}
         emptyHint={t('emptyOptional')}
       />
+
+      <section className="mb-10" data-testid="checklist-section-by-category">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-display-sm font-semibold tracking-tight">
+            {t('categorySection.title')}
+          </h2>
+          <span className="text-muted-foreground font-mono text-xs">{categoryGroups.length}</span>
+        </div>
+        <p className="text-muted-foreground mb-4 text-sm">{t('categorySection.subtitle')}</p>
+        <Separator className="mb-6" />
+        <div className="space-y-8">
+          {categoryGroups.map((group) => (
+            <CategoryWithActions
+              key={group.category}
+              group={group}
+              locale={locale}
+              copy={categoryCopy}
+              cardCopy={cardCopy}
+            />
+          ))}
+        </div>
+      </section>
 
       <Separator className="my-12" />
       <p className="text-muted-foreground font-mono text-xs">
@@ -197,6 +254,37 @@ function ChecklistSection({
         </div>
       )}
     </section>
+  );
+}
+
+function CategoryWithActions({
+  group,
+  locale,
+  copy,
+  cardCopy,
+}: {
+  group: ChecklistCategoryGroup;
+  locale: Locale;
+  copy: React.ComponentProps<typeof ChecklistCategorySection>['copy'];
+  cardCopy: React.ComponentProps<typeof ChecklistItemCard>['copy'];
+}) {
+  return (
+    <ChecklistCategorySection
+      group={group}
+      locale={locale}
+      copy={copy}
+      renderActions={(template) => {
+        const item = group.items.find((i) => i.template.id === template.id);
+        if (!item) return null;
+        return (
+          <ManualActions
+            templateId={template.id}
+            effectiveStatus={item.effectiveStatus}
+            copy={cardCopy}
+          />
+        );
+      }}
+    />
   );
 }
 

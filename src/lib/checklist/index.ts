@@ -22,3 +22,12 @@ export type {
   EffectiveChecklistStatus,
 } from './progress';
 export { computeChecklistProgress } from './progress';
+
+export {
+  CATEGORY_ICON,
+  CATEGORY_ORDER,
+  allRequiredDone,
+  firstPendingRequired,
+  groupChecklistByCategory,
+  type ChecklistCategoryGroup,
+} from './ui-helpers';
