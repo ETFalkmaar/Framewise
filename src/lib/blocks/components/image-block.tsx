@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 
 import { getTranslatedString } from '@/lib/public-site/locale-fallback';
 import type { ImageBlock as ImageBlockType, Locale } from '@/lib/blocks/types';
+import { IMAGE_SIZES, getBlurDataUrl } from '@/lib/perf/image-helpers';
 
 /**
  * Single image block. Caption optional. Set `full_width: true` for a
@@ -24,6 +25,7 @@ export function ImageBlock({
   const alt = getTranslatedString(block.props.alt_translations, locale, defaultLocale);
   const caption = getTranslatedString(block.props.caption_translations, locale, defaultLocale);
   const fullWidth = block.props.full_width === true;
+  const blurDataURL = getBlurDataUrl(block.props.image_url);
 
   return (
     <section
@@ -41,9 +43,11 @@ export function ImageBlock({
             src={block.props.image_url}
             alt={alt}
             fill
-            sizes={fullWidth ? '100vw' : '(max-width: 768px) 100vw, 768px'}
+            sizes={fullWidth ? IMAGE_SIZES.HERO_FULL : IMAGE_SIZES.CONTENT_NARROW}
+            loading="lazy"
             className="object-cover"
             data-testid="image-block-img"
+            {...(blurDataURL ? { placeholder: 'blur' as const, blurDataURL } : {})}
           />
         </div>
         {caption && (

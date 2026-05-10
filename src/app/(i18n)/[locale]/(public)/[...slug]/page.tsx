@@ -10,8 +10,13 @@ import { PublicPageRenderer } from '@/components/public-site/public-page-rendere
 import { resolveBaseUrl } from '@/lib/seo/base-url';
 import { buildPageMetadata } from '@/lib/seo/metadata';
 import { buildOrganizationLD, buildWebPageLD } from '@/lib/seo/jsonld';
-
 const ALL_LOCALES: Locale[] = ['nl', 'fr', 'en'];
+
+// Step 29: ISR — refresh public pages once a minute. Mirrors
+// `REVALIDATE_PUBLIC_PAGE` in `src/lib/perf/isr-config.ts`; the
+// literal stays inline because Next 16 requires the segment
+// config export to be statically analyzable as a number.
+export const revalidate = 60;
 
 /**
  * Canonical public catch-all for subdomain / custom-domain tenants.

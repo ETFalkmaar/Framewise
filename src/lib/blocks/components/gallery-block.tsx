@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 
 import { getTranslatedString } from '@/lib/public-site/locale-fallback';
 import type { GalleryBlock as GalleryBlockType, Locale } from '@/lib/blocks/types';
+import { galleryGridSizes, getBlurDataUrl } from '@/lib/perf/image-helpers';
 
 const GRID_COLUMN_CLASSES: Record<NonNullable<GalleryBlockType['props']['columns']>, string> = {
   2: 'grid-cols-1 sm:grid-cols-2',
@@ -55,6 +56,8 @@ export function GalleryBlock({
     );
   }
 
+  const gridSizes = galleryGridSizes(columns);
+
   if (layout === 'carousel') {
     return (
       <section
@@ -70,7 +73,7 @@ export function GalleryBlock({
                 src={img.url}
                 alt={getTranslatedString(img.alt_translations, locale, defaultLocale)}
                 caption={getTranslatedString(img.caption_translations, locale, defaultLocale)}
-                priority={false}
+                eager={idx === 0}
                 className="aspect-[4/3] w-72 shrink-0 snap-start sm:w-96"
                 sizes="(max-width: 640px) 18rem, 24rem"
               />
@@ -95,9 +98,9 @@ export function GalleryBlock({
                 src={img.url}
                 alt={getTranslatedString(img.alt_translations, locale, defaultLocale)}
                 caption={getTranslatedString(img.caption_translations, locale, defaultLocale)}
-                priority={false}
+                eager={idx === 0}
                 className="aspect-auto w-full"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                sizes={gridSizes}
               />
             </div>
           ))}
@@ -120,9 +123,9 @@ export function GalleryBlock({
             src={img.url}
             alt={getTranslatedString(img.alt_translations, locale, defaultLocale)}
             caption={getTranslatedString(img.caption_translations, locale, defaultLocale)}
-            priority={false}
+            eager={idx === 0}
             className="aspect-square w-full"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes={gridSizes}
           />
         ))}
       </div>
@@ -136,15 +139,17 @@ function GalleryImage({
   caption,
   className,
   sizes,
-  priority,
+  eager,
 }: {
   src: string;
   alt: string;
   caption: string;
   className?: string;
   sizes: string;
-  priority?: boolean;
+  /** Above-the-fold thumbnails should load eagerly to avoid layout shift. */
+  eager?: boolean;
 }) {
+  const blurDataURL = getBlurDataUrl(src);
   return (
     <figure className={cn('group relative overflow-hidden rounded-lg', className)}>
       <Image
@@ -152,8 +157,9 @@ function GalleryImage({
         alt={alt}
         fill
         sizes={sizes}
-        loading={priority ? 'eager' : 'lazy'}
+        loading={eager ? 'eager' : 'lazy'}
         className="object-cover transition-transform duration-300 group-hover:scale-105"
+        {...(blurDataURL ? { placeholder: 'blur' as const, blurDataURL } : {})}
       />
       {caption && (
         <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3 text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
