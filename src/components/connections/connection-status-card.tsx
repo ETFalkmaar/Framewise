@@ -37,6 +37,10 @@ export interface ConnectionStatusCardProps {
     noConnection: string;
     /** Optional label for the metadata line ("Connected to: …"). */
     connectedTo?: string;
+    /** Optional label for "test mode" badge (Mollie + future payment connectors). */
+    testModeBadge?: string;
+    /** Optional label for "live" badge. */
+    liveBadge?: string;
   };
   /**
    * Optional render function for action buttons (typically a
@@ -83,16 +87,46 @@ export function ConnectionStatusCard({
           <ul className="space-y-1 font-mono">
             {(() => {
               const meta = connection.metadata as
-                | { primary_administration_name?: string; account?: string }
+                | {
+                    primary_administration_name?: string;
+                    organization_name?: string;
+                    account?: string;
+                    key_type?: 'test' | 'live';
+                  }
                 | undefined;
-              const accountLabel = meta?.primary_administration_name ?? meta?.account ?? null;
+              const accountLabel =
+                meta?.primary_administration_name ??
+                meta?.organization_name ??
+                meta?.account ??
+                null;
               if (!accountLabel || !labels.connectedTo) return null;
+              const keyType = meta?.key_type;
               return (
                 <li
-                  className="text-muted-foreground"
+                  className="text-muted-foreground flex flex-wrap items-center gap-1"
                   data-testid={`connection-account-${provider.id}`}
                 >
-                  {labels.connectedTo}: <span className="text-foreground">{accountLabel}</span>
+                  <span>
+                    {labels.connectedTo}: <span className="text-foreground">{accountLabel}</span>
+                  </span>
+                  {keyType === 'test' && labels.testModeBadge && (
+                    <Badge
+                      variant="outline"
+                      className="border-amber-500/40 bg-amber-500/5 font-mono text-[9px] text-amber-700 dark:text-amber-300"
+                      data-testid={`connection-key-type-${provider.id}`}
+                    >
+                      {labels.testModeBadge}
+                    </Badge>
+                  )}
+                  {keyType === 'live' && labels.liveBadge && (
+                    <Badge
+                      variant="outline"
+                      className="border-emerald-500/40 bg-emerald-500/5 font-mono text-[9px] text-emerald-700 dark:text-emerald-300"
+                      data-testid={`connection-key-type-${provider.id}`}
+                    >
+                      {labels.liveBadge}
+                    </Badge>
+                  )}
                 </li>
               );
             })()}

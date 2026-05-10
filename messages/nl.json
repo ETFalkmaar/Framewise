@@ -187,7 +187,28 @@
             "testFailedMessage": "Controleer of de User API Token volledig is gekopieerd."
           },
           "sourceTokenWarning": "Deze koppeling vereist ook een integrator Source API Token. Framewise moet die aanvragen via support@e-boekhouden.nl (gratis, ~1-2 werkdagen). Tot die is geconfigureerd faalt elke submit met CONFIGURATION_INCOMPLETE."
+        },
+        "mollie": {
+          "title": "Mollie",
+          "description": "Nederlandse betalingen — iDEAL, Bancontact, creditcard en meer.",
+          "instructions": {
+            "title": "Verbinding maken met Mollie",
+            "subtitle": "Kies bewust een keytype — test keys verwerken geen echt geld, live keys wel.",
+            "step1": "Log in op je Mollie Dashboard via mollie.com.",
+            "step2": "Open Ontwikkelaars → API-keys.",
+            "step3": "Kies een Live key (echte transacties, vereist KvK + bankrekening) of een Test key (sandbox, perfect voor demo's).",
+            "step4": "Kopieer de zojuist gegenereerde key en plak hem hieronder.",
+            "tip": "We herkennen test vs. live aan de prefix en plaatsen een badge bij de connectie zodat je niet per ongeluk echte kaartbetalingen aanneemt tijdens een demo.",
+            "testFailedTitle": "Verbinding mislukt",
+            "testFailedMessage": "Mollie keys beginnen met test_ of live_ gevolgd door 20+ alfanumerieke tekens."
+          },
+          "testKeyWarning": "Alleen sandbox. Geen echt geld; ideaal voor demo's en CI.",
+          "liveKeyWarning": "Productie. Echte transacties. Vereist KvK + bankrekening op het Mollie-account."
         }
+      },
+      "keyTypeBadge": {
+        "test": "test mode",
+        "live": "live"
       },
       "statusLabel": {
         "connected": "Verbonden",

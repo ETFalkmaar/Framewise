@@ -460,6 +460,50 @@ session model that's noticeably different.
 4. CI runs the connector against a stubbed `fetch`; no real
    tokens are needed in pipelines.
 
+### Mollie (step 17)
+
+First payment connector. iDEAL, Bancontact, credit card, and the
+rest of the Mollie method matrix; NL only for now (CW gets Stripe
+in a later step).
+
+- **Two key flavours** that look identical to the customer but
+  have very different consequences:
+  - `test_*` keys live in the Mollie sandbox — no real money ever
+    moves. Perfect for demos and CI.
+  - `live_*` keys move real money. Require KvK + bank account on
+    the Mollie organization.
+    The connector parses the prefix and stores `key_type` on
+    `provider_connections.metadata`, then the connections card
+    badges a test connection in orange and a live one in green so
+    you never accidentally take a real card payment during a demo.
+- **`testConnection`** runs `GET /organizations/me` AND
+  `GET /methods` in **parallel** — proof-of-life + harvest the
+  organisation name + the active payment-method list (`['ideal',
+'creditcard', ...]`) all in one round-trip pair.
+- **Error mapping** (`mapMollieError`): 401 →
+  `InvalidCredentialsError`, 403 → `INSUFFICIENT_PERMISSIONS`,
+  404 → `RESOURCE_NOT_FOUND`, 422 → `VALIDATION_FAILED` (with
+  `body.detail` flattened), 429 → `RATE_LIMITED` (600/5 min,
+  retry-after detail), 5xx → `PROVIDER_ERROR`, network failures
+  → `NETWORK_ERROR` via `mollieNetworkError`.
+- **UI**: 4-step `<MollieInstructions />` card above the wizard
+  with a side-by-side test-vs-live legend. The wizard's input
+  has a `^(test|live)_[a-zA-Z0-9]{20,40}$` HTML pattern so the
+  client rejects malformed keys without a server round-trip.
+
+#### Testing Mollie locally
+
+1. Sign up for a free Mollie test account at mollie.com — no
+   KvK or bank required for sandbox keys.
+2. Dashboard → Developers → API keys → copy a **Test API key**
+   (starts with `test_`).
+3. In the dev server, log in as `owner@demo-restaurant.example`
+   (NL Pro tenant) and visit `/account/connections/add/mollie`.
+   Paste the key.
+4. The wizard runs the parallel round-trip and stores the
+   organisation name + active methods on the connection. CI
+   uses a stubbed `fetch`; no real keys ever land in pipelines.
+
 ## Status
 
-In development - Step 16 of 118 (revised plan)
+In development - Step 17 of 118 (revised plan)

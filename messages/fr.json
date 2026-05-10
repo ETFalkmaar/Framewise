@@ -187,7 +187,28 @@
             "testFailedMessage": "Vérifiez que le User API Token a été copié intégralement."
           },
           "sourceTokenWarning": "Ce connecteur nécessite également un Source API Token au niveau intégrateur. Framewise doit le demander via support@e-boekhouden.nl (gratuit, ~1 à 2 jours ouvrés). En attendant, chaque soumission échoue avec CONFIGURATION_INCOMPLETE."
+        },
+        "mollie": {
+          "title": "Mollie",
+          "description": "Paiements néerlandais — iDEAL, Bancontact, carte de crédit, etc.",
+          "instructions": {
+            "title": "Se connecter à Mollie",
+            "subtitle": "Choisissez le type de clé avec soin — les clés test ne traitent pas d'argent réel, les clés live oui.",
+            "step1": "Connectez-vous à votre tableau de bord Mollie sur mollie.com.",
+            "step2": "Ouvrez Développeurs → Clés API.",
+            "step3": "Choisissez une clé Live (transactions réelles, KvK + compte bancaire requis) ou une clé Test (sandbox, parfait pour les démos).",
+            "step4": "Copiez la clé fraîchement générée et collez-la dans le champ ci-dessous.",
+            "tip": "Nous détectons automatiquement test vs live via le préfixe et badgions la connexion en conséquence pour éviter les paiements par carte accidentels en démo.",
+            "testFailedTitle": "Échec de la connexion",
+            "testFailedMessage": "Les clés Mollie commencent par test_ ou live_ suivies de 20+ caractères alphanumériques."
+          },
+          "testKeyWarning": "Sandbox uniquement. Aucun argent réel ; idéal pour démos et CI.",
+          "liveKeyWarning": "Production. Transactions réelles. KvK + compte bancaire requis sur le compte Mollie."
         }
+      },
+      "keyTypeBadge": {
+        "test": "test mode",
+        "live": "live"
       },
       "statusLabel": {
         "connected": "Connecté",

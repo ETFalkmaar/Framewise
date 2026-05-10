@@ -14,6 +14,7 @@ import { ApiKeyWizard } from '@/components/connectors/api-key-wizard';
 import { OAuthButton } from '@/components/connectors/oauth-button';
 import { MoneybirdInstructions } from '@/components/connectors/moneybird/instructions';
 import { EBoekhoudenInstructions } from '@/components/connectors/e-boekhouden/instructions';
+import { MollieInstructions } from '@/components/connectors/mollie/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -103,6 +104,7 @@ export default async function ConnectorConnectPage({
 
       {connector.id === 'moneybird' && <MoneybirdInstructions />}
       {connector.id === 'e-boekhouden' && <EBoekhoudenInstructions />}
+      {connector.id === 'mollie' && <MollieInstructions />}
 
       {connector.authMethod === 'api_key' && connector.apiKey && (
         <section data-testid="api-key-flow">

@@ -846,6 +846,7 @@ async function ConnectorFrameworkPlayground() {
 
       <MoneybirdConnectorDebug />
       <EBoekhoudenConnectorDebug />
+      <MollieConnectorDebug />
     </section>
   );
 }
@@ -981,6 +982,72 @@ function EBoekhoudenConnectorDebug() {
           {sourceTokenConfigured
             ? 'Both tokens present; testConnection will reach the real API.'
             : 'Without the integrator token, testConnection returns CONFIGURATION_INCOMPLETE.'}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function MollieConnectorDebug() {
+  const mollie = getConnector('mollie');
+  if (!mollie) {
+    return (
+      <Card size="sm" data-testid="mollie-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">Mollie connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 17+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card size="sm" data-testid="mollie-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Mollie connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          First payment provider — test/live key auto-detection.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{mollie.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{mollie.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{mollie.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(mollie.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">apiKey.fields </span>
+          <span className="text-foreground">{mollie.apiKey?.fields.length ?? 0}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api base </span>
+          <span className="text-foreground">https://api.mollie.com/v2</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">supported key formats </span>
+          <span className="text-foreground">test_… · live_…</span>
+        </p>
+        <p className="text-muted-foreground italic">
+          testConnection performs a parallel GET /organizations/me + GET /methods round-trip against
+          api.mollie.com; no debug call here so /debug/data never burns rate limits.
         </p>
       </CardContent>
     </Card>
