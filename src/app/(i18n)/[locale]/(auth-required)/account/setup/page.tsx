@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
-import { getActiveTenantForUser } from '@/lib/auth';
+import { getActiveTenantForUser, getCurrentUser, isUserSuperAdmin } from '@/lib/auth';
 import { canTenantGoLive } from '@/lib/validation';
 import {
   type ChecklistCategoryGroup,
@@ -13,6 +13,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { AwaitingPublication } from '@/components/account/setup/awaiting-publication';
+import { PublishButton } from '@/components/account/setup/publish-button';
 import { ChecklistCategorySection } from '@/components/checklist/checklist-category';
 import { ChecklistProgressBar } from '@/components/checklist/checklist-progress-bar';
 import { ChecklistStatusBanner } from '@/components/checklist/checklist-status-banner';
@@ -58,10 +60,35 @@ export default async function SetupPage({ params }: { params: Promise<{ locale: 
     );
   }
 
-  const [progress, goLive] = await Promise.all([
+  const [progress, goLive, currentUser] = await Promise.all([
     computeChecklistProgress(tenant.id),
     canTenantGoLive(tenant.id),
+    getCurrentUser(),
   ]);
+  const viewerIsSuperAdmin = currentUser !== null && isUserSuperAdmin(currentUser.id);
+  const currentRenderStatus: 'live' | 'maintenance' =
+    tenant.status === 'live' ? 'live' : 'maintenance';
+
+  const tPublish = await getTranslations('account.setup.publish');
+  const tAwaiting = await getTranslations('account.setup.awaiting');
+  const publishCopy = {
+    publishTitle: tPublish('publishSectionTitle'),
+    liveTitle: tPublish('liveSectionTitle'),
+    publishHint: tPublish('publishHint'),
+    liveHint: tPublish('liveHint'),
+    publishCta: tPublish('publishButton'),
+    unpublishCta: tPublish('unpublishButton'),
+    publishing: tPublish('publishing'),
+    unpublishing: tPublish('unpublishing'),
+    blockedHint: tPublish('requiredItemsMessage'),
+    liveStatusLabel: tPublish('liveStatus'),
+  };
+  const awaitingCopy = {
+    title: tAwaiting('title'),
+    readyMessage: tAwaiting('readyMessage'),
+    notReadyMessage: tAwaiting('notReadyMessage'),
+    contactInfo: tAwaiting('contactInfo'),
+  };
 
   const actionAutoComplete = t('actionAutoComplete');
   const cardCopy = {
@@ -151,6 +178,18 @@ export default async function SetupPage({ params }: { params: Promise<{ locale: 
           </CardHeader>
         </Card>
       )}
+
+      <div className="mb-10" data-testid="publish-section">
+        {viewerIsSuperAdmin ? (
+          <PublishButton
+            currentStatus={currentRenderStatus}
+            canPublish={goLive.canGoLive}
+            copy={publishCopy}
+          />
+        ) : (
+          <AwaitingPublication ready={goLive.canGoLive} copy={awaitingCopy} />
+        )}
+      </div>
 
       <ChecklistSection
         testId="checklist-section-required"

@@ -79,6 +79,24 @@
       },
       "successTitle": "Tout est prêt pour la mise en ligne",
       "successBody": "Tous les éléments obligatoires sont terminés. Demandez à Framewise de publier le site — le bouton de publication arrive à l'étape 32.",
+      "publish": {
+        "publishSectionTitle": "Publier le site",
+        "liveSectionTitle": "Le site est en ligne",
+        "publishHint": "Tous les éléments obligatoires sont terminés. Cliquez pour mettre le site en ligne.",
+        "liveHint": "Le site est visible publiquement. Cliquez sur « Mettre en maintenance » pour le retirer temporairement.",
+        "publishButton": "Mettre le site en ligne",
+        "unpublishButton": "Mettre en maintenance",
+        "publishing": "Publication en cours…",
+        "unpublishing": "Mise hors ligne…",
+        "liveStatus": "Le site est en ligne et visible des visiteurs",
+        "requiredItemsMessage": "Tous les éléments obligatoires ne sont pas terminés. Complétez-les avant de publier."
+      },
+      "awaiting": {
+        "title": "En attente de publication",
+        "readyMessage": "Prêt ! Framewise va bientôt mettre votre site en ligne.",
+        "notReadyMessage": "Complétez d'abord tous les éléments obligatoires. Ensuite Framewise publiera le site.",
+        "contactInfo": "Des questions ? Contactez-nous via framewise.com."
+      },
       "requiredBadge": "obligatoire",
       "optionalBadge": "optionnel",
       "autoCompletedHint": "Validé automatiquement une fois l'étape terminée dans {action}.",

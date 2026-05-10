@@ -79,6 +79,24 @@
       },
       "successTitle": "Ready to go live",
       "successBody": "All required items are complete. Ask Framewise to publish the site — the publish button arrives in step 32.",
+      "publish": {
+        "publishSectionTitle": "Publish site",
+        "liveSectionTitle": "Site is live",
+        "publishHint": "All required items are complete. Click to take the site live.",
+        "liveHint": "The site is publicly visible. Click 'Take into maintenance' to pull it offline temporarily.",
+        "publishButton": "Take site live",
+        "unpublishButton": "Take into maintenance",
+        "publishing": "Publishing…",
+        "unpublishing": "Taking offline…",
+        "liveStatus": "Site is live and visible to visitors",
+        "requiredItemsMessage": "Not all required items are complete. Finish them before publishing."
+      },
+      "awaiting": {
+        "title": "Awaiting publication",
+        "readyMessage": "Ready! Framewise will take your site live soon.",
+        "notReadyMessage": "Complete every required item first. Then Framewise will publish your site.",
+        "contactInfo": "Questions? Reach us via framewise.com."
+      },
       "requiredBadge": "required",
       "optionalBadge": "optional",
       "autoCompletedHint": "Marked done automatically once you complete the step in {action}.",

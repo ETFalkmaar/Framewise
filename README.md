@@ -1363,6 +1363,41 @@ step 32; the success card only hints "ask Framewise to publish".
 
 Adds 17 tests (ui-helpers: 17) — total 950.
 
+### Site-live gate (step 32 — fase 10 part 3/5)
+
+The "publish" trigger the super-admin pulls when a customer's
+checklist is green (step 32). Maintenance render already existed
+in the locale layout; this step adds the publish/unpublish
+actions, the super-admin preview bypass, and a customer-facing
+"Awaiting publication" card.
+
+- `src/lib/site-lifecycle/maintenance-check.ts` — pure mapping
+  from `TenantStatus` to a `SiteRenderDecision`
+  (`live` → public, `onboarding`/`paused` → maintenance,
+  `cancelled` → 404) plus `shouldBypassMaintenance()` for the
+  super-admin preview rule.
+- `src/lib/site-lifecycle/publish.ts` — `publishSite()` gates on
+  `canTenantGoLive` and `canTransitionTo`, flips the tenant to
+  `live`, logs a structured audit line. `unpublishSite()` only
+  fires when the tenant is currently `live`, flips it to
+  `paused`. Both return a discriminated `PublishResult` with a
+  stable `errorCode` the UI can localise.
+- `src/components/account/setup/publish-button.tsx` — client
+  island. Renders the publish CTA when status = maintenance,
+  swaps to a "site is live + take into maintenance" card when
+  status = live.
+- `src/components/account/setup/awaiting-publication.tsx` —
+  read-only card for the customer-side view. Tells them whether
+  Framewise can publish yet and how to reach support.
+- Setup page renders `<PublishButton />` for super-admin,
+  `<AwaitingPublication />` for everyone else.
+- Locale layout: super-admin bypasses the maintenance shell on
+  any tenant page so a half-built customer site stays previewable.
+- Translations: `account.setup.publish.*` and `account.setup.awaiting.*`
+  in NL / FR / EN.
+
+Adds 16 tests (maintenance-check: 8, publish: 8) — total 966.
+
 ## Status
 
-In development - Step 31 of 96 (revised plan) — FASE 10 deel 2/5 (setup checklist UI)
+In development - Step 32 of 96 (revised plan) — FASE 10 deel 3/5 (site-live gate)
