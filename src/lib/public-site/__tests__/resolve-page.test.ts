@@ -26,6 +26,9 @@ const TENANT: Tenant = {
   custom_domain: null,
   default_locale: 'nl',
   enabled_locales: ['nl', 'en'],
+  og_image_url: null,
+  organization_type: null,
+  twitter_handle: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };
@@ -37,6 +40,7 @@ const HOME_PAGE: Page = {
   status: 'published',
   parent_id: null,
   order_index: 0,
+  seo_meta: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
   published_at: '2026-01-01T00:00:00.000Z',

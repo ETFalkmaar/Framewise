@@ -1941,6 +1941,9 @@ async function runValidationExamples(): Promise<PlaygroundExample[]> {
       custom_domain: null,
       default_locale: 'nl',
       enabled_locales: ['nl'],
+      og_image_url: null,
+      organization_type: null,
+      twitter_handle: null,
     });
     results.push({
       title: 'Valid tenant insert',

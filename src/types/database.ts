@@ -23,6 +23,18 @@ export type Country = 'NL' | 'CW';
 export type LocaleCode = 'nl' | 'fr' | 'en';
 export type TenantStatus = 'onboarding' | 'live' | 'paused' | 'cancelled';
 
+/**
+ * Schema.org `@type` value used by `buildOrganizationLD`. Defaults to
+ * `Organization` when null. Step 26 picks subtype based on the
+ * tenant's vertical (`Restaurant` for hospitality, `LodgingBusiness`
+ * for villas/holiday homes, `LocalBusiness` for everything else).
+ */
+export type OrganizationType =
+  | 'Organization'
+  | 'LocalBusiness'
+  | 'Restaurant'
+  | 'LodgingBusiness';
+
 /** A multi-tenant site instance (one Framewise customer site). */
 export interface Tenant {
   id: UUID;
@@ -36,6 +48,17 @@ export interface Tenant {
   custom_domain: string | null;
   default_locale: LocaleCode;
   enabled_locales: LocaleCode[];
+  /**
+   * Default OpenGraph image URL for the whole tenant. Page-level
+   * `seo_meta.og_image_url` overrides this; both fall back to the
+   * first image found in a page's blocks (see `resolveOgImage`).
+   * Step 26.
+   */
+  og_image_url: string | null;
+  /** schema.org `@type` for `buildOrganizationLD`. Step 26. */
+  organization_type: OrganizationType | null;
+  /** Twitter handle without the `@` prefix (e.g. `framewise_app`). Step 26. */
+  twitter_handle: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -162,6 +185,31 @@ export interface SupportHoursLog {
 // ────────────────────────────────────────────────────────────────────────────
 export type PageStatus = 'draft' | 'published' | 'archived';
 
+/**
+ * Per-page SEO overrides. All fields optional; `buildPageMetadata`
+ * falls back to the tenant defaults and the first hero/text block
+ * when a key is missing. Stored as a JSONB column on `pages`. Step 26.
+ */
+export interface PageSeoMeta {
+  /** Override for `<title>`. Per locale; falls back to first hero headline. */
+  title_translations?: Partial<Record<LocaleCode, string>>;
+  /** Override for `<meta name="description">`. Per locale. */
+  description_translations?: Partial<Record<LocaleCode, string>>;
+  /** Override for the page-level OG image URL. */
+  og_image_url?: string | null;
+  /**
+   * Override for the canonical URL path. Useful when two slugs resolve
+   * to logically the same page (e.g. `/contact` and `/get-in-touch`).
+   * If absent, the canonical defaults to the request pathname.
+   */
+  canonical_path?: string | null;
+  /**
+   * `true` adds `<meta name="robots" content="noindex,nofollow">`.
+   * Used for draft preview routes that shouldn't show up in search.
+   */
+  noindex?: boolean;
+}
+
 /** A single editable page on a tenant's site. */
 export interface Page {
   id: UUID;
@@ -170,6 +218,11 @@ export interface Page {
   status: PageStatus;
   parent_id: UUID | null;
   order_index: number;
+  /**
+   * Per-page SEO overrides. `null` (or omitted) means "use tenant
+   * defaults + block-derived fallbacks". Step 26.
+   */
+  seo_meta: PageSeoMeta | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
   published_at: ISODateTime | null;

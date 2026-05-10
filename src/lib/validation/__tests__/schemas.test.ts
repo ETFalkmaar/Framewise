@@ -22,6 +22,9 @@ const VALID_TENANT_INSERT = {
   custom_domain: null,
   default_locale: 'en' as const,
   enabled_locales: ['en', 'nl', 'fr'] as const,
+  og_image_url: null,
+  organization_type: null,
+  twitter_handle: null,
 };
 
 describe('helpers', () => {
@@ -150,6 +153,7 @@ describe('pageInsertSchema', () => {
     status: 'draft' as const,
     parent_id: null,
     order_index: 0,
+    seo_meta: null,
     published_at: null,
   };
 
@@ -167,6 +171,36 @@ describe('pageInsertSchema', () => {
 
   it('rejects bad slug', () => {
     expect(pageInsertSchema.safeParse({ ...validPage, slug: 'Bad Slug' }).success).toBe(false);
+  });
+
+  it('accepts populated seo_meta', () => {
+    const result = pageInsertSchema.safeParse({
+      ...validPage,
+      seo_meta: {
+        title_translations: { nl: 'Welkom', en: 'Welcome' },
+        description_translations: { nl: 'Hallo' },
+        og_image_url: 'https://example.com/og.png',
+        canonical_path: '/home',
+        noindex: true,
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects seo_meta.canonical_path that does not start with /', () => {
+    const result = pageInsertSchema.safeParse({
+      ...validPage,
+      seo_meta: { canonical_path: 'home' },
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects seo_meta.og_image_url that is not a URL', () => {
+    const result = pageInsertSchema.safeParse({
+      ...validPage,
+      seo_meta: { og_image_url: 'not-a-url' },
+    });
+    expect(result.success).toBe(false);
   });
 });
 

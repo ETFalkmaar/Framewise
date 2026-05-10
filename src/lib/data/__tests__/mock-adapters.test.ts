@@ -77,6 +77,9 @@ describe('mock data layer — tenants CRUD', () => {
       custom_domain: null,
       default_locale: 'nl',
       enabled_locales: ['nl'],
+      og_image_url: null,
+      organization_type: null,
+      twitter_handle: null,
     });
     expect(created.id).toMatch(/^[0-9a-f]{8}-/i);
     expect(created.created_at).toBe(created.updated_at);
@@ -128,6 +131,7 @@ describe('mock data layer — pages CRUD', () => {
       status: 'draft',
       parent_id: null,
       order_index: 99,
+      seo_meta: null,
       published_at: null,
     });
     expect(created.status).toBe('draft');
@@ -145,6 +149,7 @@ describe('mock data layer — pages CRUD', () => {
         status: 'draft',
         parent_id: null,
         order_index: 100 + i,
+        seo_meta: null,
         published_at: null,
       });
       ids.add(p.id);
@@ -193,6 +198,9 @@ describe('mock data layer — validation enforcement', () => {
         custom_domain: null,
         default_locale: 'nl',
         enabled_locales: ['nl'],
+        og_image_url: null,
+        organization_type: null,
+        twitter_handle: null,
       })
     ).rejects.toBeInstanceOf(ValidationError);
   });
@@ -211,6 +219,9 @@ describe('mock data layer — validation enforcement', () => {
         custom_domain: null,
         default_locale: 'nl',
         enabled_locales: ['nl'],
+        og_image_url: null,
+        organization_type: null,
+        twitter_handle: null,
       });
     } catch (e) {
       caught = e;
@@ -282,6 +293,7 @@ describe('mock data layer — validation enforcement', () => {
         status: 'draft',
         parent_id: null,
         order_index: 50,
+        seo_meta: null,
         published_at: null,
       });
     } catch (e) {

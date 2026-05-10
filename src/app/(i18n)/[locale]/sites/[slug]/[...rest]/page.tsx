@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -6,6 +7,11 @@ import { resolvePage } from '@/lib/public-site/resolve-page';
 import { type Locale } from '@/i18n/routing';
 import { Badge } from '@/components/ui/badge';
 import { PublicPageRenderer } from '@/components/public-site/public-page-renderer';
+import { resolveBaseUrl } from '@/lib/seo/base-url';
+import { buildPageMetadata } from '@/lib/seo/metadata';
+import { buildOrganizationLD, buildWebPageLD } from '@/lib/seo/jsonld';
+
+const ALL_LOCALES: Locale[] = ['nl', 'fr', 'en'];
 
 /**
  * Catch-all for inner public pages under the path-prefix tenant
@@ -20,6 +26,29 @@ import { PublicPageRenderer } from '@/components/public-site/public-page-rendere
  * (over-ons, contact, …) but the routing supports deeper nesting
  * out of the box for step 30+.
  */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale; slug: string; rest: string[] }>;
+}): Promise<Metadata> {
+  const { locale, slug, rest } = await params;
+
+  const tenant = await getCurrentTenant();
+  if (!tenant) return {};
+
+  const pageSlug = (rest ?? []).join('/');
+  const resolved = await resolvePage({ tenantId: tenant.id, pageSlug, locale });
+  if (!resolved) return {};
+
+  return buildPageMetadata({
+    resolved,
+    locale,
+    baseUrl: resolveBaseUrl(),
+    pathname: pageSlug ? `/sites/${slug}/${pageSlug}` : `/sites/${slug}`,
+    allLocales: ALL_LOCALES,
+  });
+}
+
 export default async function TenantSiteSubPage({
   params,
 }: {
@@ -40,8 +69,23 @@ export default async function TenantSiteSubPage({
   });
   if (!resolved) notFound();
 
+  const baseUrl = resolveBaseUrl();
+  const pathname = pageSlug ? `/sites/${slug}/${pageSlug}` : `/sites/${slug}`;
+  const orgLd = buildOrganizationLD({ tenant: resolved.tenant, baseUrl });
+  const pageLd = buildWebPageLD({ resolved, locale, baseUrl, pathname });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        data-testid="jsonld-organization"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }}
+      />
+      <script
+        type="application/ld+json"
+        data-testid="jsonld-webpage"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageLd) }}
+      />
       <AdminPreviewBanner tenantName={tenant.name} tenantSlug={slug} pageSlug={pageSlug} />
       <PublicPageRenderer resolved={resolved} />
     </>

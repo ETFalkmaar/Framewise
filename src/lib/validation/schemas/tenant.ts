@@ -15,6 +15,19 @@ const customDomainSchema = z
   )
   .max(253);
 
+const organizationTypeSchema = z.enum([
+  'Organization',
+  'LocalBusiness',
+  'Restaurant',
+  'LodgingBusiness',
+]);
+
+// Twitter handle without the leading "@". 1-15 chars of [A-Za-z0-9_]
+// per Twitter's published rule.
+const twitterHandleSchema = z.string().regex(/^[A-Za-z0-9_]{1,15}$/, 'Expected a Twitter handle');
+
+const ogImageUrlSchema = z.string().url();
+
 export const tenantInsertSchema = z
   .object({
     slug: slugSchema,
@@ -27,6 +40,9 @@ export const tenantInsertSchema = z
     custom_domain: customDomainSchema.nullable(),
     default_locale: localeSchema,
     enabled_locales: localesArraySchema,
+    og_image_url: ogImageUrlSchema.nullable(),
+    organization_type: organizationTypeSchema.nullable(),
+    twitter_handle: twitterHandleSchema.nullable(),
   })
   .refine((data) => data.enabled_locales.includes(data.default_locale), {
     message: 'enabled_locales must include the default_locale',
@@ -45,6 +61,9 @@ export const tenantUpdateSchema = z
     custom_domain: customDomainSchema.nullable().optional(),
     default_locale: localeSchema.optional(),
     enabled_locales: localesArraySchema.optional(),
+    og_image_url: ogImageUrlSchema.nullable().optional(),
+    organization_type: organizationTypeSchema.nullable().optional(),
+    twitter_handle: twitterHandleSchema.nullable().optional(),
   })
   .strict();
 
@@ -60,6 +79,9 @@ export const tenantRowSchema = z.object({
   custom_domain: customDomainSchema.nullable(),
   default_locale: localeSchema,
   enabled_locales: localesArraySchema,
+  og_image_url: ogImageUrlSchema.nullable(),
+  organization_type: organizationTypeSchema.nullable(),
+  twitter_handle: twitterHandleSchema.nullable(),
   created_at: isoDateTimeSchema,
   updated_at: isoDateTimeSchema,
 });
