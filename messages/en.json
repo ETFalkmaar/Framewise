@@ -34,6 +34,17 @@
     "noTenants": "No tenants linked to this account.",
     "logout": "Sign out",
     "viewConnections": "Manage connections",
+    "viewMedia": "Media library",
+    "media": {
+      "title": "Media library",
+      "subtitle": "Images and documents uploaded for this tenant.",
+      "noTenant": "No tenant selected for this session.",
+      "empty": "No media uploaded yet.",
+      "emptyHint": "Step 14+ adds the upload form. Until then this is a read-only view.",
+      "uploadButton": "Upload new file",
+      "uploadDisabled": "Uploads are wired up in a later step.",
+      "storageBadge": "storage"
+    },
     "setup": {
       "title": "Setup checklist",
       "subtitle": "What still needs to happen before this site can go live.",

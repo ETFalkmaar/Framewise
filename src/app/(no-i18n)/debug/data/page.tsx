@@ -21,7 +21,8 @@ import {
 } from '@/lib/validation';
 import { computeChecklistProgress } from '@/lib/checklist';
 import { decrypt, encrypt, EncryptionError } from '@/lib/vault';
-import { tokenAccessLogRepo } from '@/lib/data';
+import { mediaRepo, tokenAccessLogRepo } from '@/lib/data';
+import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -114,6 +115,8 @@ export default async function DebugDataPage() {
       <ChecklistPlayground />
 
       <VaultPlayground />
+
+      <StoragePlayground />
 
       <AuthPlayground />
     </main>
@@ -603,6 +606,108 @@ async function VaultPlayground() {
                       {row.success ? '✓' : '✗'}
                     </span>
                     <span className="text-muted-foreground">{row.connection_id.slice(0, 8)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+async function StoragePlayground() {
+  const provider = getActiveProvider();
+  const VILLA = '11111111-1111-1111-1111-111111111111';
+  const SUPER = 'a0000000-0000-0000-0000-000000000001';
+
+  const sampleBytes = Buffer.from('framewise-debug-sample-bytes');
+  let uploadResult: Awaited<ReturnType<typeof uploadMedia>> | null = null;
+  let error: string | null = null;
+  try {
+    uploadResult = await uploadMedia({
+      tenantId: VILLA,
+      uploadedByUserId: SUPER,
+      fileName: `debug_sample_${Date.now()}.txt`,
+      mimeType: 'image/png',
+      sizeBytes: sampleBytes.byteLength,
+      body: sampleBytes,
+      altText: { en: 'Debug sample' },
+    });
+  } catch (err) {
+    if (err instanceof StorageError) error = `${err.code}: ${err.message}`;
+    else if (err instanceof Error) error = err.message;
+    else error = String(err);
+  }
+
+  const recentMedia = (await mediaRepo.listByTenant(VILLA)).slice(0, 5);
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="storage-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Storage playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Active provider for this request: <code className="font-mono">{provider.name}</code> (
+        {provider.available ? 'available' : 'unavailable'}). The mock provider returns deterministic
+        Picsum URLs; Vercel Blob is used when{' '}
+        <code className="font-mono">BLOB_READ_WRITE_TOKEN</code> is set.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card size="sm" data-testid="storage-upload-result">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Badge variant={error ? 'destructive' : 'secondary'} className="font-mono">
+                {error ? '✗ failed' : '✓ uploaded'}
+              </Badge>
+              <CardTitle className="text-sm">Live upload via {provider.name}</CardTitle>
+            </div>
+            <CardDescription className="font-mono text-xs">
+              Buffer({sampleBytes.byteLength} bytes) → uploadMedia()
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-1 text-xs">
+            {error ? (
+              <p className="text-destructive font-mono">{error}</p>
+            ) : uploadResult ? (
+              <>
+                <p className="font-mono">
+                  <span className="text-muted-foreground">path </span>
+                  <span className="text-foreground break-all">{uploadResult.upload.path}</span>
+                </p>
+                <p className="font-mono">
+                  <span className="text-muted-foreground">url </span>
+                  <span className="text-foreground break-all">{uploadResult.upload.url}</span>
+                </p>
+                <p className="font-mono">
+                  <span className="text-muted-foreground">media.id </span>
+                  <span className="text-foreground">{uploadResult.media.id}</span>
+                </p>
+              </>
+            ) : null}
+          </CardContent>
+        </Card>
+        <Card size="sm" data-testid="storage-recent-media">
+          <CardHeader>
+            <CardTitle className="text-sm">Recent media (villa)</CardTitle>
+            <CardDescription className="font-mono text-xs">
+              latest {recentMedia.length}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-xs">
+            {recentMedia.length === 0 ? (
+              <p className="text-muted-foreground">(none)</p>
+            ) : (
+              <ul className="space-y-1 font-mono">
+                {recentMedia.map((m) => (
+                  <li key={m.id} className="flex flex-wrap gap-2">
+                    <span className="text-muted-foreground">
+                      {m.created_at.replace('T', ' ').slice(0, 19)}
+                    </span>
+                    <span className="text-foreground">{m.file_name}</span>
+                    <span className="text-muted-foreground">({m.mime_type})</span>
                   </li>
                 ))}
               </ul>

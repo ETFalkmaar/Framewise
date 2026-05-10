@@ -39,6 +39,7 @@ import providerConnectionsSeed from './seeds/provider_connections.json';
 import tenantCountrySettingsSeed from './seeds/tenant_country_settings.json';
 import tenantChecklistStatusSeed from './seeds/tenant_checklist_status.json';
 import tokenAccessLogSeed from './seeds/token_access_log.json';
+import mediaSeed from './seeds/media.json';
 
 /**
  * In-memory store for the mock adapter. One Map per table keyed by `id`.
@@ -125,6 +126,7 @@ function loadSeeds(): void {
     ['tenant_country_settings', tenantCountrySettingsSeed as unknown as TenantCountrySettings[]],
     ['tenant_checklist_status', tenantChecklistStatusSeed as unknown as TenantChecklistStatus[]],
     ['token_access_log', tokenAccessLogSeed as unknown as TokenAccessLog[]],
+    ['media', mediaSeed as unknown as Media[]],
   ];
 
   for (const [name, rows] of pairs) {

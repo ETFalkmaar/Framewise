@@ -282,6 +282,35 @@ plus a Postgres trigger-based audit log. The public API
 (`storeToken` / `getToken` / `rotateToken` / `revokeToken`) stays
 the same so call sites don't change.
 
+## Storage
+
+Tenant media (images, PDFs) lives behind a small adapter layer in
+`src/lib/storage/`. Application code calls `uploadMedia()` /
+`deleteMedia()` and never touches the underlying provider.
+
+- **Provider selection** (`getActiveProvider()`):
+  1. Test override (`__setStorageProviderOverride`).
+  2. **Vercel Blob** when `BLOB_READ_WRITE_TOKEN` is set (production).
+  3. **Mock** — always works. Returns deterministic Picsum / placeholder
+     URLs so the media library renders the same thumbnails across
+     reloads. Acts as a graceful production fallback when the Blob
+     store hasn't been provisioned yet.
+- **Bucket layout**: `tenants/<tenantId>/<yyyy>/<mm>/<filename>` —
+  tenant id is the only identifier in the path so two tenants can
+  never collide. Built by `buildTenantPath()`; spaces become
+  underscores, the tenant id is UUID-validated.
+- **Upload validation** (`assertValidUpload`): allow-list MIME types
+  (jpeg/png/webp/avif/gif/svg/pdf), max **50 MB**, safe filename
+  charset (`A-Za-z0-9._\- ()` only).
+- **UI**: `/<locale>/account/media` renders a tenant-scoped grid of
+  thumbnails (alt text per locale, file name, MIME, size,
+  dimensions, uploader). Upload button is wired in step 14+.
+  `/debug/data` Storage playground does a live `uploadMedia()` round
+  trip and lists the active provider.
+
+Step 119 swaps the Vercel Blob adapter for [Supabase Storage](https://supabase.com/docs/guides/storage)
+behind the same `StorageProvider` interface — call sites stay the same.
+
 ## Status
 
-In development - Step 12 of 118 (revised plan)
+In development - Step 13 of 118 (revised plan)
