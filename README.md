@@ -1398,6 +1398,34 @@ actions, the super-admin preview bypass, and a customer-facing
 
 Adds 16 tests (maintenance-check: 8, publish: 8) — total 966.
 
+### Domain wizard (step 33 — fase 10 part 4/5)
+
+Super-admin tool to attach a customer's own domain (`klant.nl`) to
+their tenant. Wizard at `/admin/tenants/[tenantId]/domain/` walks
+through: enter the domain → show DNS records → check verification →
+success card. State lives client-side so the customer can leave the
+page open and come back later.
+
+- `src/lib/domain/vercel-client.ts` — `VercelDomainsClient`
+  interface + `MockVercelDomainsClient` that advances
+  `pending_dns` → `ssl_pending` → `active` on successive
+  `verifyDomain()` calls. Real Vercel API integration ships
+  behind `VERCEL_API_TOKEN` in a later step.
+- `src/lib/domain/setup.ts` — `startDomainSetup()`,
+  `verifyDomainSetup()`, `removeDomainSetup()`. The first call
+  validates the hostname, checks no other tenant owns it, asks
+  the Vercel client to register it, and writes
+  `tenants.custom_domain`. The verify call re-polls Vercel and
+  returns the updated status + DNS records.
+- `src/app/(i18n)/[locale]/(auth-required)/admin/tenants/[tenantId]/domain/`
+  — `page.tsx` (super-admin gate, 404 on unknown tenant) +
+  `actions.ts` (server actions with permission re-check) +
+  `wizard.tsx` (client form with the three steps inline).
+- Custom-domain routing was already wired in step 7's tenant
+  resolver — no middleware changes needed.
+
+Adds 21 tests (vercel-client: 9, setup: 12) — total 987.
+
 ## Status
 
-In development - Step 32 of 96 (revised plan) — FASE 10 deel 3/5 (site-live gate)
+In development - Step 33 of 96 (revised plan) — FASE 10 deel 4/5 (domain wizard)
