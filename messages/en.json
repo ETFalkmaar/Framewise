@@ -250,6 +250,29 @@
             "sandbox": "sandbox",
             "live": "live"
           }
+        },
+        "hubspot": {
+          "title": "HubSpot",
+          "description": "Global CRM — the free tier is plenty for lead-sync from the AI agent.",
+          "instructions": {
+            "title": "Connect to HubSpot",
+            "subtitle": "OAuth handshake with your own HubSpot Hub. Five steps, ~30 seconds.",
+            "step1": "Click the \"Connect with HubSpot\" button below.",
+            "step2": "Sign in to your HubSpot account (or create a free one at hubspot.com).",
+            "step3": "Pick which HubSpot Hub you'd like to connect to Framewise.",
+            "step4": "Confirm Framewise may read and create contacts.",
+            "step5": "You'll be redirected back to Framewise as soon as the handshake completes.",
+            "tip": "We persist the Hub ID + UI domain on the connection card so you always know which account is linked."
+          },
+          "byoaDisclaimer": "Contacts stay in YOUR HubSpot Hub. Framewise only holds a read+write token for lead-sync.",
+          "freeTierNotice": "HubSpot Free CRM is plenty for Framewise's lead-sync — no paid plan needed.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncBody": "Whenever the AI agent captures a lead on your site, the contact appears immediately in your HubSpot Hub.",
+          "configWarningTitle": "HubSpot not yet configured",
+          "configWarning": "This integration needs Framewise to register a HubSpot app first. Please contact support.",
+          "oauthCta": "Connect with HubSpot",
+          "oauthRedirecting": "Redirecting to HubSpot…",
+          "portalLabel": "Hub"
         }
       },
       "keyTypeBadge": {

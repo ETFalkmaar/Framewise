@@ -250,6 +250,29 @@
             "sandbox": "sandbox",
             "live": "live"
           }
+        },
+        "hubspot": {
+          "title": "HubSpot",
+          "description": "CRM mondial — la formule gratuite suffit pour la synchro des leads depuis l'agent IA.",
+          "instructions": {
+            "title": "Se connecter à HubSpot",
+            "subtitle": "Authentification OAuth avec votre propre Hub HubSpot. Cinq étapes, ~30 secondes.",
+            "step1": "Cliquez sur le bouton « Connecter HubSpot » ci-dessous.",
+            "step2": "Connectez-vous à votre compte HubSpot (ou créez-en un gratuit sur hubspot.com).",
+            "step3": "Sélectionnez le Hub HubSpot à connecter à Framewise.",
+            "step4": "Confirmez que Framewise peut lire et créer des contacts.",
+            "step5": "Vous serez redirigé automatiquement vers Framewise dès que la liaison sera terminée.",
+            "tip": "Nous conservons l'ID du Hub + le domaine UI sur la fiche de connexion afin que vous sachiez toujours quel compte est lié."
+          },
+          "byoaDisclaimer": "Les contacts restent dans VOTRE Hub HubSpot. Framewise détient seulement un jeton lecture+écriture pour la synchro des leads.",
+          "freeTierNotice": "HubSpot Free CRM est largement suffisant pour la synchro des leads de Framewise — aucun abonnement requis.",
+          "autoSyncTitle": "Synchro auto",
+          "autoSyncBody": "Dès que l'agent IA capte un lead sur votre site, le contact apparaît immédiatement dans votre Hub HubSpot.",
+          "configWarningTitle": "HubSpot pas encore configuré",
+          "configWarning": "Cette intégration nécessite que Framewise enregistre une application HubSpot. Veuillez contacter le support.",
+          "oauthCta": "Connecter HubSpot",
+          "oauthRedirecting": "Redirection vers HubSpot…",
+          "portalLabel": "Hub"
         }
       },
       "keyTypeBadge": {

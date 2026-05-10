@@ -41,6 +41,12 @@ export interface ConnectionStatusCardProps {
     testModeBadge?: string;
     /** Optional label for "live" badge. */
     liveBadge?: string;
+    /**
+     * Optional label for the HubSpot Hub identifier — rendered as
+     * "<ui_domain> (Hub <portal_id>)". HubSpot has no test/live mode
+     * so no coloured badge.
+     */
+    portalLabel?: string;
   };
   /**
    * Optional render function for action buttons (typically a
@@ -99,6 +105,10 @@ export function ConnectionStatusCard({
                     livemode?: boolean;
                     /** PayPal-shaped: 'sandbox' (= test) | 'live'. */
                     environment?: 'sandbox' | 'live';
+                    /** HubSpot-shaped: UI domain (`app.hubspot.com` / `app-eu1.hubspot.com`). */
+                    ui_domain?: string;
+                    /** HubSpot-shaped: numeric Hub identifier persisted as a string. */
+                    portal_id?: string;
                   }
                 | undefined;
               const accountLabel =
@@ -106,6 +116,7 @@ export function ConnectionStatusCard({
                 meta?.organization_name ??
                 meta?.business_name ??
                 meta?.name ??
+                meta?.ui_domain ??
                 meta?.account ??
                 null;
               if (!accountLabel || !labels.connectedTo) return null;
@@ -132,6 +143,19 @@ export function ConnectionStatusCard({
                 >
                   <span>
                     {labels.connectedTo}: <span className="text-foreground">{accountLabel}</span>
+                    {meta?.portal_id && labels.portalLabel && (
+                      <span className="text-muted-foreground">
+                        {' '}
+                        ({labels.portalLabel}{' '}
+                        <span
+                          className="text-foreground"
+                          data-testid={`connection-portal-id-${provider.id}`}
+                        >
+                          {meta.portal_id}
+                        </span>
+                        )
+                      </span>
+                    )}
                   </span>
                   {mode === 'test' && labels.testModeBadge && (
                     <Badge

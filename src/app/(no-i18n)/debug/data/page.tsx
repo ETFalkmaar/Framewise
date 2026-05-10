@@ -25,15 +25,19 @@ import { mediaRepo, tokenAccessLogRepo } from '@/lib/data';
 import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import {
   ConnectorError,
+  buildHubSpotAuthorizeUrl,
   buildPayPalAuthorizeUrl,
   buildStripeAuthorizeUrl,
   getAllConnectors,
   getConnector,
+  getHubSpotOAuthConfig,
   getPayPalApiBaseUrl,
   getPayPalAuthorizeBaseUrl,
   getPayPalEnvironment,
   getPayPalOAuthConfig,
   getStripeOAuthConfig,
+  HUBSPOT_AUTHORIZE_URL,
+  HUBSPOT_TOKEN_URL,
   mockApiKeyConnector,
   STRIPE_AUTHORIZE_URL,
   submitApiKeyCredentials,
@@ -857,6 +861,7 @@ async function ConnectorFrameworkPlayground() {
       <MollieConnectorDebug />
       <StripeConnectorDebug />
       <PayPalConnectorDebug />
+      <HubSpotConnectorDebug />
     </section>
   );
 }
@@ -1285,6 +1290,113 @@ function PayPalConnectorDebug() {
           handleOAuthCallback exchanges the code at {apiBase}/v1/oauth2/token (Basic auth) then
           probes /v1/identity/oauth2/userinfo; no debug call here so /debug/data never burns through
           PayPal rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function HubSpotConnectorDebug() {
+  const hubspot = getConnector('hubspot');
+  if (!hubspot) {
+    return (
+      <Card size="sm" data-testid="hubspot-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">HubSpot CRM connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 20+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const config = getHubSpotOAuthConfig();
+  const clientIdConfigured = Boolean(process.env.HUBSPOT_CLIENT_ID?.trim());
+  const secretConfigured = Boolean(process.env.HUBSPOT_CLIENT_SECRET?.trim());
+  // Build a sample authorize URL with a dummy state so operators can
+  // inspect the exact URL we'd send to HubSpot — useful for debugging
+  // without ever firing a real OAuth round-trip.
+  const sampleAuthorizeUrl = config
+    ? buildHubSpotAuthorizeUrl({
+        clientId: config.clientId,
+        redirectUri: 'https://framewise.example/api/connectors/oauth/callback?providerId=hubspot',
+        state: 'example_state_xxxx',
+      })
+    : null;
+
+  return (
+    <Card size="sm" data-testid="hubspot-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">HubSpot CRM connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          First CRM provider — internationally available, free tier compatible.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{hubspot.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{hubspot.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{hubspot.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(hubspot.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">scopes </span>
+          <span className="text-foreground">
+            [{(hubspot.oauth?.scopes ?? []).map((s) => `'${s}'`).join(', ')}]
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">authorize URL </span>
+          <span className="text-foreground">{HUBSPOT_AUTHORIZE_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">token URL </span>
+          <span className="text-foreground">{HUBSPOT_TOKEN_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">HUBSPOT_CLIENT_ID </span>
+          <Badge
+            variant={clientIdConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="hubspot-debug-client-id"
+          >
+            {clientIdConfigured ? 'configured' : 'not configured'}
+          </Badge>
+          <span className="text-muted-foreground"> · HUBSPOT_CLIENT_SECRET </span>
+          <Badge
+            variant={secretConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="hubspot-debug-secret"
+          >
+            {secretConfigured ? 'configured' : 'not configured'}
+          </Badge>
+        </p>
+        {sampleAuthorizeUrl && (
+          <p className="font-mono break-all" data-testid="hubspot-debug-sample-url">
+            <span className="text-muted-foreground">sample authorize URL </span>
+            <span className="text-foreground">{sampleAuthorizeUrl}</span>
+          </p>
+        )}
+        <p className="text-muted-foreground italic">
+          handleOAuthCallback exchanges the code at api.hubapi.com/oauth/v1/token then probes
+          /account-info/v3/details; no debug call here so /debug/data never burns through HubSpot
+          rate limits.
         </p>
       </CardContent>
     </Card>

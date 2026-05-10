@@ -637,6 +637,82 @@ banner instead — perfect for previewing the UI without a PayPal
 developer account. Tests stub all HTTP via `fetchImpl`; no real
 OAuth ever fires in CI.
 
+### HubSpot CRM (step 20)
+
+The first **CRM** connector and the only one we expect every tenant
+to want — HubSpot's free tier covers the lead-sync use case the AI
+agent will drive in step 21+. Internationally available (NL + CW),
+no test/live split, no per-region URL juggling.
+
+- **OAuth flow**: customer clicks "Connect with HubSpot" →
+  `/api/connectors/oauth/start` → `app.hubspot.com/oauth/authorize`
+  with scopes `oauth` + `crm.objects.contacts.read` +
+  `crm.objects.contacts.write` → callback → form-urlencoded POST to
+  `api.hubapi.com/oauth/v1/token` → `/account-info/v3/details`
+  probe → vault-stored credentials + the Hub identifier on the
+  connection card.
+- **Refresh tokens**: HubSpot always issues a refresh token on the
+  authorization-code grant and the refresh token never expires
+  unless revoked. Future steps can quietly mint new access tokens
+  (HubSpot's access tokens are short-lived — typically 30 minutes).
+  We persist `expires_at` on both `metadata` and `credentials` so
+  the refresh-on-401 logic in step 21+ has the data it needs.
+- **Two error envelopes** (`mapHubSpotError`): REST endpoints return
+  `{ status, message, correlationId, category }` while OAuth-style
+  errors use `{ status, error_description }` — the mapper probes
+  both. `category` (when present) is folded into the user-facing
+  message because it tells operators _why_ (e.g. `MISSING_SCOPES`,
+  `RATE_LIMIT`). 400 → `VALIDATION_FAILED`, 401 →
+  `InvalidCredentialsError`, 403 → `INSUFFICIENT_PERMISSIONS`,
+  404 → `RESOURCE_NOT_FOUND`, 429 → `RATE_LIMITED` (with
+  `retry-after`), 5xx → `PROVIDER_ERROR`, network →
+  `NETWORK_ERROR` via `hubspotNetworkError`.
+- **Redirect-URI pinning**: HubSpot pins the token endpoint's
+  `redirect_uri` to the value used during `/authorize`. Same
+  instance-cache pattern as PayPal (step 19) — `getAuthorizeUrl`
+  stashes the URL and `handleOAuthCallback` echoes it back.
+- **No mode badge**: HubSpot accounts are always "live"
+  (developer-test accounts use a different `accountType`, not a
+  separate environment). The connection card just shows
+  `<ui_domain> (Hub <portal_id>)` without any coloured badge. The
+  amber/emerald badge chain in
+  `connection-status-card.tsx` continues to handle Mollie's
+  `key_type`, Stripe's `livemode`, and PayPal's `environment` —
+  HubSpot simply never sets any of those keys, so the chain
+  short-circuits to "no badge".
+- **Configuration gate**: when `HUBSPOT_CLIENT_ID` /
+  `HUBSPOT_CLIENT_SECRET` are blank the wizard still renders but
+  the "Connect with HubSpot" button is disabled and a
+  `<HubSpotConfigWarning />` banner explains the gap. Same pattern
+  as Stripe + PayPal.
+- **Metadata**: `portal_id` (numeric `portalId` cast to string),
+  `account_type`, `company_currency`, `ui_domain`, `time_zone`,
+  `expires_at` — surfaced on the connection card.
+- **UI**: 5-step `<HubSpotInstructions />` card with side-by-side
+  BYOA + Free CRM notices, plus an auto-sync callout describing
+  the AI-agent → HubSpot lead flow.
+
+#### Testing HubSpot locally
+
+1. Sign up for a free HubSpot Developer account at
+   developers.hubspot.com.
+2. My Apps → Create App → fill in basic info, set the redirect URI
+   to `http://localhost:3000/api/connectors/oauth/callback?providerId=hubspot`
+   (or whichever dev port you use), and pick scopes `oauth`,
+   `crm.objects.contacts.read`, `crm.objects.contacts.write`.
+3. Copy the **Client ID** and **Client Secret** → paste into
+   `.env.local` as `HUBSPOT_CLIENT_ID` / `HUBSPOT_CLIENT_SECRET`.
+4. Restart the dev server. `/account/connections/add/hubspot`
+   now shows an enabled "Connect with HubSpot" button. Clicking
+   it redirects you to a real OAuth page — completing the
+   handshake stores the Hub's UI domain + numeric portal ID on
+   the connection.
+
+Without those env vars the wizard renders the config-incomplete
+banner instead — perfect for previewing the UI without a HubSpot
+developer account. Tests stub all HTTP via `fetchImpl`; no real
+OAuth ever fires in CI.
+
 ## Status
 
-In development - Step 19 of 118 (revised plan)
+In development - Step 20 of 118 (revised plan)

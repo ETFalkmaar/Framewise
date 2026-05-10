@@ -200,3 +200,31 @@ export type {
   PayPalClientOptions,
   PayPalOAuthConfig,
 } from './providers/paypal';
+
+// HubSpot CRM (step 20) — first CRM connector. Internationally
+// available (NL + CW). Free tier is plenty for the AI agent's
+// lead-sync flow that lands in step 21+. No test/live mode — the
+// connection card just shows the Hub identifier.
+export {
+  hubspotConnector,
+  HubSpotConnector,
+  HubSpotClient,
+  HUBSPOT_ERROR_CODES,
+  HUBSPOT_AUTHORIZE_URL,
+  HUBSPOT_TOKEN_URL,
+  DEFAULT_HUBSPOT_SCOPES,
+  buildAuthorizeUrl as buildHubSpotAuthorizeUrl,
+  exchangeCodeForToken as exchangeHubSpotCodeForToken,
+  getHubSpotOAuthConfig,
+  configurationIncomplete as hubspotConfigurationIncomplete,
+  mapHubSpotError,
+  hubspotNetworkError,
+} from './providers/hubspot';
+export type {
+  HubSpotAccountInfo,
+  HubSpotCredentials,
+  HubSpotMetadata,
+  HubSpotOAuthTokenResponse,
+  HubSpotClientOptions,
+  HubSpotOAuthConfig,
+} from './providers/hubspot';
