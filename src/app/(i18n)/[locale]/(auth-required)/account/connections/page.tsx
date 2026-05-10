@@ -80,6 +80,7 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
     neverUsed: t('neverUsed'),
     expiresAt: t('expiresAt'),
     noConnection: t('noConnection'),
+    connectedTo: t('connectedTo'),
   };
 
   return (

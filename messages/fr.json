@@ -154,6 +154,24 @@
       "neverUsed": "jamais utilisé",
       "expiresAt": "Expire",
       "noConnection": "Non connecté",
+      "connectedTo": "Connecté à",
+      "providers": {
+        "moneybird": {
+          "title": "Moneybird",
+          "description": "Comptabilité néerlandaise pour indépendants et PME.",
+          "instructions": {
+            "title": "Se connecter à Moneybird",
+            "subtitle": "Quatre étapes. Le token ne quitte votre navigateur qu'au moment du chiffrement.",
+            "step1": "Connectez-vous à votre compte Moneybird sur moneybird.com.",
+            "step2": "Ouvrez Paramètres → Développeurs → API tokens.",
+            "step3": "Cliquez sur « Créer un nouveau token », nommez-le « Framewise » et confirmez.",
+            "step4": "Copiez le token fraîchement généré et collez-le dans le champ ci-dessous.",
+            "tip": "Si vous gérez plusieurs administrations, vous pouvez en épingler une via son ID — sinon nous prenons la première visible par le token.",
+            "testFailedTitle": "Échec de la connexion",
+            "testFailedMessage": "Vérifiez que le token a été copié sans espaces autour."
+          }
+        }
+      },
       "statusLabel": {
         "connected": "Connecté",
         "disconnected": "Déconnecté",

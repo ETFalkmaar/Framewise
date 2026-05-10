@@ -72,3 +72,23 @@ export {
 } from './flows/shared';
 
 export { mockApiKeyConnector, mockOAuthConnector } from './test-doubles';
+
+// ──────────────────────────────────────────────────────────────────
+// Real provider connectors. Each module registers itself in the
+// connector registry on import — keep these as side-effect imports.
+// Step 15 ships Moneybird; steps 16–23 add the next five.
+// ──────────────────────────────────────────────────────────────────
+export {
+  moneybirdConnector,
+  MoneybirdConnector,
+  MoneybirdClient,
+  MONEYBIRD_ERROR_CODES,
+  mapMoneybirdError,
+  networkError,
+} from './providers/moneybird';
+export type {
+  MoneybirdAdministration,
+  MoneybirdCredentials,
+  MoneybirdMetadata,
+  MoneybirdClientOptions,
+} from './providers/moneybird';
