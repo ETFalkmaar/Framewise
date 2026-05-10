@@ -1105,9 +1105,9 @@ JSON-LD blocks (`Organization` and `WebPage`). Three new helpers in
 #### Schema additions
 
 - `Tenant`: `og_image_url`, `organization_type` (`'LocalBusiness' |
-  'Restaurant' | 'LodgingBusiness' | 'Organization'`), `twitter_handle`.
+'Restaurant' | 'LodgingBusiness' | 'Organization'`), `twitter_handle`.
 - `Page`: `seo_meta` JSONB (`{ title_translations?,
-  description_translations?, og_image_url?, canonical_path?, noindex? }`).
+description_translations?, og_image_url?, canonical_path?, noindex? }`).
 
 All four are nullable and default to "use the fallback" — existing
 tenants and pages keep working without a migration.

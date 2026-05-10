@@ -113,9 +113,7 @@ export function buildPageMetadata(input: BuildMetadataInput): Metadata {
           }
         : {}),
     },
-    robots: noindex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   };
 }
 
