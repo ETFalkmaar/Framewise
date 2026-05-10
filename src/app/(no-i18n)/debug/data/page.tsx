@@ -27,6 +27,7 @@ import {
   ConnectorError,
   buildHubSpotAuthorizeUrl,
   buildPayPalAuthorizeUrl,
+  buildPipedriveAuthorizeUrl,
   buildStripeAuthorizeUrl,
   getAllConnectors,
   getConnector,
@@ -35,10 +36,13 @@ import {
   getPayPalAuthorizeBaseUrl,
   getPayPalEnvironment,
   getPayPalOAuthConfig,
+  getPipedriveOAuthConfig,
   getStripeOAuthConfig,
   HUBSPOT_AUTHORIZE_URL,
   HUBSPOT_TOKEN_URL,
   mockApiKeyConnector,
+  PIPEDRIVE_AUTHORIZE_URL,
+  PIPEDRIVE_TOKEN_URL,
   STRIPE_AUTHORIZE_URL,
   submitApiKeyCredentials,
 } from '@/lib/connectors';
@@ -862,6 +866,7 @@ async function ConnectorFrameworkPlayground() {
       <StripeConnectorDebug />
       <PayPalConnectorDebug />
       <HubSpotConnectorDebug />
+      <PipedriveConnectorDebug />
     </section>
   );
 }
@@ -1397,6 +1402,117 @@ function HubSpotConnectorDebug() {
           handleOAuthCallback exchanges the code at api.hubapi.com/oauth/v1/token then probes
           /account-info/v3/details; no debug call here so /debug/data never burns through HubSpot
           rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PipedriveConnectorDebug() {
+  const pipedrive = getConnector('pipedrive');
+  if (!pipedrive) {
+    return (
+      <Card size="sm" data-testid="pipedrive-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">Pipedrive CRM connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 21+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const config = getPipedriveOAuthConfig();
+  const clientIdConfigured = Boolean(process.env.PIPEDRIVE_CLIENT_ID?.trim());
+  const secretConfigured = Boolean(process.env.PIPEDRIVE_CLIENT_SECRET?.trim());
+  // Build a sample authorize URL with a dummy state so operators can
+  // inspect the exact URL we'd send to Pipedrive — useful for
+  // debugging without ever firing a real OAuth round-trip.
+  const sampleAuthorizeUrl = config
+    ? buildPipedriveAuthorizeUrl({
+        clientId: config.clientId,
+        redirectUri: 'https://framewise.example/api/connectors/oauth/callback?providerId=pipedrive',
+        state: 'example_state_xxxx',
+      })
+    : null;
+
+  return (
+    <Card size="sm" data-testid="pipedrive-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Pipedrive CRM connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          Second CRM provider — sales-focused alternative to HubSpot. Region-aware API domain.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{pipedrive.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{pipedrive.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{pipedrive.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(pipedrive.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">scopes </span>
+          <span className="text-foreground">
+            [{(pipedrive.oauth?.scopes ?? []).map((s) => `'${s}'`).join(', ')}]
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">authorize URL </span>
+          <span className="text-foreground">{PIPEDRIVE_AUTHORIZE_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">token URL </span>
+          <span className="text-foreground">{PIPEDRIVE_TOKEN_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api domain </span>
+          <span className="text-foreground">dynamic per account — {'<company>'}.pipedrive.com</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">PIPEDRIVE_CLIENT_ID </span>
+          <Badge
+            variant={clientIdConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="pipedrive-debug-client-id"
+          >
+            {clientIdConfigured ? 'configured' : 'not configured'}
+          </Badge>
+          <span className="text-muted-foreground"> · PIPEDRIVE_CLIENT_SECRET </span>
+          <Badge
+            variant={secretConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="pipedrive-debug-secret"
+          >
+            {secretConfigured ? 'configured' : 'not configured'}
+          </Badge>
+        </p>
+        {sampleAuthorizeUrl && (
+          <p className="font-mono break-all" data-testid="pipedrive-debug-sample-url">
+            <span className="text-muted-foreground">sample authorize URL </span>
+            <span className="text-foreground">{sampleAuthorizeUrl}</span>
+          </p>
+        )}
+        <p className="text-muted-foreground italic">
+          handleOAuthCallback exchanges the code at oauth.pipedrive.com/oauth/token (Basic auth)
+          then probes the region-specific /api/v1/users/me; no debug call here so /debug/data never
+          burns through Pipedrive rate limits.
         </p>
       </CardContent>
     </Card>

@@ -273,6 +273,31 @@
           "oauthCta": "Connecter HubSpot",
           "oauthRedirecting": "Redirection vers HubSpot…",
           "portalLabel": "Hub"
+        },
+        "pipedrive": {
+          "title": "Pipedrive",
+          "description": "CRM orienté ventes avec un pipeline visuel — pas de formule gratuite, essai de 14 jours.",
+          "instructions": {
+            "title": "Se connecter à Pipedrive",
+            "subtitle": "Authentification OAuth avec votre propre entreprise Pipedrive. Cinq étapes, ~30 secondes.",
+            "step1": "Cliquez sur le bouton « Connecter Pipedrive » ci-dessous.",
+            "step2": "Connectez-vous à votre compte Pipedrive (ou démarrez un essai de 14 jours sur pipedrive.com).",
+            "step3": "Sélectionnez l'entreprise Pipedrive à connecter à Framewise.",
+            "step4": "Confirmez que Framewise peut lire et créer des contacts (read + full).",
+            "step5": "Vous serez redirigé automatiquement vers Framewise dès que la liaison sera terminée.",
+            "tip": "Pipedrive utilise un domaine API par entreprise (`<entreprise>.pipedrive.com`). Nous le conservons lors de la liaison afin que les appels suivants atteignent la bonne région."
+          },
+          "byoaDisclaimer": "Les contacts restent dans VOTRE entreprise Pipedrive. Framewise détient seulement un jeton read+full pour la synchro des leads.",
+          "trialNotice": "Pipedrive n'offre pas de formule gratuite permanente — l'essai de 14 jours suffit pour évaluer l'intégration.",
+          "salesFocusedTitle": "Orienté ventes",
+          "salesFocused": "Pipedrive excelle en gestion de pipeline. Pour le marketing-CRM, utilisez HubSpot.",
+          "autoSyncTitle": "Synchro auto",
+          "autoSyncBody": "Dès que l'agent IA capte un lead, il devient un contact dans votre Pipedrive et peut être converti en deal en un clic.",
+          "configWarningTitle": "Pipedrive pas encore configuré",
+          "configWarning": "Cette intégration nécessite que Framewise enregistre une application Pipedrive. Veuillez contacter le support.",
+          "oauthCta": "Connecter Pipedrive",
+          "oauthRedirecting": "Redirection vers Pipedrive…",
+          "companyLabel": "Entreprise"
         }
       },
       "keyTypeBadge": {

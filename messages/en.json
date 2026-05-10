@@ -273,6 +273,31 @@
           "oauthCta": "Connect with HubSpot",
           "oauthRedirecting": "Redirecting to HubSpot…",
           "portalLabel": "Hub"
+        },
+        "pipedrive": {
+          "title": "Pipedrive",
+          "description": "Sales-focused CRM with a visual deal pipeline — no free tier, 14-day trial available.",
+          "instructions": {
+            "title": "Connect to Pipedrive",
+            "subtitle": "OAuth handshake with your own Pipedrive company. Five steps, ~30 seconds.",
+            "step1": "Click the \"Connect with Pipedrive\" button below.",
+            "step2": "Sign in to your Pipedrive account (or start a 14-day trial at pipedrive.com).",
+            "step3": "Pick which Pipedrive company you'd like to connect to Framewise.",
+            "step4": "Confirm Framewise may read and create contacts (read + full).",
+            "step5": "You'll be redirected back to Framewise as soon as the handshake completes.",
+            "tip": "Pipedrive uses a per-company API domain (`<company>.pipedrive.com`). We persist it during the handshake so subsequent calls hit the right region."
+          },
+          "byoaDisclaimer": "Contacts stay in YOUR Pipedrive company. Framewise only holds a read+full token for lead-sync.",
+          "trialNotice": "Pipedrive doesn't ship a permanent free tier — the 14-day trial is enough to evaluate the integration.",
+          "salesFocusedTitle": "Sales-focused",
+          "salesFocused": "Pipedrive shines at deal-pipeline management. For marketing-CRM use HubSpot instead.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncBody": "Whenever the AI agent captures a lead, it lands as a contact in your Pipedrive company so you can convert it to a deal in one click.",
+          "configWarningTitle": "Pipedrive not yet configured",
+          "configWarning": "This integration needs Framewise to register a Pipedrive app first. Please contact support.",
+          "oauthCta": "Connect with Pipedrive",
+          "oauthRedirecting": "Redirecting to Pipedrive…",
+          "companyLabel": "Company"
         }
       },
       "keyTypeBadge": {

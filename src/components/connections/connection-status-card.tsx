@@ -109,12 +109,17 @@ export function ConnectionStatusCard({
                     ui_domain?: string;
                     /** HubSpot-shaped: numeric Hub identifier persisted as a string. */
                     portal_id?: string;
+                    /** Pipedrive-shaped: company display name from /api/v1/users/me. */
+                    company_name?: string;
+                    /** Pipedrive-shaped: slug-style identifier — appears in `<slug>.pipedrive.com`. */
+                    company_domain?: string;
                   }
                 | undefined;
               const accountLabel =
                 meta?.primary_administration_name ??
                 meta?.organization_name ??
                 meta?.business_name ??
+                meta?.company_name ??
                 meta?.name ??
                 meta?.ui_domain ??
                 meta?.account ??
