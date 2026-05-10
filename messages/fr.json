@@ -82,6 +82,52 @@
       "missing": "Connexions requises manquantes",
       "viewAll": "Gérer les connexions",
       "viewAuditLog": "Consulter le journal d'accès",
+      "addNew": "Ajouter un connecteur",
+      "addPage": {
+        "title": "Ajouter un connecteur",
+        "description": "Choisissez un fournisseur pour rattacher votre propre compte. Nous ne possédons jamais vos jetons ; vous pouvez révoquer à tout moment.",
+        "testCategory": "Connecteurs de test",
+        "devOnly": "dev uniquement",
+        "authMethod": {
+          "oauth": "OAuth",
+          "apiKey": "Clé API"
+        },
+        "complexity": {
+          "easy": "facile",
+          "medium": "moyen",
+          "advanced": "avancé"
+        }
+      },
+      "connectFlow": {
+        "oauthStart": "Se connecter à {provider}",
+        "oauthRedirecting": "Redirection…",
+        "apiKeyTitle": "Collez vos identifiants API",
+        "apiKeySubmit": "Se connecter",
+        "testing": "Test de la connexion…",
+        "success": "Connecté",
+        "successHint": "Retour à la liste des connexions.",
+        "testFailed": "Échec de la connexion",
+        "fieldRequired": "Ce champ est obligatoire",
+        "helpLinkLabel": "Documentation du fournisseur",
+        "cancel": "Annuler"
+      },
+      "disconnect": {
+        "confirmTitle": "Déconnecter la connexion",
+        "confirmMessage": "Déconnecter {provider} ? Votre compte reste chez le fournisseur ; nous arrêtons simplement les échanges.",
+        "confirmButton": "Déconnecter",
+        "pending": "En cours…",
+        "failed": "Échec de la déconnexion",
+        "success": "Déconnecté"
+      },
+      "errors": {
+        "providerNotFound": "Nous ne connaissons pas ce fournisseur.",
+        "stateValidation": "Vérification de sécurité échouée — réessayez la connexion.",
+        "flowAborted": "Vous avez annulé la connexion.",
+        "invalidCredentials": "Le fournisseur a rejeté vos identifiants.",
+        "tokenExchange": "Impossible de finaliser la configuration avec le fournisseur.",
+        "unsupportedFlow": "Ce connecteur ne prend pas en charge ce flux.",
+        "unknown": "Quelque chose s'est mal passé, réessayez."
+      },
       "audit": {
         "title": "Journal d'accès aux tokens",
         "subtitle": "Chaque chiffrement, déchiffrement, rafraîchissement et révocation est enregistré ici.",

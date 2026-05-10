@@ -23,6 +23,12 @@ import { computeChecklistProgress } from '@/lib/checklist';
 import { decrypt, encrypt, EncryptionError } from '@/lib/vault';
 import { mediaRepo, tokenAccessLogRepo } from '@/lib/data';
 import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
+import {
+  ConnectorError,
+  getAllConnectors,
+  mockApiKeyConnector,
+  submitApiKeyCredentials,
+} from '@/lib/connectors';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -117,6 +123,8 @@ export default async function DebugDataPage() {
       <VaultPlayground />
 
       <StoragePlayground />
+
+      <ConnectorFrameworkPlayground />
 
       <AuthPlayground />
     </main>
@@ -712,6 +720,125 @@ async function StoragePlayground() {
                 ))}
               </ul>
             )}
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+async function ConnectorFrameworkPlayground() {
+  const VILLA = '11111111-1111-1111-1111-111111111111';
+  const SUPER = 'a0000000-0000-0000-0000-000000000001';
+
+  const all = getAllConnectors();
+  const ctx = { tenantId: VILLA, userId: SUPER };
+
+  // Two scenarios: a valid + an invalid API-key submission against the
+  // mock connector. Errors are expected for the invalid case; we
+  // capture both outcomes so the page can render success + failure
+  // paths side-by-side.
+  let validResult: Awaited<ReturnType<typeof submitApiKeyCredentials>> | null = null;
+  let validError: string | null = null;
+  try {
+    validResult = await submitApiKeyCredentials({
+      connector: mockApiKeyConnector,
+      credentials: { api_key: 'debug_value', subdomain: 'demo' },
+      context: ctx,
+    });
+  } catch (err) {
+    validError = err instanceof ConnectorError ? `${err.code}: ${err.message}` : String(err);
+  }
+
+  let invalidErrorCode: string | null = null;
+  let invalidErrorMessage: string | null = null;
+  try {
+    await submitApiKeyCredentials({
+      connector: mockApiKeyConnector,
+      credentials: { api_key: 'invalid' },
+      context: ctx,
+    });
+  } catch (err) {
+    if (err instanceof ConnectorError) {
+      invalidErrorCode = err.code;
+      invalidErrorMessage = err.message;
+    } else {
+      invalidErrorMessage = String(err);
+    }
+  }
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="connector-framework-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">
+          Connector framework playground
+        </h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        {all.length} connector(s) registered. Step 14 ships the framework + mock connectors; steps
+        15–23 plug in real providers.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card size="sm" data-testid="connector-registry-snapshot">
+          <CardHeader>
+            <CardTitle className="text-sm">Registered connectors</CardTitle>
+            <CardDescription className="font-mono text-xs">getAllConnectors()</CardDescription>
+          </CardHeader>
+          <CardContent className="text-xs">
+            {all.length === 0 ? (
+              <p className="text-muted-foreground">(none)</p>
+            ) : (
+              <ul className="space-y-1 font-mono">
+                {all.map((c) => (
+                  <li key={c.id} className="flex flex-wrap gap-2">
+                    <span className="text-foreground">{c.id}</span>
+                    <span className="text-muted-foreground">
+                      ({c.category}/{c.authMethod}
+                      {c.developmentOnly ? ', dev' : ''})
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+        <Card size="sm" data-testid="connector-flows-snapshot">
+          <CardHeader>
+            <CardTitle className="text-sm">submitApiKeyCredentials()</CardTitle>
+            <CardDescription className="font-mono text-xs">mock-api-key</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-xs">
+            <div data-testid="connector-flow-success">
+              <p className="font-mono">
+                <Badge
+                  variant={validResult?.success ? 'secondary' : 'destructive'}
+                  className="mr-2 font-mono"
+                >
+                  {validResult?.success ? '✓ ok' : '✗ failed'}
+                </Badge>
+                api_key=&quot;debug_value&quot;
+              </p>
+              {validResult?.success && (
+                <p className="text-muted-foreground mt-1 font-mono">
+                  connectionId <span className="text-foreground">{validResult.connectionId}</span>
+                </p>
+              )}
+              {validError && <p className="text-destructive font-mono">{validError}</p>}
+            </div>
+            <div data-testid="connector-flow-failure">
+              <p className="font-mono">
+                <Badge variant="destructive" className="mr-2 font-mono">
+                  ✗ rejected
+                </Badge>
+                api_key=&quot;invalid&quot;
+              </p>
+              {invalidErrorCode && (
+                <p className="text-destructive mt-1 font-mono">
+                  {invalidErrorCode}: {invalidErrorMessage}
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

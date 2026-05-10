@@ -7,7 +7,7 @@ import {
   ValidationError,
   VALIDATION_ERROR_CODES,
 } from '@/lib/validation';
-import type { CountryCode } from '@/lib/countries';
+import { getProviderById, type CountryCode } from '@/lib/countries';
 
 import type { ConnectionsRepository } from '../../repositories/connections';
 import { generateId, getTimestamp, table } from './store';
@@ -78,7 +78,14 @@ export const mockConnectionsRepo: ConnectionsRepository = {
         { field: 'tenant_id' }
       );
     }
-    assertProviderAvailable(parsed.provider, tenant.country as CountryCode);
+    // Cross-entity rule only fires for providers known to the country
+    // registry (`@/lib/countries`). Step 14+ connector ids that are NOT
+    // in the country registry (mock test doubles, future connectors)
+    // are accepted — the framework's per-connector `availableIn` check
+    // already gates which countries see which connector in the UI.
+    if (getProviderById(parsed.provider)) {
+      assertProviderAvailable(parsed.provider, tenant.country as CountryCode);
+    }
 
     // Re-use a disconnected row for the same (tenant, category, provider) so
     // we don't accumulate ghost rows when a user reconnects.

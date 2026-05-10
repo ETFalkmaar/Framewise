@@ -36,6 +36,12 @@ export interface ConnectionStatusCardProps {
     expiresAt: string;
     noConnection: string;
   };
+  /**
+   * Optional render function for action buttons (typically a
+   * `<DisconnectButton />` from `@/components/connectors`). Rendered
+   * only when a connection exists.
+   */
+  renderActions?: (connection: ProviderConnection) => React.ReactNode;
 }
 
 export function ConnectionStatusCard({
@@ -43,6 +49,7 @@ export function ConnectionStatusCard({
   connection,
   byoaDisclaimer,
   labels,
+  renderActions,
 }: ConnectionStatusCardProps) {
   const status: ConnectionDisplayStatus = connection?.status ?? 'none';
 
@@ -93,6 +100,7 @@ export function ConnectionStatusCard({
           <p className="text-muted-foreground font-mono">{labels.noConnection}</p>
         )}
         <p className="text-muted-foreground text-[11px] leading-snug">{byoaDisclaimer}</p>
+        {connection && renderActions && <div className="pt-1">{renderActions(connection)}</div>}
       </CardContent>
     </Card>
   );

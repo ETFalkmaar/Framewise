@@ -18,6 +18,7 @@ import {
   ConnectionStatusCard,
   type ConnectionDisplayStatus,
 } from '@/components/connections/connection-status-card';
+import { DisconnectButton } from '@/components/connectors/disconnect-button';
 
 const CATEGORY_ORDER: ProviderCategory[] = ['accounting', 'payments', 'phone', 'crm', 'newsletter'];
 
@@ -106,6 +107,13 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
           >
             🔒 {t('viewAuditLog')}
           </Link>
+          <Link
+            href="/account/connections/add"
+            data-testid="link-add-connector"
+            className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-2 py-1 ring-1 transition"
+          >
+            + {t('addNew')}
+          </Link>
         </div>
       </header>
 
@@ -165,6 +173,17 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
                       connection={conn}
                       byoaDisclaimer={t('byoaDisclaimer')}
                       labels={cardLabels}
+                      renderActions={(c) => (
+                        <DisconnectButton
+                          connectionId={c.id}
+                          copy={{
+                            confirm: t('disconnect.confirmMessage', { provider: p.name }),
+                            button: t('disconnect.confirmButton'),
+                            pending: t('disconnect.pending'),
+                            failed: t('disconnect.failed'),
+                          }}
+                        />
+                      )}
                     />
                   );
                 })}

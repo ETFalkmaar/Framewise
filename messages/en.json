@@ -82,6 +82,52 @@
       "missing": "Missing required connections",
       "viewAll": "Manage connections",
       "viewAuditLog": "View access log",
+      "addNew": "Add connector",
+      "addPage": {
+        "title": "Add a connector",
+        "description": "Pick a provider to bring your own account on board. We never own your tokens; you can revoke at any time.",
+        "testCategory": "Test connectors",
+        "devOnly": "dev only",
+        "authMethod": {
+          "oauth": "OAuth",
+          "apiKey": "API key"
+        },
+        "complexity": {
+          "easy": "easy",
+          "medium": "medium",
+          "advanced": "advanced"
+        }
+      },
+      "connectFlow": {
+        "oauthStart": "Connect with {provider}",
+        "oauthRedirecting": "Redirecting…",
+        "apiKeyTitle": "Paste your API credentials",
+        "apiKeySubmit": "Connect",
+        "testing": "Testing connection…",
+        "success": "Connected",
+        "successHint": "Returning you to the connections list.",
+        "testFailed": "Connection failed",
+        "fieldRequired": "This field is required",
+        "helpLinkLabel": "Provider documentation",
+        "cancel": "Cancel"
+      },
+      "disconnect": {
+        "confirmTitle": "Disconnect connection",
+        "confirmMessage": "Disconnect {provider}? The provider will keep the account; we just stop talking to it.",
+        "confirmButton": "Disconnect",
+        "pending": "Disconnecting…",
+        "failed": "Failed to disconnect",
+        "success": "Disconnected"
+      },
+      "errors": {
+        "providerNotFound": "We do not know this provider.",
+        "stateValidation": "Security check failed — please try connecting again.",
+        "flowAborted": "You cancelled the connection.",
+        "invalidCredentials": "The provider rejected your credentials.",
+        "tokenExchange": "Could not finish setup with the provider.",
+        "unsupportedFlow": "This connector does not support that flow.",
+        "unknown": "Something went wrong, please try again."
+      },
       "audit": {
         "title": "Token access log",
         "subtitle": "Every encrypt, decrypt, refresh and revoke is recorded here.",

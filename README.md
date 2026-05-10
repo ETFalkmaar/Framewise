@@ -311,6 +311,61 @@ Tenant media (images, PDFs) lives behind a small adapter layer in
 Step 119 swaps the Vercel Blob adapter for [Supabase Storage](https://supabase.com/docs/guides/storage)
 behind the same `StorageProvider` interface — call sites stay the same.
 
+## Connector framework
+
+Every third-party integration plugs into a uniform framework under
+`src/lib/connectors/` and is exposed through `@/lib/connectors`.
+
+- **Definition** — a connector is a plain `ConnectorDefinition` literal
+  (or `BaseConnector` subclass) with `id`, `category`, `authMethod`,
+  optional `oauth { authorizeUrl, tokenUrl, scopes, pkce, ... }` /
+  `apiKey { instructions, fields, helpUrl }` blocks and an optional
+  `testConnection`. `developmentOnly: true` hides the card in
+  production but keeps it usable in dev / playground / tests.
+- **Registry** — `registerConnector(c)` at module load. Step 14 ships
+  two mock connectors (`mock-oauth`, `mock-api-key`) so the flows can
+  be exercised end-to-end without any real provider; steps 15–23
+  fill in Moneybird / Stripe / Mollie / Twilio / HubSpot / Brevo.
+- **OAuth flow** — `initiateOAuthFlow()` builds the provider's
+  `authorize_url`, generates a CSRF state + optional PKCE pair, and
+  returns the value to set as the signed `framewise_oauth_flow`
+  cookie. `handleOAuthCallback()` validates the state, exchanges the
+  code (mocked in step 14, real in 15+), runs `testConnection`, and
+  persists the encrypted token via the vault.
+- **API-key flow** — `submitApiKeyCredentials()` validates the form
+  fields against `connector.apiKey.fields`, runs `testConnection`,
+  and persists.
+- **Persistence** — both flows go through `storeCredentials()`, which
+  is a thin wrapper around `connectionsRepo` + `vault.storeToken()`.
+  Re-using a previously-disconnected row is automatic, so the user
+  doesn't accumulate ghost rows when they reconnect.
+- **Routes** — `POST /api/connectors/oauth/start`,
+  `GET /api/connectors/oauth/callback`,
+  `POST /api/connectors/api-key/connect`,
+  `POST /api/connectors/revoke`. All four require an active session,
+  call `assertCanManageTenant`, and verify the connection belongs to
+  the active tenant before any vault access.
+- **UI** — `/<locale>/account/connections/add` is the hub: one card
+  per registered connector, grouped by category, with a "Test"
+  section for `developmentOnly` connectors in dev.
+  `/<locale>/account/connections/add/[providerId]` runs the
+  connector-specific flow (OAuth button or API-key wizard). The
+  existing connections page gains "Add connector" + per-card
+  "Disconnect" buttons.
+
+### Adding a new connector
+
+1. Drop a new `ConnectorDefinition` literal into
+   `src/lib/connectors/providers/<id>.ts` (or extend `BaseConnector`).
+2. Call `registerConnector(...)` at the bottom of that file.
+3. Make sure the file is imported from somewhere that runs at
+   module load (e.g. `src/lib/connectors/index.ts` or a barrel).
+   Steps 15–23 will add an `init.ts` that imports all connector
+   modules in deterministic order.
+
+The hub, OAuth callback, API-key wizard, audit log and disconnect
+flow then work for the new connector with no further changes.
+
 ## Status
 
-In development - Step 13 of 118 (revised plan)
+In development - Step 14 of 118 (revised plan)
