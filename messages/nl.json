@@ -82,6 +82,52 @@
       "missing": "Ontbrekende verbindingen",
       "viewAll": "Beheer verbindingen",
       "viewAuditLog": "Toegangslog bekijken",
+      "addNew": "Connector toevoegen",
+      "addPage": {
+        "title": "Connector toevoegen",
+        "description": "Kies een provider om je eigen account te koppelen. Wij beheren je tokens nooit; je kunt elke verbinding op elk moment verbreken.",
+        "testCategory": "Test-connectors",
+        "devOnly": "alleen dev",
+        "authMethod": {
+          "oauth": "OAuth",
+          "apiKey": "API-key"
+        },
+        "complexity": {
+          "easy": "eenvoudig",
+          "medium": "gemiddeld",
+          "advanced": "geavanceerd"
+        }
+      },
+      "connectFlow": {
+        "oauthStart": "Verbind met {provider}",
+        "oauthRedirecting": "Doorsturen…",
+        "apiKeyTitle": "Plak je API-gegevens",
+        "apiKeySubmit": "Verbinden",
+        "testing": "Verbinding testen…",
+        "success": "Verbonden",
+        "successHint": "Je gaat terug naar het overzicht.",
+        "testFailed": "Verbinding mislukt",
+        "fieldRequired": "Dit veld is vereist",
+        "helpLinkLabel": "Provider-documentatie",
+        "cancel": "Annuleren"
+      },
+      "disconnect": {
+        "confirmTitle": "Verbinding verbreken",
+        "confirmMessage": "{provider} loskoppelen? Je account blijft bij de provider; wij praten er gewoon niet meer mee.",
+        "confirmButton": "Verbreken",
+        "pending": "Bezig…",
+        "failed": "Loskoppelen mislukt",
+        "success": "Losgekoppeld"
+      },
+      "errors": {
+        "providerNotFound": "Deze provider kennen we niet.",
+        "stateValidation": "Beveiligingscheck mislukt — probeer opnieuw te verbinden.",
+        "flowAborted": "Je hebt de verbinding geannuleerd.",
+        "invalidCredentials": "De provider heeft je gegevens afgewezen.",
+        "tokenExchange": "Setup met de provider kon niet worden voltooid.",
+        "unsupportedFlow": "Deze connector ondersteunt dit type verbinding niet.",
+        "unknown": "Er ging iets mis, probeer het opnieuw."
+      },
       "audit": {
         "title": "Token-toegangslog",
         "subtitle": "Elke encryptie, decryptie, refresh en intrekking wordt hier vastgelegd.",
