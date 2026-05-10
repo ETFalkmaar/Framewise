@@ -9,6 +9,11 @@ import {
   requireCurrentUser,
 } from '@/lib/auth';
 import { getTemplateById } from '@/lib/checklist';
+import {
+  type PublishResult,
+  publishSite as publishSiteCore,
+  unpublishSite as unpublishSiteCore,
+} from '@/lib/site-lifecycle';
 import { ValidationError, VALIDATION_ERROR_CODES } from '@/lib/validation';
 
 async function resolveTenantAndTemplate(formData: FormData) {
@@ -64,4 +69,64 @@ export async function markItemSkippedAction(formData: FormData): Promise<void> {
   await checklistRepo.markSkipped(tenant.id, template.id);
   revalidatePath('/account/setup');
   revalidatePath('/account');
+}
+
+/**
+ * Step 32: super-admin publishes the tenant. Gated by
+ * `isUserSuperAdmin` here and again inside `publishSiteCore` so a
+ * direct POST can't slip past the wizard.
+ */
+export async function publishSiteAction(): Promise<PublishResult> {
+  let user;
+  try {
+    user = await requireCurrentUser();
+  } catch {
+    return { success: false, error: 'Niet ingelogd' };
+  }
+  if (!isUserSuperAdmin(user.id)) {
+    return { success: false, error: 'Alleen de super-admin kan publiceren' };
+  }
+  const tenant = await getActiveTenantForUser();
+  if (!tenant) return { success: false, error: 'Geen actieve tenant' };
+
+  const result = await publishSiteCore({
+    tenantId: tenant.id,
+    performedByUserId: user.id,
+  });
+  if (result.success) {
+    revalidatePath('/account/setup');
+    revalidatePath('/account');
+    revalidatePath(`/sites/${tenant.slug}`);
+  }
+  return result;
+}
+
+/**
+ * Step 32: super-admin pulls the site back to maintenance (status
+ * `paused`). The `reason` is recorded in the audit log only.
+ */
+export async function unpublishSiteAction(reason?: string): Promise<PublishResult> {
+  let user;
+  try {
+    user = await requireCurrentUser();
+  } catch {
+    return { success: false, error: 'Niet ingelogd' };
+  }
+  if (!isUserSuperAdmin(user.id)) {
+    return { success: false, error: 'Alleen de super-admin kan een site offline halen' };
+  }
+  const tenant = await getActiveTenantForUser();
+  if (!tenant) return { success: false, error: 'Geen actieve tenant' };
+
+  const result = await unpublishSiteCore({
+    tenantId: tenant.id,
+    performedByUserId: user.id,
+    reason,
+  });
+  if (result.success) {
+    revalidatePath('/account/setup');
+    revalidatePath('/account');
+    revalidatePath(`/sites/${tenant.slug}`);
+  }
+  return result;
 }

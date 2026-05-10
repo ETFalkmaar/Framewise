@@ -13,6 +13,7 @@ import {
   AuthProvider,
   getActiveTenantForUser,
   getCurrentUserWithTenants,
+  isUserSuperAdmin,
   toPublicUser,
 } from '@/lib/auth';
 import '../../globals.css';
@@ -82,8 +83,14 @@ export default async function LocaleLayout({
   const plan = tenantContext?.plan ?? null;
   const subscription = tenantContext?.subscription ?? null;
 
+  // Step 32: super-admin bypasses the maintenance shell so they can
+  // preview / fix a tenant site that's still in onboarding or
+  // paused for an emergency repair.
+  const viewerIsSuperAdmin = authContext !== null && isUserSuperAdmin(authContext.user.id);
   const showMaintenance =
-    tenant !== null && (tenant.status === 'onboarding' || tenant.status === 'paused');
+    tenant !== null &&
+    !viewerIsSuperAdmin &&
+    (tenant.status === 'onboarding' || tenant.status === 'paused');
 
   return (
     <html

@@ -79,6 +79,24 @@
       },
       "successTitle": "Alles staat klaar om live te gaan",
       "successBody": "Alle verplichte items zijn afgerond. Vraag Framewise om de site te publiceren — de publicatie-knop komt in stap 32.",
+      "publish": {
+        "publishSectionTitle": "Site publiceren",
+        "liveSectionTitle": "Site is live",
+        "publishHint": "Alle verplichte items zijn voltooid. Klik om de site live te zetten.",
+        "liveHint": "De site is publiek zichtbaar. Klik 'In onderhoudsmodus zetten' om hem tijdelijk offline te halen.",
+        "publishButton": "Site live zetten",
+        "unpublishButton": "In onderhoudsmodus zetten",
+        "publishing": "Bezig met publiceren…",
+        "unpublishing": "Bezig met offline halen…",
+        "liveStatus": "Site is live en zichtbaar voor bezoekers",
+        "requiredItemsMessage": "Niet alle verplichte items zijn voltooid. Vul ze in voordat je publiceert."
+      },
+      "awaiting": {
+        "title": "Wachten op publicatie",
+        "readyMessage": "Klaar! Framewise zal je site binnenkort live zetten.",
+        "notReadyMessage": "Vul eerst alle verplichte items in. Daarna publiceert Framewise je site.",
+        "contactInfo": "Vragen? Neem contact op via framewise.com."
+      },
       "requiredBadge": "vereist",
       "optionalBadge": "optioneel",
       "autoCompletedHint": "Wordt automatisch afgevinkt zodra je de stap voltooit in {action}.",
