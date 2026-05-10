@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
 
 import { getActiveTenantForUser } from '@/lib/auth';
-import { getConnector, getStripeOAuthConfig } from '@/lib/connectors';
+import { getConnector, getPayPalOAuthConfig, getStripeOAuthConfig } from '@/lib/connectors';
 import { getProviderById } from '@/lib/countries';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,10 @@ import {
   StripeConfigWarning,
   StripeInstructions,
 } from '@/components/connectors/stripe/instructions';
+import {
+  PayPalConfigWarning,
+  PayPalInstructions,
+} from '@/components/connectors/paypal/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -94,10 +98,14 @@ export default async function ConnectorConnectPage({
       </Card>
 
       {connector.id === 'stripe' && <StripeInstructions />}
+      {connector.id === 'paypal-business' && <PayPalInstructions />}
 
       {connector.authMethod === 'oauth' && (
         <section data-testid="oauth-flow">
           {connector.id === 'stripe' && getStripeOAuthConfig() === null && <StripeConfigWarning />}
+          {connector.id === 'paypal-business' && getPayPalOAuthConfig() === null && (
+            <PayPalConfigWarning />
+          )}
           <OAuthButton
             providerId={connector.id}
             copy={{
@@ -105,7 +113,10 @@ export default async function ConnectorConnectPage({
               starting: t('connectFlow.oauthRedirecting'),
               failed: t('connectFlow.testFailed'),
             }}
-            disabled={connector.id === 'stripe' && getStripeOAuthConfig() === null}
+            disabled={
+              (connector.id === 'stripe' && getStripeOAuthConfig() === null) ||
+              (connector.id === 'paypal-business' && getPayPalOAuthConfig() === null)
+            }
           />
         </section>
       )}

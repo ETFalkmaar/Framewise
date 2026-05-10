@@ -168,3 +168,35 @@ export type {
   StripeClientOptions,
   StripeOAuthConfig,
 } from './providers/stripe';
+
+// PayPal Business (step 19) — second OAuth payment connector. Built
+// for the CW route (Stripe isn't officially available for Curaçao
+// entities; PayPal works directly). Sandbox + Live environments
+// resolve from `PAYPAL_ENVIRONMENT`. `networkError`,
+// `configurationIncomplete`, `buildAuthorizeUrl`, `exchangeCodeForToken`,
+// and `mapXError` collide with Stripe — re-export under prefixed aliases.
+export {
+  paypalConnector,
+  PayPalConnector,
+  PayPalClient,
+  PAYPAL_ERROR_CODES,
+  DEFAULT_PAYPAL_SCOPES,
+  getPayPalApiBaseUrl,
+  getPayPalAuthorizeBaseUrl,
+  getPayPalEnvironment,
+  buildAuthorizeUrl as buildPayPalAuthorizeUrl,
+  exchangeCodeForToken as exchangePayPalCodeForToken,
+  getPayPalOAuthConfig,
+  configurationIncomplete as paypalConfigurationIncomplete,
+  mapPayPalError,
+  paypalNetworkError,
+} from './providers/paypal';
+export type {
+  PayPalCredentials,
+  PayPalEnvironment,
+  PayPalMetadata,
+  PayPalOAuthTokenResponse,
+  PayPalUserInfo,
+  PayPalClientOptions,
+  PayPalOAuthConfig,
+} from './providers/paypal';

@@ -25,9 +25,14 @@ import { mediaRepo, tokenAccessLogRepo } from '@/lib/data';
 import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import {
   ConnectorError,
+  buildPayPalAuthorizeUrl,
   buildStripeAuthorizeUrl,
   getAllConnectors,
   getConnector,
+  getPayPalApiBaseUrl,
+  getPayPalAuthorizeBaseUrl,
+  getPayPalEnvironment,
+  getPayPalOAuthConfig,
   getStripeOAuthConfig,
   mockApiKeyConnector,
   STRIPE_AUTHORIZE_URL,
@@ -851,6 +856,7 @@ async function ConnectorFrameworkPlayground() {
       <EBoekhoudenConnectorDebug />
       <MollieConnectorDebug />
       <StripeConnectorDebug />
+      <PayPalConnectorDebug />
     </section>
   );
 }
@@ -1157,6 +1163,128 @@ function StripeConnectorDebug() {
         <p className="text-muted-foreground italic">
           handleOAuthCallback exchanges the code at connect.stripe.com/oauth/token then probes
           /v1/account; no debug call here so /debug/data never burns through Stripe rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PayPalConnectorDebug() {
+  const paypal = getConnector('paypal-business');
+  if (!paypal) {
+    return (
+      <Card size="sm" data-testid="paypal-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">PayPal Business connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 19+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const config = getPayPalOAuthConfig();
+  const environment = getPayPalEnvironment();
+  const clientIdConfigured = Boolean(process.env.PAYPAL_CLIENT_ID?.trim());
+  const secretConfigured = Boolean(process.env.PAYPAL_CLIENT_SECRET?.trim());
+  const authorizeBase = getPayPalAuthorizeBaseUrl(environment);
+  const apiBase = getPayPalApiBaseUrl(environment);
+  // Build a sample authorize URL with a dummy state so operators can
+  // inspect the exact URL we'd send to PayPal — useful for debugging
+  // without ever firing a real OAuth round-trip.
+  const sampleAuthorizeUrl = config
+    ? buildPayPalAuthorizeUrl({
+        clientId: config.clientId,
+        redirectUri:
+          'https://framewise.example/api/connectors/oauth/callback?providerId=paypal-business',
+        state: 'example_state_xxxx',
+        environment: config.environment,
+      })
+    : null;
+
+  return (
+    <Card size="sm" data-testid="paypal-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">PayPal Business connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          Second OAuth payment provider — works directly from Curaçao, no Stripe Atlas detour.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{paypal.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{paypal.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{paypal.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(paypal.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">scopes </span>
+          <span className="text-foreground">
+            [{(paypal.oauth?.scopes ?? []).map((s) => `'${s}'`).join(', ')}]
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">environment </span>
+          <Badge
+            variant={environment === 'live' ? 'destructive' : 'secondary'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="paypal-debug-environment"
+          >
+            {environment}
+          </Badge>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">authorize base </span>
+          <span className="text-foreground">{authorizeBase}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api base </span>
+          <span className="text-foreground">{apiBase}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">PAYPAL_CLIENT_ID </span>
+          <Badge
+            variant={clientIdConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="paypal-debug-client-id"
+          >
+            {clientIdConfigured ? 'configured' : 'not configured'}
+          </Badge>
+          <span className="text-muted-foreground"> · PAYPAL_CLIENT_SECRET </span>
+          <Badge
+            variant={secretConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="paypal-debug-secret"
+          >
+            {secretConfigured ? 'configured' : 'not configured'}
+          </Badge>
+        </p>
+        {sampleAuthorizeUrl && (
+          <p className="font-mono break-all" data-testid="paypal-debug-sample-url">
+            <span className="text-muted-foreground">sample authorize URL </span>
+            <span className="text-foreground">{sampleAuthorizeUrl}</span>
+          </p>
+        )}
+        <p className="text-muted-foreground italic">
+          handleOAuthCallback exchanges the code at {apiBase}/v1/oauth2/token (Basic auth) then
+          probes /v1/identity/oauth2/userinfo; no debug call here so /debug/data never burns through
+          PayPal rate limits.
         </p>
       </CardContent>
     </Card>
