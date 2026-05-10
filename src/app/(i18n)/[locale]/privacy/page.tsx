@@ -2,6 +2,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import type { Locale } from '@/i18n/routing';
 
+// Step 29: cache for an hour — content barely changes. Mirrors
+// `REVALIDATE_STATIC_CONTENT` in `src/lib/perf/isr-config.ts`.
+export const revalidate = 3600;
+
 /**
  * Placeholder privacy policy. Step 93 ships the real DPA + privacy
  * template generator; for now this page exists so the consent

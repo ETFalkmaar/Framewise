@@ -1236,6 +1236,58 @@ loaders in later steps will gate on `choices.analytics === true`.
 
 Adds 20 tests (consent-storage: 20) — total 871.
 
+### Performance & ISR (step 29 — fase 9 part 6/6, FASE 9 COMPLETE)
+
+Step 29 closes the public-renderer phase with the performance pass.
+Three small libs and a `next.config.ts` header rule do most of the
+work; the block components now opt into priority loading and
+blur-up placeholders without changing their props.
+
+#### Helpers (`src/lib/perf/`)
+
+- **`isr-config.ts`** — `ISR_REVALIDATE.PUBLIC_PAGE = 60`,
+  `SITEMAP = 60`, `STATIC_CONTENT = 3600`, `ROBOTS = 3600`. All
+  windows live in one file so future audits don't have to grep
+  three different routes.
+- **`image-helpers.ts`** — `IMAGE_SIZES` presets the renderer
+  hands to `next/image`'s `sizes` prop; `getBlurDataUrl()` rewrites
+  Picsum URLs to `/10/10` for a near-free blur-up placeholder;
+  `shouldPrioritizeImage()` flags the LCP candidate (hero block at
+  position 0); `galleryGridSizes()` picks the right preset for a
+  gallery's column count.
+
+#### Block components
+
+- **Hero** now sets `priority`, `fetchPriority="high"`,
+  `sizes={IMAGE_SIZES.HERO_FULL}`, and a `blur` placeholder for
+  Picsum sources.
+- **Image** sets `loading="lazy"`, `sizes` matched to its
+  `full_width` flag, and a blur placeholder.
+- **Gallery** marks the first image of each layout `loading="eager"`
+  (above-the-fold), the rest `lazy`, picks `sizes` from
+  `galleryGridSizes(columns)`, and adds blur placeholders.
+
+#### Routing
+
+All three public routes plus the `/privacy` and `/terms`
+placeholders export `revalidate = ISR_REVALIDATE.…` so Next renders
+them through ISR rather than on every request.
+
+#### `next.config.ts`
+
+`headers()` now caches static asset extensions for a year
+(`max-age=31536000, immutable`) and the `/sites/*` tree for 60 s
+shared with a 5-minute SWR window. `experimental.optimizePackageImports`
+includes `lucide-react` to keep the icon bundle slim.
+
+#### Web Vitals
+
+`<WebVitalsReporter />` (mounted by `<PublicLayout />`) logs FCP,
+LCP, CLS, INP, and TTFB to the dev console. Production analytics
+hook arrives in step 88.
+
+Adds 20 tests (image-helpers: 14, isr-config: 6) — total 891.
+
 ## Status
 
-In development - Step 28 of 96 (revised plan) — FASE 9 deel 5/6 (cookie consent live)
+In development - Step 29 of 96 (revised plan) — **FASE 9 COMPLETE** (6/6, public renderer done)

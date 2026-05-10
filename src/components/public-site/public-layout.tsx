@@ -1,6 +1,7 @@
 import { ConsentProvider } from '@/components/consent/consent-provider';
 import { ConsentModal } from '@/components/consent/consent-modal';
 import { CookieBanner } from '@/components/consent/cookie-banner';
+import { WebVitalsReporter } from '@/components/perf/web-vitals';
 
 import { PublicFooter } from './public-footer';
 
@@ -19,6 +20,7 @@ import { PublicFooter } from './public-footer';
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <ConsentProvider>
+      <WebVitalsReporter />
       <div className="flex min-h-screen flex-col">
         <div className="flex-1">{children}</div>
         <PublicFooter />

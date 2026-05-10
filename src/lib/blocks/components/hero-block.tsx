@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 
 import { getTranslatedString } from '@/lib/public-site/locale-fallback';
 import type { HeroBlock as HeroBlockType, Locale } from '@/lib/blocks/types';
+import { IMAGE_SIZES, getBlurDataUrl } from '@/lib/perf/image-helpers';
 
 const OVERLAY_CLASSES: Record<NonNullable<HeroBlockType['props']['background_overlay']>, string> = {
   none: '',
@@ -34,6 +35,7 @@ export function HeroBlock({
   const ctaText = getTranslatedString(block.props.cta_text_translations, locale, defaultLocale);
   const overlay = OVERLAY_CLASSES[block.props.background_overlay ?? 'dark'];
   const hasImage = Boolean(block.props.image_url);
+  const blurDataURL = block.props.image_url ? getBlurDataUrl(block.props.image_url) : undefined;
 
   return (
     <section
@@ -46,8 +48,10 @@ export function HeroBlock({
           alt=""
           fill
           priority
-          sizes="100vw"
+          fetchPriority="high"
+          sizes={IMAGE_SIZES.HERO_FULL}
           className="object-cover"
+          {...(blurDataURL ? { placeholder: 'blur' as const, blurDataURL } : {})}
         />
       )}
       {hasImage && overlay && (
