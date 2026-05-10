@@ -368,5 +368,52 @@
         "newsletter": "Newsletter"
       }
     }
+  },
+  "consent": {
+    "settings_link": "Paramètres de cookies",
+    "banner": {
+      "aria_label": "Consentement aux cookies",
+      "title": "Nous utilisons des cookies",
+      "description": "Nous utilisons des cookies pour améliorer votre expérience. Choisissez ceux que vous acceptez.",
+      "privacy_link": "Lire notre politique de confidentialité",
+      "accept_all": "Tout accepter",
+      "only_necessary": "Uniquement nécessaires",
+      "customize": "Personnaliser"
+    },
+    "modal": {
+      "aria_label": "Préférences de cookies",
+      "title": "Préférences de cookies",
+      "description": "Choisissez les cookies que vous autorisez. Vous pourrez modifier ce choix via « Paramètres de cookies » en bas de chaque page.",
+      "necessary": {
+        "title": "Cookies nécessaires",
+        "description": "Indispensables au fonctionnement du site (session, sécurité). Ils ne peuvent pas être désactivés."
+      },
+      "analytics": {
+        "title": "Cookies analytiques",
+        "description": "Nous aident à comprendre comment les visiteurs utilisent le site afin de l'améliorer."
+      },
+      "marketing": {
+        "title": "Cookies marketing",
+        "description": "Pour les publicités personnalisées et le remarketing sur d'autres sites."
+      },
+      "save": "Enregistrer les préférences",
+      "only_necessary": "Uniquement nécessaires",
+      "cancel": "Annuler"
+    }
+  },
+  "footer": {
+    "brand": "Framewise",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions générales"
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "placeholder_content": "Ceci est une politique de confidentialité provisoire. Le texte complet sera fourni après l'intégration.",
+    "placeholder_note": "Les clients reçoivent un modèle de politique de confidentialité définitif à la livraison (arrive à l'étape 93)."
+  },
+  "terms": {
+    "title": "Conditions générales",
+    "placeholder_content": "Ceci est un texte provisoire des conditions générales. Le texte complet sera fourni après l'intégration.",
+    "placeholder_note": "Les clients reçoivent un modèle de conditions générales définitif à la livraison (arrive à l'étape 93)."
   }
 }

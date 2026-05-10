@@ -368,5 +368,52 @@
         "newsletter": "Newsletter"
       }
     }
+  },
+  "consent": {
+    "settings_link": "Cookie settings",
+    "banner": {
+      "aria_label": "Cookie consent",
+      "title": "We use cookies",
+      "description": "We use cookies to improve your experience. Choose which ones you accept.",
+      "privacy_link": "Read our privacy policy",
+      "accept_all": "Accept all",
+      "only_necessary": "Only necessary",
+      "customize": "Customise"
+    },
+    "modal": {
+      "aria_label": "Cookie preferences",
+      "title": "Cookie preferences",
+      "description": "Choose which cookies you allow. You can change this later via 'Cookie settings' at the bottom of every page.",
+      "necessary": {
+        "title": "Necessary cookies",
+        "description": "Required for the site to work (session, security). These cannot be turned off."
+      },
+      "analytics": {
+        "title": "Analytics cookies",
+        "description": "Help us understand how visitors use the site so we can improve it."
+      },
+      "marketing": {
+        "title": "Marketing cookies",
+        "description": "For personalised ads and remarketing on other sites."
+      },
+      "save": "Save preferences",
+      "only_necessary": "Only necessary",
+      "cancel": "Cancel"
+    }
+  },
+  "footer": {
+    "brand": "Framewise",
+    "privacy": "Privacy policy",
+    "terms": "Terms and conditions"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "placeholder_content": "This is a placeholder privacy policy. The full text will be provided after onboarding.",
+    "placeholder_note": "Customers receive a final privacy policy template at delivery (arrives in step 93)."
+  },
+  "terms": {
+    "title": "Terms and conditions",
+    "placeholder_content": "This is a placeholder for the terms and conditions. The full text will be provided after onboarding.",
+    "placeholder_note": "Customers receive a final terms-and-conditions template at delivery (arrives in step 93)."
   }
 }

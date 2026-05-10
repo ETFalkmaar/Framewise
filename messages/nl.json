@@ -368,5 +368,52 @@
         "newsletter": "Nieuwsbrief"
       }
     }
+  },
+  "consent": {
+    "settings_link": "Cookie-instellingen",
+    "banner": {
+      "aria_label": "Cookie-toestemming",
+      "title": "We gebruiken cookies",
+      "description": "We gebruiken cookies om je ervaring te verbeteren. Kies welke je accepteert.",
+      "privacy_link": "Lees ons privacybeleid",
+      "accept_all": "Accepteer alles",
+      "only_necessary": "Alleen noodzakelijk",
+      "customize": "Voorkeuren aanpassen"
+    },
+    "modal": {
+      "aria_label": "Cookie-voorkeuren",
+      "title": "Cookie-voorkeuren",
+      "description": "Kies welke cookies je toestaat. Je kunt deze keuze later wijzigen via 'Cookie-instellingen' onderaan elke pagina.",
+      "necessary": {
+        "title": "Noodzakelijke cookies",
+        "description": "Vereist voor de werking van de site (sessie, beveiliging). Deze kunnen niet worden uitgeschakeld."
+      },
+      "analytics": {
+        "title": "Analytics cookies",
+        "description": "Helpen ons begrijpen hoe bezoekers de site gebruiken zodat we kunnen verbeteren."
+      },
+      "marketing": {
+        "title": "Marketing cookies",
+        "description": "Voor gepersonaliseerde advertenties en remarketing op andere sites."
+      },
+      "save": "Voorkeuren opslaan",
+      "only_necessary": "Alleen noodzakelijk",
+      "cancel": "Annuleren"
+    }
+  },
+  "footer": {
+    "brand": "Framewise",
+    "privacy": "Privacybeleid",
+    "terms": "Algemene voorwaarden"
+  },
+  "privacy": {
+    "title": "Privacybeleid",
+    "placeholder_content": "Dit is een placeholder privacybeleid. De volledige tekst wordt geleverd na onboarding.",
+    "placeholder_note": "Klanten ontvangen een definitieve privacybeleid-sjabloon bij oplevering (komt in stap 93)."
+  },
+  "terms": {
+    "title": "Algemene voorwaarden",
+    "placeholder_content": "Dit is een placeholder voor de algemene voorwaarden. De volledige tekst wordt geleverd na onboarding.",
+    "placeholder_note": "Klanten ontvangen een definitief sjabloon voor algemene voorwaarden bij oplevering (komt in stap 93)."
   }
 }

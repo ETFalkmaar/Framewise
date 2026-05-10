@@ -5,6 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { getCurrentTenant } from '@/lib/tenant';
 import { resolvePage } from '@/lib/public-site/resolve-page';
 import { type Locale } from '@/i18n/routing';
+import { PublicLayout } from '@/components/public-site/public-layout';
 import { PublicPageRenderer } from '@/components/public-site/public-page-renderer';
 import { resolveBaseUrl } from '@/lib/seo/base-url';
 import { buildPageMetadata } from '@/lib/seo/metadata';
@@ -83,7 +84,7 @@ export default async function PublicCatchAllPage({
   const pageLd = buildWebPageLD({ resolved, locale, baseUrl, pathname });
 
   return (
-    <>
+    <PublicLayout>
       <script
         type="application/ld+json"
         data-testid="jsonld-organization"
@@ -95,6 +96,6 @@ export default async function PublicCatchAllPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageLd) }}
       />
       <PublicPageRenderer resolved={resolved} />
-    </>
+    </PublicLayout>
   );
 }

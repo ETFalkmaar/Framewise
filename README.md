@@ -1181,6 +1181,61 @@ so a fresh page publish surfaces in the sitemap within a minute.
 
 Adds 27 tests (sitemap-builder: 18, robots-builder: 9) — total 851.
 
+### Cookie consent (step 28 — fase 9 part 5/6)
+
+Step 28 ships the GDPR-mandated cookie consent banner that every public
+tenant page now wears. Three categories — `necessary` (always on),
+`analytics`, `marketing` — with default-deny for the latter two until
+the visitor opts in. Pre-checked boxes are forbidden under GDPR.
+
+#### Storage layer (`src/lib/consent/`)
+
+- **`types.ts`** — exports `ConsentChoices`, `ConsentRecord`,
+  `DEFAULT_DENY`, `ACCEPT_ALL`, plus the storage key
+  (`framewise_consent_v1`), version, TTL (365 days), and the
+  `framewise:consent-changed` custom event name.
+- **`storage.ts`** — `readConsent()` returns the stored record or
+  `null` for missing / corrupt / version-mismatched / expired
+  payloads (it never throws). `writeConsent()` persists +
+  dispatches the change event. `clearConsent()` and
+  `hasGivenConsent()` round out the API. All functions are
+  SSR-safe (`typeof window` guards).
+
+#### React layer (`src/components/consent/`)
+
+- **`<ConsentProvider />`** — uses
+  [`useSyncExternalStore`](https://react.dev/reference/react/useSyncExternalStore)
+  so the consent state is read straight from `localStorage` without
+  any `setState`-in-effect. Subscribes to the `storage` event (other
+  tabs) and the `framewise:consent-changed` event (same tab) so all
+  subscribers stay in sync.
+- **`<CookieBanner />`** — fixed-bottom banner with three buttons:
+  "Customise" (opens modal), "Only necessary" (persists
+  `DEFAULT_DENY`), "Accept all" (persists `ACCEPT_ALL`). Hidden once
+  a valid consent record exists.
+- **`<ConsentModal />`** — granular per-category switches. Mounts
+  on demand (not via `display: none`) so `useState` re-initialises
+  with the latest saved choices each time the user opens it.
+- **`<CookieSettingsLink />`** — footer button that re-opens the
+  modal so visitors can change or withdraw their choice. GDPR
+  rule: withdrawing consent must be as easy as giving it.
+
+#### Layout integration
+
+A new `<PublicLayout />` wraps every public tenant page
+(`(public)/[...slug]`, `sites/[slug]`, `sites/[slug]/[...rest]`).
+It mounts the provider, the banner, the modal, and a
+`<PublicFooter />` carrying the privacy / terms / cookie-settings
+links. New placeholder routes `/<locale>/privacy` and
+`/<locale>/terms` exist so the footer links resolve to a 200 page;
+the real DPA + privacy template generator ships in step 93.
+
+`useConsent()` exposes `choices`, `hasConsented`, `setChoices`,
+`showBanner`, `showModal`, `openModal`, `closeModal` — analytics
+loaders in later steps will gate on `choices.analytics === true`.
+
+Adds 20 tests (consent-storage: 20) — total 871.
+
 ## Status
 
-In development - Step 27 of 96 (revised plan) — FASE 9 deel 4/6 (sitemap + robots live)
+In development - Step 28 of 96 (revised plan) — FASE 9 deel 5/6 (cookie consent live)
