@@ -1,0 +1,92 @@
+[
+  {
+    "id": "9a000000-0000-0000-0000-000000000001",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "file_name": "villa_pool.jpg",
+    "mime_type": "image/jpeg",
+    "size_bytes": 482133,
+    "storage_path": "tenants/11111111-1111-1111-1111-111111111111/2026/03/villa_pool.jpg",
+    "public_url": "https://picsum.photos/seed/ad2563e02c4a/800/600",
+    "alt_text": {
+      "nl": "Zwembad Villa Bonbini bij zonsondergang",
+      "fr": "Piscine Villa Bonbini au coucher du soleil",
+      "en": "Villa Bonbini pool at sunset"
+    },
+    "width": 800,
+    "height": 600,
+    "uploaded_by_user_id": "a0000000-0000-0000-0000-000000000002",
+    "created_at": "2026-03-04T09:30:00.000Z"
+  },
+  {
+    "id": "9a000000-0000-0000-0000-000000000002",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "file_name": "villa_living.jpg",
+    "mime_type": "image/jpeg",
+    "size_bytes": 612877,
+    "storage_path": "tenants/11111111-1111-1111-1111-111111111111/2026/03/villa_living.jpg",
+    "public_url": "https://picsum.photos/seed/3b990040d6cd/800/600",
+    "alt_text": {
+      "nl": "Woonkamer met uitzicht op de baai",
+      "fr": "Salon avec vue sur la baie",
+      "en": "Living room with bay view"
+    },
+    "width": 800,
+    "height": 600,
+    "uploaded_by_user_id": "a0000000-0000-0000-0000-000000000002",
+    "created_at": "2026-03-12T14:10:00.000Z"
+  },
+  {
+    "id": "9a000000-0000-0000-0000-000000000003",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "file_name": "villa_garden.jpg",
+    "mime_type": "image/jpeg",
+    "size_bytes": 539209,
+    "storage_path": "tenants/11111111-1111-1111-1111-111111111111/2026/04/villa_garden.jpg",
+    "public_url": "https://picsum.photos/seed/f0039ec35985/800/600",
+    "alt_text": {
+      "nl": "Tropische tuin met palmen",
+      "fr": "Jardin tropical avec palmiers",
+      "en": "Tropical garden with palm trees"
+    },
+    "width": 800,
+    "height": 600,
+    "uploaded_by_user_id": "a0000000-0000-0000-0000-000000000002",
+    "created_at": "2026-04-15T11:45:00.000Z"
+  },
+  {
+    "id": "9a000000-0000-0000-0000-000000000004",
+    "tenant_id": "22222222-2222-2222-2222-222222222222",
+    "file_name": "restaurant_terrace.jpg",
+    "mime_type": "image/jpeg",
+    "size_bytes": 425100,
+    "storage_path": "tenants/22222222-2222-2222-2222-222222222222/2026/03/restaurant_terrace.jpg",
+    "public_url": "https://picsum.photos/seed/57d61873d7e1/800/600",
+    "alt_text": {
+      "nl": "Terras langs het Damrak",
+      "fr": "Terrasse le long du Damrak",
+      "en": "Terrace along the Damrak"
+    },
+    "width": 800,
+    "height": 600,
+    "uploaded_by_user_id": "a0000000-0000-0000-0000-000000000003",
+    "created_at": "2026-03-22T16:00:00.000Z"
+  },
+  {
+    "id": "9a000000-0000-0000-0000-000000000005",
+    "tenant_id": "22222222-2222-2222-2222-222222222222",
+    "file_name": "restaurant_dish.jpg",
+    "mime_type": "image/jpeg",
+    "size_bytes": 387412,
+    "storage_path": "tenants/22222222-2222-2222-2222-222222222222/2026/04/restaurant_dish.jpg",
+    "public_url": "https://picsum.photos/seed/20f2e75b5004/800/600",
+    "alt_text": {
+      "nl": "Signatuur-gerecht met vis",
+      "fr": "Plat signature avec poisson",
+      "en": "Signature fish dish"
+    },
+    "width": 800,
+    "height": 600,
+    "uploaded_by_user_id": "a0000000-0000-0000-0000-000000000003",
+    "created_at": "2026-04-28T19:20:00.000Z"
+  }
+]

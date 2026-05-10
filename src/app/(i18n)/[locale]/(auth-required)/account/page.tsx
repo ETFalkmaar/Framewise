@@ -121,7 +121,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
       )}
 
       <Separator className="my-12" />
-      <div className="space-y-3">
+      <div className="flex flex-wrap gap-3">
         <Link
           href="/account/connections"
           data-testid="link-connections"
@@ -129,10 +129,17 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         >
           → {t('viewConnections')}
         </Link>
-        <p className="text-muted-foreground font-mono text-xs">
-          Mock auth — Supabase replacement scheduled for step 119/118.
-        </p>
+        <Link
+          href="/account/media"
+          data-testid="link-media"
+          className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+        >
+          → {t('viewMedia')}
+        </Link>
       </div>
+      <p className="text-muted-foreground mt-3 font-mono text-xs">
+        Mock auth — Supabase replacement scheduled for step 119/118.
+      </p>
     </main>
   );
 }

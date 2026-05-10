@@ -34,6 +34,17 @@
     "noTenants": "Aucun tenant lié à ce compte.",
     "logout": "Se déconnecter",
     "viewConnections": "Gérer les connexions",
+    "viewMedia": "Bibliothèque média",
+    "media": {
+      "title": "Bibliothèque média",
+      "subtitle": "Images et documents téléversés pour ce tenant.",
+      "noTenant": "Aucun tenant sélectionné pour cette session.",
+      "empty": "Aucun média téléversé pour l'instant.",
+      "emptyHint": "L'étape 14+ ajoute le formulaire de téléversement. D'ici là, c'est une vue en lecture seule.",
+      "uploadButton": "Téléverser un fichier",
+      "uploadDisabled": "Les téléversements seront activés dans une étape ultérieure.",
+      "storageBadge": "stockage"
+    },
     "setup": {
       "title": "Checklist de configuration",
       "subtitle": "Ce qu'il reste à faire avant la mise en ligne du site.",

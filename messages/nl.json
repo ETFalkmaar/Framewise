@@ -34,6 +34,17 @@
     "noTenants": "Geen tenants gekoppeld aan dit account.",
     "logout": "Uitloggen",
     "viewConnections": "Verbindingen beheren",
+    "viewMedia": "Mediabibliotheek",
+    "media": {
+      "title": "Mediabibliotheek",
+      "subtitle": "Afbeeldingen en documenten die voor deze tenant zijn geüpload.",
+      "noTenant": "Geen tenant geselecteerd voor deze sessie.",
+      "empty": "Nog geen media geüpload.",
+      "emptyHint": "Stap 14+ voegt het upload-formulier toe. Tot dan is dit een read-only weergave.",
+      "uploadButton": "Upload nieuw bestand",
+      "uploadDisabled": "Uploads worden in een latere stap aangezet.",
+      "storageBadge": "opslag"
+    },
     "setup": {
       "title": "Setup-checklist",
       "subtitle": "Wat er nog moet gebeuren voordat deze site live mag.",
