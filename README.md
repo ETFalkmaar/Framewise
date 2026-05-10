@@ -1426,6 +1426,35 @@ page open and come back later.
 
 Adds 21 tests (vercel-client: 9, setup: 12) — total 987.
 
+### Branded maintenance page (step 34 — fase 10 part 5/5, FASE 10 COMPLETE)
+
+Step 34 swaps the bare maintenance shell for a branded one and
+gives super-admins a settings form to customise it.
+
+- `Tenant` gains three optional fields:
+  `maintenance_message_translations` (per locale),
+  `maintenance_logo_url`, `maintenance_contact_email`. All
+  nullable so existing tenants keep working — the renderer
+  falls back to a Framewise default frame when nothing is set.
+- `src/lib/maintenance/` — `resolveMaintenanceMessage()` walks
+  the locale fallback chain (`locale` → `tenant.default_locale`
+  → any non-empty entry → framework default).
+  `hasMaintenanceBranding()` is the bool the UI uses to decide
+  whether to render the customer's logo or the initial-letter
+  placeholder.
+- `src/components/maintenance-page.tsx` — server component:
+  gradient background, tenant logo (or initial), localised
+  headline + message, optional mailto link to the contact
+  email, "Powered by Framewise" footer.
+- `/admin/tenants/[tenantId]/maintenance` (super-admin only) —
+  settings form with logo URL + contact email + three locale
+  text areas. Server action validates via Zod and writes the
+  three columns in one update.
+- Locale layout passes `locale` into `<MaintenancePage />` so
+  the visitor's language wins over the tenant default.
+
+Adds 14 tests (lib/maintenance: 14) — total 1001 🎉
+
 ## Status
 
-In development - Step 33 of 96 (revised plan) — FASE 10 deel 4/5 (domain wizard)
+In development - Step 34 of 96 (revised plan) — **FASE 10 COMPLETE** (5/5, onboarding + site-live ready)

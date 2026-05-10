@@ -28,6 +28,11 @@ const twitterHandleSchema = z.string().regex(/^[A-Za-z0-9_]{1,15}$/, 'Expected a
 
 const ogImageUrlSchema = z.string().url();
 
+// Step 34: branded maintenance fields.
+const maintenanceMessageSchema = z.partialRecord(localeSchema, z.string().min(1).max(500));
+const maintenanceLogoUrlSchema = z.string().url();
+const maintenanceContactEmailSchema = z.string().email().toLowerCase();
+
 export const tenantInsertSchema = z
   .object({
     slug: slugSchema,
@@ -43,6 +48,9 @@ export const tenantInsertSchema = z
     og_image_url: ogImageUrlSchema.nullable(),
     organization_type: organizationTypeSchema.nullable(),
     twitter_handle: twitterHandleSchema.nullable(),
+    maintenance_message_translations: maintenanceMessageSchema.nullable(),
+    maintenance_logo_url: maintenanceLogoUrlSchema.nullable(),
+    maintenance_contact_email: maintenanceContactEmailSchema.nullable(),
   })
   .refine((data) => data.enabled_locales.includes(data.default_locale), {
     message: 'enabled_locales must include the default_locale',
@@ -64,6 +72,9 @@ export const tenantUpdateSchema = z
     og_image_url: ogImageUrlSchema.nullable().optional(),
     organization_type: organizationTypeSchema.nullable().optional(),
     twitter_handle: twitterHandleSchema.nullable().optional(),
+    maintenance_message_translations: maintenanceMessageSchema.nullable().optional(),
+    maintenance_logo_url: maintenanceLogoUrlSchema.nullable().optional(),
+    maintenance_contact_email: maintenanceContactEmailSchema.nullable().optional(),
   })
   .strict();
 
@@ -82,6 +93,9 @@ export const tenantRowSchema = z.object({
   og_image_url: ogImageUrlSchema.nullable(),
   organization_type: organizationTypeSchema.nullable(),
   twitter_handle: twitterHandleSchema.nullable(),
+  maintenance_message_translations: maintenanceMessageSchema.nullable(),
+  maintenance_logo_url: maintenanceLogoUrlSchema.nullable(),
+  maintenance_contact_email: maintenanceContactEmailSchema.nullable(),
   created_at: isoDateTimeSchema,
   updated_at: isoDateTimeSchema,
 });

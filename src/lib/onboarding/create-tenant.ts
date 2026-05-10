@@ -97,6 +97,9 @@ export async function createTenant(
       og_image_url: null,
       organization_type: null,
       twitter_handle: null,
+      maintenance_message_translations: null,
+      maintenance_logo_url: null,
+      maintenance_contact_email: null,
     });
   } catch (err) {
     return { success: false, error: errorMessage(err, 'Tenant aanmaken mislukt') };

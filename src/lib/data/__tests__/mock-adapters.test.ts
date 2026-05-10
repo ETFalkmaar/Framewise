@@ -80,6 +80,9 @@ describe('mock data layer — tenants CRUD', () => {
       og_image_url: null,
       organization_type: null,
       twitter_handle: null,
+      maintenance_message_translations: null,
+      maintenance_logo_url: null,
+      maintenance_contact_email: null,
     });
     expect(created.id).toMatch(/^[0-9a-f]{8}-/i);
     expect(created.created_at).toBe(created.updated_at);
@@ -201,6 +204,9 @@ describe('mock data layer — validation enforcement', () => {
         og_image_url: null,
         organization_type: null,
         twitter_handle: null,
+        maintenance_message_translations: null,
+        maintenance_logo_url: null,
+        maintenance_contact_email: null,
       })
     ).rejects.toBeInstanceOf(ValidationError);
   });
@@ -222,6 +228,9 @@ describe('mock data layer — validation enforcement', () => {
         og_image_url: null,
         organization_type: null,
         twitter_handle: null,
+        maintenance_message_translations: null,
+        maintenance_logo_url: null,
+        maintenance_contact_email: null,
       });
     } catch (e) {
       caught = e;
