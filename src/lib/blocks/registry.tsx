@@ -1,6 +1,10 @@
+import { ContactBlock as ContactComponent } from './components/contact-block';
 import { CtaBlock as CtaComponent } from './components/cta-block';
+import { FaqBlock as FaqComponent } from './components/faq-block';
+import { GalleryBlock as GalleryComponent } from './components/gallery-block';
 import { HeroBlock as HeroComponent } from './components/hero-block';
 import { ImageBlock as ImageComponent } from './components/image-block';
+import { PricingBlock as PricingComponent } from './components/pricing-block';
 import { TextBlock as TextComponent } from './components/text-block';
 import { KNOWN_BLOCK_TYPES, type BlockType, type ContentBlock, type Locale } from './types';
 
@@ -22,8 +26,8 @@ type BlockComponent = React.ComponentType<BlockComponentProps>;
 /**
  * Static registry of block components. Adding a new block type
  * means: declare it in `types.ts`, add to `KNOWN_BLOCK_TYPES`, add
- * the component here. Step 25 will add gallery / faq / pricing /
- * contact.
+ * the component here. Step 24 shipped 4 base blocks; step 25
+ * completes the set with gallery / faq / pricing / contact.
  *
  * The cast through `as BlockComponent` is safe because each
  * component's `block` prop is a discriminated subtype — the registry
@@ -35,6 +39,10 @@ const registry: Record<BlockType, BlockComponent> = {
   text: TextComponent as BlockComponent,
   image: ImageComponent as BlockComponent,
   cta: CtaComponent as BlockComponent,
+  gallery: GalleryComponent as BlockComponent,
+  faq: FaqComponent as BlockComponent,
+  pricing: PricingComponent as BlockComponent,
+  contact: ContactComponent as BlockComponent,
 };
 
 /**

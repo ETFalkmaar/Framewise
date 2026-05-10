@@ -325,5 +325,263 @@
     },
     "created_at": "2026-03-15T10:10:00.000Z",
     "updated_at": "2026-03-15T10:10:00.000Z"
+  },
+
+  {
+    "id": "10000000-0000-0000-0000-000000000023",
+    "page_id": "f0000000-0000-0000-0000-000000000004",
+    "block_type": "gallery",
+    "order_index": 3,
+    "data": {
+      "layout": "grid",
+      "columns": 3,
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/villa-bedroom/800/600",
+          "alt_translations": { "nl": "Hoofdslaapkamer", "en": "Master bedroom" },
+          "caption_translations": { "nl": "Hoofdslaapkamer", "en": "Master bedroom" }
+        },
+        {
+          "url": "https://picsum.photos/seed/villa-kitchen/800/600",
+          "alt_translations": { "nl": "Open keuken", "en": "Open kitchen" },
+          "caption_translations": { "nl": "Open keuken", "en": "Open kitchen" }
+        },
+        {
+          "url": "https://picsum.photos/seed/villa-terrace/800/600",
+          "alt_translations": { "nl": "Terras met zeezicht", "en": "Terrace with sea view" },
+          "caption_translations": { "nl": "Terras", "en": "Terrace" }
+        },
+        {
+          "url": "https://picsum.photos/seed/villa-garden/800/600",
+          "alt_translations": { "nl": "De tuin", "en": "The garden" },
+          "caption_translations": { "nl": "Tuin", "en": "Garden" }
+        },
+        {
+          "url": "https://picsum.photos/seed/villa-bath/800/600",
+          "alt_translations": { "nl": "Badkamer", "en": "Bathroom" }
+        },
+        {
+          "url": "https://picsum.photos/seed/villa-livingroom/800/600",
+          "alt_translations": { "nl": "Woonkamer", "en": "Living room" }
+        }
+      ]
+    },
+    "created_at": "2026-05-10T08:05:00.000Z",
+    "updated_at": "2026-05-10T08:05:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000024",
+    "page_id": "f0000000-0000-0000-0000-000000000004",
+    "block_type": "faq",
+    "order_index": 4,
+    "data": {
+      "headline_translations": {
+        "nl": "Veelgestelde vragen",
+        "en": "Frequently asked questions"
+      },
+      "items": [
+        {
+          "question_translations": {
+            "nl": "Hoeveel personen kunnen er verblijven?",
+            "en": "How many guests can stay?"
+          },
+          "answer_translations": {
+            "nl": "De villa biedt comfortabel plek aan 8 personen, verdeeld over 4 ruime slaapkamers.",
+            "en": "The villa comfortably hosts up to 8 guests across 4 spacious bedrooms."
+          }
+        },
+        {
+          "question_translations": {
+            "nl": "Is de villa kindvriendelijk?",
+            "en": "Is the villa child-friendly?"
+          },
+          "answer_translations": {
+            "nl": "Ja, het zwembad heeft een veiligheidshek en er zijn kinderbedjes en kinderstoelen beschikbaar op aanvraag.",
+            "en": "Yes, the pool has a safety fence and cribs + high chairs are available on request."
+          }
+        },
+        {
+          "question_translations": {
+            "nl": "Wat is inbegrepen?",
+            "en": "What's included?"
+          },
+          "answer_translations": {
+            "nl": "Schoonmaak, beddengoed, handdoeken, wifi en airconditioning zijn inbegrepen. Een privé chef is bij Holiday-tarief inbegrepen.",
+            "en": "Cleaning, bedding, towels, wifi, and air conditioning are included. A private chef is included with the Holiday rate."
+          }
+        }
+      ]
+    },
+    "created_at": "2026-05-10T08:10:00.000Z",
+    "updated_at": "2026-05-10T08:10:00.000Z"
+  },
+
+  {
+    "id": "10000000-0000-0000-0000-000000000080",
+    "page_id": "f0000000-0000-0000-0000-000000000006",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline_translations": {
+        "nl": "Tarieven & boekingen",
+        "en": "Rates & booking"
+      },
+      "subheadline_translations": {
+        "nl": "Drie pakketten, één onvergetelijk verblijf",
+        "en": "Three packages, one unforgettable stay"
+      },
+      "image_url": "https://picsum.photos/seed/villa-rates/1920/1080",
+      "background_overlay": "dark"
+    },
+    "created_at": "2026-05-10T08:15:00.000Z",
+    "updated_at": "2026-05-10T08:15:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000081",
+    "page_id": "f0000000-0000-0000-0000-000000000006",
+    "block_type": "pricing",
+    "order_index": 1,
+    "data": {
+      "headline_translations": { "nl": "Kies je verblijf", "en": "Pick your stay" },
+      "subheadline_translations": {
+        "nl": "Per week, alles inclusief tenzij anders vermeld",
+        "en": "Per week, all-inclusive unless noted"
+      },
+      "plans": [
+        {
+          "id": "off-season",
+          "name_translations": { "nl": "Off-Season", "en": "Off-Season" },
+          "price": "€1.500/week",
+          "features_translations": [
+            { "nl": "Tot 8 personen", "en": "Up to 8 guests" },
+            { "nl": "Schoonmaak inbegrepen", "en": "Cleaning included" },
+            { "nl": "Wifi + airconditioning", "en": "Wifi + air conditioning" },
+            { "nl": "Welkomstpakket", "en": "Welcome package" }
+          ],
+          "cta_text_translations": { "nl": "Boek Off-Season", "en": "Book Off-Season" },
+          "cta_link": "/sites/demo-villa/contact"
+        },
+        {
+          "id": "high-season",
+          "name_translations": { "nl": "High-Season", "en": "High-Season" },
+          "price": "€2.800/week",
+          "highlight": true,
+          "features_translations": [
+            { "nl": "Tot 8 personen", "en": "Up to 8 guests" },
+            { "nl": "Schoonmaak inbegrepen", "en": "Cleaning included" },
+            { "nl": "Wifi + airconditioning", "en": "Wifi + air conditioning" },
+            { "nl": "Premium welkomstpakket", "en": "Premium welcome package" },
+            { "nl": "Privé chef beschikbaar", "en": "Private chef available" }
+          ],
+          "cta_text_translations": { "nl": "Boek High-Season", "en": "Book High-Season" },
+          "cta_link": "/sites/demo-villa/contact"
+        },
+        {
+          "id": "holiday",
+          "name_translations": { "nl": "Holiday", "en": "Holiday" },
+          "price": "€3.500/week",
+          "features_translations": [
+            { "nl": "Tot 8 personen", "en": "Up to 8 guests" },
+            { "nl": "Premium schoonmaak", "en": "Premium cleaning" },
+            { "nl": "Wifi + airconditioning", "en": "Wifi + air conditioning" },
+            { "nl": "Premium welkomstpakket", "en": "Premium welcome package" },
+            { "nl": "Privé chef inbegrepen", "en": "Private chef included" }
+          ],
+          "cta_text_translations": { "nl": "Boek Holiday", "en": "Book Holiday" },
+          "cta_link": "/sites/demo-villa/contact"
+        }
+      ]
+    },
+    "created_at": "2026-05-10T08:20:00.000Z",
+    "updated_at": "2026-05-10T08:20:00.000Z"
+  },
+
+  {
+    "id": "10000000-0000-0000-0000-000000000032",
+    "page_id": "f0000000-0000-0000-0000-000000000003",
+    "block_type": "contact",
+    "order_index": 2,
+    "data": {
+      "headline_translations": { "nl": "Stel je vraag", "en": "Ask your question" },
+      "subheadline_translations": {
+        "nl": "We reageren binnen 24 uur",
+        "en": "We respond within 24 hours"
+      },
+      "fields": ["name", "email", "phone", "message"],
+      "submit_text_translations": { "nl": "Verstuur", "en": "Send" },
+      "success_message_translations": {
+        "nl": "Bedankt! We nemen binnen 24 uur contact met je op.",
+        "en": "Thanks! We'll get back to you within 24 hours."
+      },
+      "recipient_email": "hello@demo-villa.example.com"
+    },
+    "created_at": "2026-05-10T08:25:00.000Z",
+    "updated_at": "2026-05-10T08:25:00.000Z"
+  },
+
+  {
+    "id": "10000000-0000-0000-0000-000000000063",
+    "page_id": "f0000000-0000-0000-0000-000000000011",
+    "block_type": "gallery",
+    "order_index": 3,
+    "data": {
+      "layout": "grid",
+      "columns": 3,
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/restaurant-soup/800/600",
+          "alt_translations": { "nl": "Aspergesoep", "en": "Asparagus soup" },
+          "caption_translations": { "nl": "Aspergesoep", "en": "Asparagus soup" }
+        },
+        {
+          "url": "https://picsum.photos/seed/restaurant-salad/800/600",
+          "alt_translations": { "nl": "Salade", "en": "Salad" },
+          "caption_translations": { "nl": "Salade van de chef", "en": "Chef's salad" }
+        },
+        {
+          "url": "https://picsum.photos/seed/restaurant-fish/800/600",
+          "alt_translations": { "nl": "Visgerecht", "en": "Fish dish" },
+          "caption_translations": { "nl": "Vers van de markt", "en": "Fresh from the market" }
+        },
+        {
+          "url": "https://picsum.photos/seed/restaurant-meat/800/600",
+          "alt_translations": { "nl": "Vleesgerecht", "en": "Meat dish" },
+          "caption_translations": { "nl": "Lamsschouder", "en": "Lamb shoulder" }
+        },
+        {
+          "url": "https://picsum.photos/seed/restaurant-dessert/800/600",
+          "alt_translations": { "nl": "Dessert", "en": "Dessert" }
+        },
+        {
+          "url": "https://picsum.photos/seed/restaurant-wine/800/600",
+          "alt_translations": { "nl": "Wijnselectie", "en": "Wine selection" }
+        }
+      ]
+    },
+    "created_at": "2026-05-10T08:30:00.000Z",
+    "updated_at": "2026-05-10T08:30:00.000Z"
+  },
+
+  {
+    "id": "10000000-0000-0000-0000-000000000072",
+    "page_id": "f0000000-0000-0000-0000-000000000012",
+    "block_type": "contact",
+    "order_index": 2,
+    "data": {
+      "headline_translations": { "nl": "Reserveer een tafel", "en": "Reserve a table" },
+      "subheadline_translations": {
+        "nl": "Ontvang binnen één werkdag een bevestiging per e-mail",
+        "en": "Confirmation by email within one business day"
+      },
+      "fields": ["name", "email", "phone", "subject", "message"],
+      "submit_text_translations": { "nl": "Reserveren", "en": "Reserve" },
+      "success_message_translations": {
+        "nl": "Reservering ontvangen! Bevestiging volgt per e-mail.",
+        "en": "Reservation received! Confirmation by email."
+      },
+      "recipient_email": "reserveer@demo-restaurant.example"
+    },
+    "created_at": "2026-05-10T08:35:00.000Z",
+    "updated_at": "2026-05-10T08:35:00.000Z"
   }
 ]

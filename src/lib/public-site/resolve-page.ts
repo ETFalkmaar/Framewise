@@ -2,7 +2,16 @@ import { blocksRepo, pagesRepo, tenantsRepo } from '@/lib/data';
 import type { Block, Page, Tenant } from '@/types/database';
 
 import { isKnownBlockType } from '@/lib/blocks/registry';
-import type { ContentBlock, Locale, RawBlockData } from '@/lib/blocks/types';
+import type {
+  ContactFormField,
+  ContentBlock,
+  GalleryImage,
+  FaqItem,
+  Locale,
+  PricingPlan,
+  RawBlockData,
+} from '@/lib/blocks/types';
+import { VALID_CONTACT_FORM_FIELDS } from '@/lib/blocks/types';
 
 export interface ResolvedPage {
   tenant: Tenant;
@@ -134,12 +143,173 @@ function toContentBlock(row: Block): ContentBlock | null {
         },
       };
     }
+    case 'gallery': {
+      const images = parseGalleryImages(data.images);
+      if (images.length === 0) return null;
+      return {
+        ...base,
+        type: 'gallery',
+        props: {
+          images,
+          layout: optionalGalleryLayout(data.layout),
+          columns: optionalGalleryColumns(data.columns),
+        },
+      };
+    }
+    case 'faq': {
+      const items = parseFaqItems(data.items);
+      if (items.length === 0) return null;
+      return {
+        ...base,
+        type: 'faq',
+        props: {
+          headline_translations: optionalStringMap(data.headline_translations),
+          items,
+        },
+      };
+    }
+    case 'pricing': {
+      const plans = parsePricingPlans(data.plans);
+      if (plans.length === 0) return null;
+      return {
+        ...base,
+        type: 'pricing',
+        props: {
+          headline_translations: optionalStringMap(data.headline_translations),
+          subheadline_translations: optionalStringMap(data.subheadline_translations),
+          plans,
+        },
+      };
+    }
+    case 'contact': {
+      if (!isStringMap(data.submit_text_translations)) return null;
+      if (!isStringMap(data.success_message_translations)) return null;
+      const fields = parseContactFields(data.fields);
+      return {
+        ...base,
+        type: 'contact',
+        props: {
+          headline_translations: optionalStringMap(data.headline_translations),
+          subheadline_translations: optionalStringMap(data.subheadline_translations),
+          fields,
+          submit_text_translations: data.submit_text_translations,
+          success_message_translations: data.success_message_translations,
+          recipient_email: optionalString(data.recipient_email),
+        },
+      };
+    }
     default:
       // Future block types — the registry's `isKnownBlockType` already
       // filters these out, so this branch is unreachable. Kept for
       // exhaustiveness.
       return null;
   }
+}
+
+/**
+ * Parse a `gallery.images` array. Drops entries with missing `url`
+ * or `alt_translations` — defensive: we'd rather render a smaller
+ * gallery than crash. An empty array bubbles up as a `null` block
+ * which the resolver then filters out.
+ */
+function parseGalleryImages(value: unknown): GalleryImage[] {
+  if (!Array.isArray(value)) return [];
+  const out: GalleryImage[] = [];
+  for (const raw of value) {
+    if (!raw || typeof raw !== 'object') continue;
+    const item = raw as Record<string, unknown>;
+    if (typeof item.url !== 'string' || item.url.length === 0) continue;
+    if (!isStringMap(item.alt_translations)) continue;
+    out.push({
+      url: item.url,
+      alt_translations: item.alt_translations,
+      caption_translations: optionalStringMap(item.caption_translations),
+    });
+  }
+  return out;
+}
+
+/**
+ * Parse a `faq.items` array. Each entry needs both
+ * `question_translations` and `answer_translations`; partial rows
+ * are dropped.
+ */
+function parseFaqItems(value: unknown): FaqItem[] {
+  if (!Array.isArray(value)) return [];
+  const out: FaqItem[] = [];
+  for (const raw of value) {
+    if (!raw || typeof raw !== 'object') continue;
+    const item = raw as Record<string, unknown>;
+    if (!isStringMap(item.question_translations)) continue;
+    if (!isStringMap(item.answer_translations)) continue;
+    out.push({
+      question_translations: item.question_translations,
+      answer_translations: item.answer_translations,
+    });
+  }
+  return out;
+}
+
+/**
+ * Parse a `pricing.plans` array. Each plan needs an `id`, a
+ * non-empty `name_translations`, a `price` string, and an array of
+ * feature translations. Plans missing any of these are dropped.
+ */
+function parsePricingPlans(value: unknown): PricingPlan[] {
+  if (!Array.isArray(value)) return [];
+  const out: PricingPlan[] = [];
+  for (const raw of value) {
+    if (!raw || typeof raw !== 'object') continue;
+    const plan = raw as Record<string, unknown>;
+    if (typeof plan.id !== 'string' || plan.id.length === 0) continue;
+    if (!isStringMap(plan.name_translations)) continue;
+    if (typeof plan.price !== 'string' || plan.price.length === 0) continue;
+    if (!Array.isArray(plan.features_translations)) continue;
+    const features: PricingPlan['features_translations'] = [];
+    for (const feature of plan.features_translations) {
+      if (isStringMap(feature)) features.push(feature);
+    }
+    out.push({
+      id: plan.id,
+      name_translations: plan.name_translations,
+      price: plan.price,
+      features_translations: features,
+      cta_text_translations: optionalStringMap(plan.cta_text_translations),
+      cta_link: optionalString(plan.cta_link),
+      highlight: plan.highlight === true,
+    });
+  }
+  return out;
+}
+
+/**
+ * Parse a `contact.fields` array. Drops unknown values, dedupes
+ * (the form layout uses array order so duplicates would render the
+ * same field twice). Empty result is allowed — a contact form with
+ * just a submit button is still legal.
+ */
+function parseContactFields(value: unknown): ContactFormField[] {
+  if (!Array.isArray(value)) return [];
+  const valid = new Set<ContactFormField>(VALID_CONTACT_FORM_FIELDS);
+  const seen = new Set<ContactFormField>();
+  const out: ContactFormField[] = [];
+  for (const raw of value) {
+    if (typeof raw !== 'string') continue;
+    if (!valid.has(raw as ContactFormField)) continue;
+    const field = raw as ContactFormField;
+    if (seen.has(field)) continue;
+    seen.add(field);
+    out.push(field);
+  }
+  return out;
+}
+
+function optionalGalleryLayout(value: unknown): 'grid' | 'carousel' | 'masonry' | undefined {
+  return value === 'grid' || value === 'carousel' || value === 'masonry' ? value : undefined;
+}
+
+function optionalGalleryColumns(value: unknown): 2 | 3 | 4 | undefined {
+  return value === 2 || value === 3 || value === 4 ? value : undefined;
 }
 
 const VALID_LOCALES = new Set<Locale>(['nl', 'fr', 'en']);

@@ -223,13 +223,16 @@ describe('resolvePage', () => {
     expect(result!.blocks.map((b) => b.id)).toEqual(['b1', 'b2', 'b3']);
   });
 
-  it('skips unknown block types (gallery / faq / etc — step 25 placeholders)', async () => {
+  it('skips unknown block types (future schema additions)', async () => {
     setupRepos({
       tenants: [TENANT],
       pages: [HOME_PAGE],
       blocks: [
         makeBlock('b1', HOME_PAGE.id, 'hero', 0, VALID_HERO_DATA),
-        makeBlock('b2', HOME_PAGE.id, 'gallery', 1, { images: [] }),
+        // Cast through `as` because TS doesn't allow non-BlockType
+        // strings, but the runtime DB can absolutely contain values
+        // we haven't shipped yet (forward compatibility).
+        makeBlock('b2', HOME_PAGE.id, 'future-block-type' as unknown as 'hero', 1, { foo: 'bar' }),
         makeBlock('b3', HOME_PAGE.id, 'text', 2, VALID_TEXT_DATA),
       ],
     });
@@ -240,6 +243,304 @@ describe('resolvePage', () => {
     });
     expect(result!.blocks).toHaveLength(2);
     expect(result!.blocks.map((b) => b.type)).toEqual(['hero', 'text']);
+  });
+
+  describe('parses step 25 block types', () => {
+    it('parses a gallery block with grid layout', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('g1', HOME_PAGE.id, 'gallery', 0, {
+            layout: 'grid',
+            columns: 3,
+            images: [
+              {
+                url: 'https://example.com/a.jpg',
+                alt_translations: { nl: 'Foto A', en: 'Photo A' },
+                caption_translations: { nl: 'Caption', en: 'Caption' },
+              },
+              {
+                url: 'https://example.com/b.jpg',
+                alt_translations: { nl: 'Foto B', en: 'Photo B' },
+              },
+            ],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      expect(result!.blocks).toHaveLength(1);
+      const block = result!.blocks[0]!;
+      expect(block.type).toBe('gallery');
+      if (block.type === 'gallery') {
+        expect(block.props.images).toHaveLength(2);
+        expect(block.props.layout).toBe('grid');
+        expect(block.props.columns).toBe(3);
+      }
+    });
+
+    it('drops gallery blocks with no valid images', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('g1', HOME_PAGE.id, 'gallery', 0, { images: [] }),
+          // No alt_translations on any image → all dropped → empty
+          // gallery → block dropped.
+          makeBlock('g2', HOME_PAGE.id, 'gallery', 1, {
+            images: [{ url: 'https://example.com/x.jpg' }],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      expect(result!.blocks).toHaveLength(0);
+    });
+
+    it('parses a faq block with multiple items', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('f1', HOME_PAGE.id, 'faq', 0, {
+            headline_translations: { nl: 'Vragen', en: 'Questions' },
+            items: [
+              {
+                question_translations: { en: 'Q1?' },
+                answer_translations: { en: 'A1.' },
+              },
+              {
+                question_translations: { en: 'Q2?' },
+                answer_translations: { en: 'A2.' },
+              },
+            ],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      expect(block.type).toBe('faq');
+      if (block.type === 'faq') {
+        expect(block.props.items).toHaveLength(2);
+      }
+    });
+
+    it('drops faq items missing question or answer translations', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('f1', HOME_PAGE.id, 'faq', 0, {
+            items: [
+              { question_translations: { en: 'Q?' } }, // no answer → dropped
+              {
+                question_translations: { en: 'Real Q?' },
+                answer_translations: { en: 'Real A.' },
+              },
+            ],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      if (block?.type === 'faq') {
+        expect(block.props.items).toHaveLength(1);
+        expect(block.props.items[0]?.question_translations.en).toBe('Real Q?');
+      }
+    });
+
+    it('parses a pricing block with highlight + features', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('p1', HOME_PAGE.id, 'pricing', 0, {
+            headline_translations: { en: 'Plans' },
+            plans: [
+              {
+                id: 'basic',
+                name_translations: { en: 'Basic' },
+                price: '€10/mo',
+                features_translations: [{ en: 'Feature one' }],
+              },
+              {
+                id: 'pro',
+                name_translations: { en: 'Pro' },
+                price: '€30/mo',
+                highlight: true,
+                features_translations: [{ en: 'Feature one' }, { en: 'Feature two' }],
+              },
+            ],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      if (block?.type === 'pricing') {
+        expect(block.props.plans).toHaveLength(2);
+        expect(block.props.plans[1]?.highlight).toBe(true);
+      }
+    });
+
+    it('drops pricing plans missing required fields', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('p1', HOME_PAGE.id, 'pricing', 0, {
+            plans: [
+              { id: 'no-price', name_translations: { en: 'X' } }, // no price → dropped
+              {
+                id: 'good',
+                name_translations: { en: 'Good' },
+                price: '€0',
+                features_translations: [],
+              },
+            ],
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      if (block?.type === 'pricing') {
+        expect(block.props.plans).toHaveLength(1);
+        expect(block.props.plans[0]?.id).toBe('good');
+      }
+    });
+
+    it('parses a contact block with valid fields', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('c1', HOME_PAGE.id, 'contact', 0, {
+            fields: ['name', 'email', 'message'],
+            submit_text_translations: { en: 'Send' },
+            success_message_translations: { en: 'Thanks!' },
+            recipient_email: 'hello@example.com',
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      if (block?.type === 'contact') {
+        expect(block.props.fields).toEqual(['name', 'email', 'message']);
+        expect(block.props.recipient_email).toBe('hello@example.com');
+      }
+    });
+
+    it('drops invalid + duplicate contact fields', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('c1', HOME_PAGE.id, 'contact', 0, {
+            fields: ['name', 'name', 'made-up', 'email'],
+            submit_text_translations: { en: 'Send' },
+            success_message_translations: { en: 'Thanks!' },
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      const block = result!.blocks[0]!;
+      if (block?.type === 'contact') {
+        // 'made-up' rejected, duplicate 'name' deduped.
+        expect(block.props.fields).toEqual(['name', 'email']);
+      }
+    });
+
+    it('renders all 8 block types in a single page (regression)', async () => {
+      setupRepos({
+        tenants: [TENANT],
+        pages: [HOME_PAGE],
+        blocks: [
+          makeBlock('1', HOME_PAGE.id, 'hero', 0, VALID_HERO_DATA),
+          makeBlock('2', HOME_PAGE.id, 'text', 1, VALID_TEXT_DATA),
+          makeBlock('3', HOME_PAGE.id, 'image', 2, {
+            image_url: 'https://example.com/x.jpg',
+            alt_translations: { en: 'X' },
+          }),
+          makeBlock('4', HOME_PAGE.id, 'cta', 3, {
+            headline_translations: { en: 'H' },
+            button_text_translations: { en: 'B' },
+            button_link: '/x',
+          }),
+          makeBlock('5', HOME_PAGE.id, 'gallery', 4, {
+            images: [{ url: 'https://example.com/a.jpg', alt_translations: { en: 'A' } }],
+          }),
+          makeBlock('6', HOME_PAGE.id, 'faq', 5, {
+            items: [
+              {
+                question_translations: { en: 'Q?' },
+                answer_translations: { en: 'A.' },
+              },
+            ],
+          }),
+          makeBlock('7', HOME_PAGE.id, 'pricing', 6, {
+            plans: [
+              {
+                id: 'b',
+                name_translations: { en: 'Basic' },
+                price: '€0',
+                features_translations: [],
+              },
+            ],
+          }),
+          makeBlock('8', HOME_PAGE.id, 'contact', 7, {
+            fields: ['email'],
+            submit_text_translations: { en: 'Send' },
+            success_message_translations: { en: 'Thanks!' },
+          }),
+        ],
+      });
+      const result = await resolvePage({
+        tenantId: TENANT.id,
+        pageSlug: 'home',
+        locale: 'en',
+      });
+      expect(result!.blocks).toHaveLength(8);
+      expect(result!.blocks.map((b) => b.type)).toEqual([
+        'hero',
+        'text',
+        'image',
+        'cta',
+        'gallery',
+        'faq',
+        'pricing',
+        'contact',
+      ]);
+    });
   });
 
   it('skips blocks whose data is missing the required fields for their type', async () => {
