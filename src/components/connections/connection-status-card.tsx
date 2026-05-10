@@ -123,6 +123,10 @@ export function ConnectionStatusCard({
                     company_domain?: string;
                     /** Brevo-shaped: `true` when the primary plan is `free`. */
                     is_free_tier?: boolean;
+                    /** Mailchimp-shaped: account display name from /3.0/. */
+                    account_name?: string;
+                    /** Mailchimp-shaped: data-center prefix (`us1`, `eu1`, …). */
+                    dc?: string;
                   }
                 | undefined;
               const accountLabel =
@@ -130,6 +134,7 @@ export function ConnectionStatusCard({
                 meta?.organization_name ??
                 meta?.business_name ??
                 meta?.company_name ??
+                meta?.account_name ??
                 meta?.name ??
                 meta?.ui_domain ??
                 meta?.account ??

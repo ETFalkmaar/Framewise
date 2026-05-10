@@ -7,6 +7,7 @@ import { getActiveTenantForUser } from '@/lib/auth';
 import {
   getConnector,
   getHubSpotOAuthConfig,
+  getMailchimpOAuthConfig,
   getPayPalOAuthConfig,
   getPipedriveOAuthConfig,
   getStripeOAuthConfig,
@@ -38,6 +39,10 @@ import {
   PipedriveInstructions,
 } from '@/components/connectors/pipedrive/instructions';
 import { BrevoInstructions } from '@/components/connectors/brevo/instructions';
+import {
+  MailchimpConfigWarning,
+  MailchimpInstructions,
+} from '@/components/connectors/mailchimp/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -116,6 +121,7 @@ export default async function ConnectorConnectPage({
       {connector.id === 'paypal-business' && <PayPalInstructions />}
       {connector.id === 'hubspot' && <HubSpotInstructions />}
       {connector.id === 'pipedrive' && <PipedriveInstructions />}
+      {connector.id === 'mailchimp' && <MailchimpInstructions />}
 
       {connector.authMethod === 'oauth' && (
         <section data-testid="oauth-flow">
@@ -129,6 +135,9 @@ export default async function ConnectorConnectPage({
           {connector.id === 'pipedrive' && getPipedriveOAuthConfig() === null && (
             <PipedriveConfigWarning />
           )}
+          {connector.id === 'mailchimp' && getMailchimpOAuthConfig() === null && (
+            <MailchimpConfigWarning />
+          )}
           <OAuthButton
             providerId={connector.id}
             copy={{
@@ -140,7 +149,8 @@ export default async function ConnectorConnectPage({
               (connector.id === 'stripe' && getStripeOAuthConfig() === null) ||
               (connector.id === 'paypal-business' && getPayPalOAuthConfig() === null) ||
               (connector.id === 'hubspot' && getHubSpotOAuthConfig() === null) ||
-              (connector.id === 'pipedrive' && getPipedriveOAuthConfig() === null)
+              (connector.id === 'pipedrive' && getPipedriveOAuthConfig() === null) ||
+              (connector.id === 'mailchimp' && getMailchimpOAuthConfig() === null)
             }
           />
         </section>

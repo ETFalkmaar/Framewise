@@ -26,12 +26,14 @@ import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import {
   ConnectorError,
   buildHubSpotAuthorizeUrl,
+  buildMailchimpAuthorizeUrl,
   buildPayPalAuthorizeUrl,
   buildPipedriveAuthorizeUrl,
   buildStripeAuthorizeUrl,
   getAllConnectors,
   getConnector,
   getHubSpotOAuthConfig,
+  getMailchimpOAuthConfig,
   getPayPalApiBaseUrl,
   getPayPalAuthorizeBaseUrl,
   getPayPalEnvironment,
@@ -40,6 +42,9 @@ import {
   getStripeOAuthConfig,
   HUBSPOT_AUTHORIZE_URL,
   HUBSPOT_TOKEN_URL,
+  MAILCHIMP_AUTHORIZE_URL,
+  MAILCHIMP_METADATA_URL,
+  MAILCHIMP_TOKEN_URL,
   mockApiKeyConnector,
   PIPEDRIVE_AUTHORIZE_URL,
   PIPEDRIVE_TOKEN_URL,
@@ -868,6 +873,7 @@ async function ConnectorFrameworkPlayground() {
       <HubSpotConnectorDebug />
       <PipedriveConnectorDebug />
       <BrevoConnectorDebug />
+      <MailchimpConnectorDebug />
     </section>
   );
 }
@@ -1588,6 +1594,130 @@ function BrevoConnectorDebug() {
         <p className="text-muted-foreground italic">
           testConnection performs a single GET /v3/account against api.brevo.com; no debug call here
           so /debug/data never burns through Brevo rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function MailchimpConnectorDebug() {
+  const mailchimp = getConnector('mailchimp');
+  if (!mailchimp) {
+    return (
+      <Card size="sm" data-testid="mailchimp-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">Mailchimp connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 23+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const config = getMailchimpOAuthConfig();
+  const clientIdConfigured = Boolean(process.env.MAILCHIMP_CLIENT_ID?.trim());
+  const secretConfigured = Boolean(process.env.MAILCHIMP_CLIENT_SECRET?.trim());
+  // Build a sample authorize URL with a dummy state so operators can
+  // inspect the exact URL we'd send to Mailchimp — useful for
+  // debugging without ever firing a real OAuth round-trip.
+  const sampleAuthorizeUrl = config
+    ? buildMailchimpAuthorizeUrl({
+        clientId: config.clientId,
+        redirectUri: 'https://framewise.example/api/connectors/oauth/callback?providerId=mailchimp',
+        state: 'example_state_xxxx',
+      })
+    : null;
+
+  return (
+    <Card size="sm" data-testid="mailchimp-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Mailchimp connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          Last connector — fase 6/7 complete. Region-aware via 3-step OAuth handshake (token →
+          metadata → account).
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{mailchimp.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{mailchimp.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{mailchimp.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(mailchimp.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">scopes </span>
+          <span className="text-foreground">
+            (none — Mailchimp doesn&apos;t use a scopes parameter)
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">authorize URL </span>
+          <span className="text-foreground">{MAILCHIMP_AUTHORIZE_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">token URL </span>
+          <span className="text-foreground">{MAILCHIMP_TOKEN_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">metadata URL </span>
+          <span className="text-foreground">{MAILCHIMP_METADATA_URL}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api domain </span>
+          <span className="text-foreground">dynamic per account — {'<dc>'}.api.mailchimp.com</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">auth header </span>
+          <span className="text-foreground">OAuth {'<token>'} (NOT Bearer)</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">refresh tokens </span>
+          <span className="text-foreground">none — access tokens are permanent</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">MAILCHIMP_CLIENT_ID </span>
+          <Badge
+            variant={clientIdConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="mailchimp-debug-client-id"
+          >
+            {clientIdConfigured ? 'configured' : 'not configured'}
+          </Badge>
+          <span className="text-muted-foreground"> · MAILCHIMP_CLIENT_SECRET </span>
+          <Badge
+            variant={secretConfigured ? 'secondary' : 'destructive'}
+            className="ml-1 font-mono text-[10px]"
+            data-testid="mailchimp-debug-secret"
+          >
+            {secretConfigured ? 'configured' : 'not configured'}
+          </Badge>
+        </p>
+        {sampleAuthorizeUrl && (
+          <p className="font-mono break-all" data-testid="mailchimp-debug-sample-url">
+            <span className="text-muted-foreground">sample authorize URL </span>
+            <span className="text-foreground">{sampleAuthorizeUrl}</span>
+          </p>
+        )}
+        <p className="text-muted-foreground italic">
+          handleOAuthCallback runs a 3-step flow: POST /oauth2/token → GET /oauth2/metadata
+          (discover dc) → GET /3.0/ (region-specific account info); no debug call here so
+          /debug/data never burns through Mailchimp rate limits.
         </p>
       </CardContent>
     </Card>

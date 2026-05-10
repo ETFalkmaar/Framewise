@@ -873,6 +873,88 @@ question.
    company name + plan type on the connection. CI uses a stubbed
    `fetch`; no real keys ever land in pipelines.
 
+### Mailchimp (step 23 — phase 6/7 complete)
+
+The **last** connector. Mailchimp brings together patterns from
+earlier providers — OAuth flow (Stripe/PayPal/HubSpot/Pipedrive),
+region-aware client (Pipedrive's `apiDomain` → Mailchimp's
+`apiEndpoint`), and the free-tier badge (Brevo's `is_free_tier`).
+Internationally available (NL + CW). Forever Free tier covers
+500 contacts and 1,000 emails/month.
+
+Three Mailchimp-specific quirks not seen elsewhere:
+
+- **3-step handshake**: `token → metadata → account`. Mailchimp's
+  `/oauth2/metadata` endpoint is the ONLY way to discover the
+  account's data-center prefix (`us1`, `us2`, `eu1`, …) which then
+  becomes the API host. We persist `api_endpoint` + `dc` on the
+  credentials envelope so future REST calls don't need step 2 again.
+- **`Authorization: OAuth <token>`** — NOT `Bearer`. Most common
+  Mailchimp integration mistake. Tests assert this exact wire shape
+  on both `MailchimpClient` and `fetchMetadata` so a future
+  "helpful" edit can't regress to Bearer.
+- **No refresh tokens**: Mailchimp access tokens are permanent.
+  `expires_in` from the token endpoint is always 0, and we don't
+  persist `expires_at` on the credentials. Refresh-on-401 logic
+  in step 24+ skips Mailchimp entirely.
+
+Reuses earlier patterns:
+
+- **OAuth override pattern** (`getAuthorizeUrl` +
+  `handleOAuthCallback` from steps 18–21).
+- **Region-aware client** (Pipedrive's per-account `api_domain` →
+  Mailchimp's `api_endpoint`).
+- **PayPal-style redirect_uri pinning** via instance-cache
+  `lastRedirectUri`.
+- **Free-tier badge** (Brevo's `is_free_tier` boolean → Mailchimp's
+  `pricing_plan_type === 'forever_free'`). The blue "Free tier"
+  badge on the connection card now lights up for both providers
+  via the existing `freeTierBadge` label prop.
+
+Configuration gate: when `MAILCHIMP_CLIENT_ID` /
+`MAILCHIMP_CLIENT_SECRET` are blank the wizard still renders but
+the OAuth button is disabled and a `<MailchimpConfigWarning />`
+banner explains the gap.
+
+Metadata: `account_id`, `account_name`, `email`, `login_email`,
+`full_name`, `dc`, `api_endpoint`, `pricing_plan_type`,
+`total_subscribers`, `is_free_tier`, `account_timezone`.
+
+UI: 5-step `<MailchimpInstructions />` card with side-by-side
+BYOA + Forever Free notices, a region-aware callout describing
+the auto-detected data center, and an auto-sync notice.
+
+#### When to pick Brevo vs Mailchimp
+
+- **Brevo** (formerly Sendinblue) — EU-hosted (France + Germany),
+  GDPR-strict, transactional + marketing emails, 300/day free.
+  Pick this if your customer cares about EU data residency or
+  needs lots of transactional sends.
+- **Mailchimp** — US-hosted, marketing automation focus, richer
+  template library, 1,000/month free. Pick this if your customer
+  wants the polished editor experience and isn't bound by strict
+  EU-only data rules.
+
+#### Testing Mailchimp locally
+
+1. Sign up for a free Mailchimp account at mailchimp.com.
+2. Top-right account menu → Profile → Extras → Registered apps →
+   Register an app.
+3. Set the redirect URI to
+   `http://localhost:3000/api/connectors/oauth/callback?providerId=mailchimp`
+   (or whichever dev port you use).
+4. Copy the **Client ID** and **Client Secret** → paste into
+   `.env.local` as `MAILCHIMP_CLIENT_ID` /
+   `MAILCHIMP_CLIENT_SECRET`.
+5. Restart the dev server. `/account/connections/add/mailchimp`
+   now shows an enabled "Connect with Mailchimp" button. Clicking
+   it fires the 3-step handshake and stores the data-center
+   prefix + account name on the connection.
+
+Without those env vars the wizard renders the config-incomplete
+banner instead. Tests stub all HTTP via `fetchImpl`; no real
+OAuth ever fires in CI.
+
 ## Status
 
-In development - Step 22 of 118 (revised plan)
+In development - Step 23 of 118 (revised plan) — fase 6/7 COMPLEET, 9 connectors live

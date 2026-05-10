@@ -274,6 +274,31 @@
           "oauthRedirecting": "Redirection vers HubSpot…",
           "portalLabel": "Hub"
         },
+        "mailchimp": {
+          "title": "Mailchimp",
+          "description": "Outil d'e-mail marketing international de référence — formule Forever Free, automatisation puissante.",
+          "instructions": {
+            "title": "Se connecter à Mailchimp",
+            "subtitle": "Authentification OAuth avec votre propre compte Mailchimp. Cinq étapes, ~30 secondes.",
+            "step1": "Cliquez sur le bouton « Connecter Mailchimp » ci-dessous.",
+            "step2": "Connectez-vous à votre compte Mailchimp (ou créez-en un gratuit sur mailchimp.com).",
+            "step3": "Sélectionnez le compte Mailchimp à connecter à Framewise.",
+            "step4": "Confirmez que Framewise peut lire vos infos de compte et vos audiences.",
+            "step5": "Vous serez redirigé automatiquement vers Framewise dès que la liaison sera terminée.",
+            "tip": "Mailchimp héberge les données dans différents centres (us1, us2, eu1, …). Framewise détecte le bon endpoint automatiquement et le conserve."
+          },
+          "byoaDisclaimer": "Les contacts restent dans VOTRE compte Mailchimp. Framewise détient seulement un accès pour la synchro des leads et la gestion des audiences.",
+          "foreverFreeNotice": "Forever Free : 500 contacts, 1 000 e-mails/mois. Gratuit en permanence, sans limite de temps.",
+          "regionAwareTitle": "Région-aware",
+          "regionAwareNotice": "Centre de données détecté automatiquement via les métadonnées OAuth (us1, eu1, etc.). Votre endpoint API est conservé avec la connexion.",
+          "autoSyncTitle": "Synchro auto",
+          "autoSyncNotice": "Les leads de l'agent IA atterrissent automatiquement dans votre audience Mailchimp et peuvent être utilisés immédiatement dans des campagnes.",
+          "configWarningTitle": "Mailchimp pas encore configuré",
+          "configWarning": "Cette intégration nécessite que Framewise enregistre une application Mailchimp. Veuillez contacter le support.",
+          "oauthCta": "Connecter Mailchimp",
+          "oauthRedirecting": "Redirection vers Mailchimp…",
+          "dcLabel": "Centre de données"
+        },
         "brevo": {
           "title": "Brevo",
           "description": "E-mail marketing hébergé en UE (ex-Sendinblue) — formule gratuite 300 e-mails/jour, conforme RGPD.",
