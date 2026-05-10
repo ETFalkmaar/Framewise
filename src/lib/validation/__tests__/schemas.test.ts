@@ -25,6 +25,9 @@ const VALID_TENANT_INSERT = {
   og_image_url: null,
   organization_type: null,
   twitter_handle: null,
+  maintenance_message_translations: null,
+  maintenance_logo_url: null,
+  maintenance_contact_email: null,
 };
 
 describe('helpers', () => {

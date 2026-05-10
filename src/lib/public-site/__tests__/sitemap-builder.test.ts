@@ -27,6 +27,9 @@ const TENANT: Tenant = {
   og_image_url: null,
   organization_type: 'LodgingBusiness',
   twitter_handle: null,
+  maintenance_message_translations: null,
+  maintenance_logo_url: null,
+  maintenance_contact_email: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };

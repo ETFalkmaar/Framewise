@@ -14,6 +14,13 @@
     "og_image_url": "https://picsum.photos/seed/demo-villa-og/1200/630",
     "organization_type": "LodgingBusiness",
     "twitter_handle": "framewise_app",
+    "maintenance_message_translations": {
+      "nl": "We zijn even bezig met de boekingsmodule. Probeer het over een paar minuten opnieuw.",
+      "en": "We're tweaking the booking module. Check back in a few minutes.",
+      "fr": "Nous mettons à jour le module de réservation. Réessayez d'ici quelques minutes."
+    },
+    "maintenance_logo_url": "https://picsum.photos/seed/demo-villa-logo/200/200",
+    "maintenance_contact_email": "hello@demo-villa.example",
     "created_at": "2026-02-01T08:00:00.000Z",
     "updated_at": "2026-04-15T12:00:00.000Z"
   },
@@ -32,6 +39,9 @@
     "og_image_url": "https://picsum.photos/seed/demo-restaurant-og/1200/630",
     "organization_type": "Restaurant",
     "twitter_handle": null,
+    "maintenance_message_translations": null,
+    "maintenance_logo_url": null,
+    "maintenance_contact_email": null,
     "created_at": "2026-03-10T09:30:00.000Z",
     "updated_at": "2026-05-01T15:00:00.000Z"
   }

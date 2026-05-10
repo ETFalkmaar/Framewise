@@ -55,6 +55,17 @@ export interface Tenant {
   organization_type: OrganizationType | null;
   /** Twitter handle without the `@` prefix (e.g. `framewise_app`). Step 26. */
   twitter_handle: string | null;
+  /**
+   * Per-locale message shown on the branded maintenance page (step 34).
+   * Falls back through the tenant's default locale → English → a
+   * generic Framewise default. Keys outside `LocaleCode` are
+   * ignored by the renderer.
+   */
+  maintenance_message_translations: Partial<Record<LocaleCode, string>> | null;
+  /** URL of the logo shown on the maintenance page (step 34). */
+  maintenance_logo_url: string | null;
+  /** Email shown on the maintenance page so visitors can reach the customer (step 34). */
+  maintenance_contact_email: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

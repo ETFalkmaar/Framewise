@@ -108,7 +108,11 @@ export default async function LocaleLayout({
               <header className="absolute top-0 right-0 z-20 p-4 sm:p-6">
                 <LanguageSwitcher />
               </header>
-              {showMaintenance ? <MaintenancePage tenant={tenant!} /> : children}
+              {showMaintenance ? (
+                <MaintenancePage tenant={tenant!} locale={locale as 'nl' | 'fr' | 'en'} />
+              ) : (
+                children
+              )}
               <Toaster richColors theme="dark" />
             </TenantProvider>
           </AuthProvider>
