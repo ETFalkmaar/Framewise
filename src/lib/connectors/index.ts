@@ -278,3 +278,36 @@ export type {
   BrevoPlan,
   BrevoClientOptions,
 } from './providers/brevo';
+
+// Mailchimp (step 23) — last connector of phase 6/7. Second
+// newsletter provider after Brevo. OAuth flow with a 3-step
+// handshake (token → metadata → account); the metadata endpoint is
+// the only way to discover the account's data-center prefix
+// (`us1`, `eu1`, …) which then becomes the API host. Authorization
+// header uses `OAuth <token>` (NOT `Bearer`). Tokens are permanent
+// — no refresh flow.
+export {
+  mailchimpConnector,
+  MailchimpConnector,
+  MailchimpClient,
+  MAILCHIMP_ERROR_CODES,
+  MAILCHIMP_AUTHORIZE_URL,
+  MAILCHIMP_METADATA_URL,
+  MAILCHIMP_TOKEN_URL,
+  buildAuthorizeUrl as buildMailchimpAuthorizeUrl,
+  exchangeCodeForToken as exchangeMailchimpCodeForToken,
+  fetchMetadata as fetchMailchimpMetadata,
+  getMailchimpOAuthConfig,
+  configurationIncomplete as mailchimpConfigurationIncomplete,
+  mapMailchimpError,
+  mailchimpNetworkError,
+} from './providers/mailchimp';
+export type {
+  MailchimpAccount,
+  MailchimpConnectorMetadata,
+  MailchimpCredentials,
+  MailchimpMetadata,
+  MailchimpOAuthTokenResponse,
+  MailchimpClientOptions,
+  MailchimpOAuthConfig,
+} from './providers/mailchimp';

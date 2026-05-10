@@ -274,6 +274,31 @@
           "oauthRedirecting": "Redirecting to HubSpot…",
           "portalLabel": "Hub"
         },
+        "mailchimp": {
+          "title": "Mailchimp",
+          "description": "Leading international email marketing — Forever Free tier, strong automation.",
+          "instructions": {
+            "title": "Connect to Mailchimp",
+            "subtitle": "OAuth handshake with your own Mailchimp account. Five steps, ~30 seconds.",
+            "step1": "Click the \"Connect with Mailchimp\" button below.",
+            "step2": "Sign in to your Mailchimp account (or create a free one at mailchimp.com).",
+            "step3": "Pick which Mailchimp account you'd like to connect to Framewise.",
+            "step4": "Confirm Framewise may read your account info and audiences.",
+            "step5": "You'll be redirected back to Framewise as soon as the handshake completes.",
+            "tip": "Mailchimp hosts data in different data centers (us1, us2, eu1, …). Framewise auto-detects the right endpoint and persists it."
+          },
+          "byoaDisclaimer": "Contacts stay in YOUR Mailchimp account. Framewise only holds access for lead-sync and audience management.",
+          "foreverFreeNotice": "Forever Free: 500 contacts, 1,000 emails/month. Permanently free, no time limit.",
+          "regionAwareTitle": "Region-aware",
+          "regionAwareNotice": "Data center auto-detected via OAuth metadata (us1, eu1, etc.). Your API endpoint is persisted with the connection.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncNotice": "AI-agent leads land in your Mailchimp audience automatically and can be used in campaigns straight away.",
+          "configWarningTitle": "Mailchimp not yet configured",
+          "configWarning": "This integration needs Framewise to register a Mailchimp app first. Please contact support.",
+          "oauthCta": "Connect with Mailchimp",
+          "oauthRedirecting": "Redirecting to Mailchimp…",
+          "dcLabel": "Data center"
+        },
         "brevo": {
           "title": "Brevo",
           "description": "EU-hosted email marketing (formerly Sendinblue) — free tier 300 emails/day, GDPR-compliant.",

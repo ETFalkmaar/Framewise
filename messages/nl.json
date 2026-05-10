@@ -274,6 +274,31 @@
           "oauthRedirecting": "Doorsturen naar HubSpot…",
           "portalLabel": "Hub"
         },
+        "mailchimp": {
+          "title": "Mailchimp",
+          "description": "Toonaangevende internationale e-mailmarketing — Forever Free tier, sterke automation.",
+          "instructions": {
+            "title": "Verbinding maken met Mailchimp",
+            "subtitle": "OAuth-koppeling met je eigen Mailchimp account. Vijf stappen, ~30 seconden.",
+            "step1": "Klik op de knop \"Verbind met Mailchimp\" hieronder.",
+            "step2": "Log in op je Mailchimp-account (of maak gratis een aan op mailchimp.com).",
+            "step3": "Selecteer welk Mailchimp-account je wilt koppelen aan Framewise.",
+            "step4": "Bevestig dat Framewise account-info en lijsten mag inzien.",
+            "step5": "Je wordt automatisch teruggestuurd naar Framewise als de koppeling klaar is.",
+            "tip": "Mailchimp host data in verschillende data centers (us1, us2, eu1, …). Framewise detecteert het juiste endpoint automatisch en slaat het op."
+          },
+          "byoaDisclaimer": "Contacts blijven in jouw eigen Mailchimp-account. Framewise heeft alleen toegang voor lead-sync en lijst-management.",
+          "foreverFreeNotice": "Forever Free: 500 contacts, 1.000 e-mails per maand. Permanent gratis, geen tijdslimiet.",
+          "regionAwareTitle": "Region-aware",
+          "regionAwareNotice": "Data center wordt automatisch gedetecteerd via OAuth metadata (us1, eu1, etc.). Jouw API-endpoint wordt opgeslagen.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncNotice": "Leads van AI-agent worden automatisch toegevoegd aan jouw Mailchimp-lijsten en kunnen direct gebruikt worden in campaigns.",
+          "configWarningTitle": "Mailchimp nog niet geconfigureerd",
+          "configWarning": "Deze koppeling vereist dat Framewise een Mailchimp-app heeft geregistreerd. Neem contact op met support.",
+          "oauthCta": "Verbind met Mailchimp",
+          "oauthRedirecting": "Doorsturen naar Mailchimp…",
+          "dcLabel": "Data center"
+        },
         "brevo": {
           "title": "Brevo",
           "description": "EU-gehoste e-mailmarketing (voorheen Sendinblue) — gratis tier 300 e-mails/dag, GDPR-compliant.",
