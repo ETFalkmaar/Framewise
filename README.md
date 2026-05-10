@@ -1145,6 +1145,42 @@ the existing `localePrefix: 'as-needed'` rule from
 Adds 56 tests (og-image: 9, metadata: 22, jsonld: 16, base-url: 6,
 plus 3 page-schema tests covering `seo_meta`) — total 824.
 
+### Sitemap & robots (step 27 — fase 9 part 4/6)
+
+Step 27 swaps the static `app/sitemap.ts` and `app/robots.ts` stubs for
+dynamic, tenant-aware versions. Two new helpers in `src/lib/public-site/`:
+
+- **`sitemap-builder.ts`** — `buildSitemap()` walks
+  `pagesRepo.listByTenant()` and emits one `MetadataRoute.Sitemap`
+  entry per published page. The homepage gets `priority: 1.0` and
+  `changeFrequency: 'daily'`; inner pages get `0.8` and `'weekly'`.
+  Drafts, archived rows, and pages flagged `seo_meta.noindex = true`
+  are skipped. `alternates.languages` lists every entry in `nl-NL`,
+  `fr-FR`, `en-US` so search engines find all locale variants.
+- **`robots-builder.ts`** — `buildRobots()` returns a
+  `MetadataRoute.Robots` payload allowing `/`, disallowing
+  `/account/`, `/api/`, `/debug/`, `/login`, and pointing
+  `Sitemap:` at `<baseUrl>/sitemap.xml`.
+
+#### Multi-tenant strategy
+
+The top-level routes pick the tenant in this order:
+
+1. `getCurrentTenant()` — middleware-resolved tenant from the
+   subdomain / custom-domain strategies. Pages live at the request
+   origin, so `pathPrefix` is empty.
+2. Fallback: `tenantsRepo.findBySlug('demo-villa')` and emit pages
+   under `/sites/demo-villa`. This is what the Vercel preview host
+   serves today; per-tenant sitemaps on the marketing host arrive
+   in the domain wizard (fase 10, step 33).
+
+`/sitemap.xml` revalidates every 60 s (`export const revalidate = 60`)
+so a fresh page publish surfaces in the sitemap within a minute.
+`/robots.txt` is statically rendered at build time and caches the
+`Sitemap:` URL for `resolveBaseUrl()` — no per-request work.
+
+Adds 27 tests (sitemap-builder: 18, robots-builder: 9) — total 851.
+
 ## Status
 
-In development - Step 26 of 96 (revised plan) — FASE 9 deel 3/6 (SEO live)
+In development - Step 27 of 96 (revised plan) — FASE 9 deel 4/6 (sitemap + robots live)
