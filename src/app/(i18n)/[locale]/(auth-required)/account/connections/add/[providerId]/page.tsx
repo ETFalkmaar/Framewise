@@ -4,7 +4,12 @@ import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
 
 import { getActiveTenantForUser } from '@/lib/auth';
-import { getConnector, getPayPalOAuthConfig, getStripeOAuthConfig } from '@/lib/connectors';
+import {
+  getConnector,
+  getHubSpotOAuthConfig,
+  getPayPalOAuthConfig,
+  getStripeOAuthConfig,
+} from '@/lib/connectors';
 import { getProviderById } from '@/lib/countries';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +28,10 @@ import {
   PayPalConfigWarning,
   PayPalInstructions,
 } from '@/components/connectors/paypal/instructions';
+import {
+  HubSpotConfigWarning,
+  HubSpotInstructions,
+} from '@/components/connectors/hubspot/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -99,12 +108,16 @@ export default async function ConnectorConnectPage({
 
       {connector.id === 'stripe' && <StripeInstructions />}
       {connector.id === 'paypal-business' && <PayPalInstructions />}
+      {connector.id === 'hubspot' && <HubSpotInstructions />}
 
       {connector.authMethod === 'oauth' && (
         <section data-testid="oauth-flow">
           {connector.id === 'stripe' && getStripeOAuthConfig() === null && <StripeConfigWarning />}
           {connector.id === 'paypal-business' && getPayPalOAuthConfig() === null && (
             <PayPalConfigWarning />
+          )}
+          {connector.id === 'hubspot' && getHubSpotOAuthConfig() === null && (
+            <HubSpotConfigWarning />
           )}
           <OAuthButton
             providerId={connector.id}
@@ -115,7 +128,8 @@ export default async function ConnectorConnectPage({
             }}
             disabled={
               (connector.id === 'stripe' && getStripeOAuthConfig() === null) ||
-              (connector.id === 'paypal-business' && getPayPalOAuthConfig() === null)
+              (connector.id === 'paypal-business' && getPayPalOAuthConfig() === null) ||
+              (connector.id === 'hubspot' && getHubSpotOAuthConfig() === null)
             }
           />
         </section>

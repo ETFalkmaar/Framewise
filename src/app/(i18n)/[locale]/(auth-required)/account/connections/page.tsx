@@ -83,6 +83,7 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
     connectedTo: t('connectedTo'),
     testModeBadge: t('keyTypeBadge.test'),
     liveBadge: t('keyTypeBadge.live'),
+    portalLabel: t('providers.hubspot.portalLabel'),
   };
 
   return (

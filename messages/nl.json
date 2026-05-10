@@ -250,6 +250,29 @@
             "sandbox": "sandbox",
             "live": "live"
           }
+        },
+        "hubspot": {
+          "title": "HubSpot",
+          "description": "Wereldwijd CRM — gratis tier voldoet voor lead-sync vanuit de AI-agent.",
+          "instructions": {
+            "title": "Verbinding maken met HubSpot",
+            "subtitle": "OAuth-koppeling met je eigen HubSpot Hub. Vijf stappen, ~30 seconden.",
+            "step1": "Klik op de knop \"Verbind met HubSpot\" hieronder.",
+            "step2": "Log in op je HubSpot-account (of maak gratis een aan op hubspot.com).",
+            "step3": "Selecteer welke HubSpot Hub je wilt koppelen aan Framewise.",
+            "step4": "Bevestig dat Framewise contacts mag lezen + aanmaken.",
+            "step5": "Je wordt automatisch teruggestuurd naar Framewise als de koppeling klaar is.",
+            "tip": "We slaan de Hub-ID + UI-domein op in de connectie-card zodat je later precies weet welk account gekoppeld is."
+          },
+          "byoaDisclaimer": "Contacts blijven in jouw eigen HubSpot Hub. Framewise heeft alleen read+write toegang voor lead-sync.",
+          "freeTierNotice": "HubSpot Free CRM is gratis en voldoet voor lead-sync vanuit Framewise — geen abonnement nodig.",
+          "autoSyncTitle": "Auto-sync",
+          "autoSyncBody": "Wanneer de AI-agent een lead vangt op je website, verschijnt deze direct als contact in je HubSpot Hub.",
+          "configWarningTitle": "HubSpot nog niet geconfigureerd",
+          "configWarning": "Deze koppeling vereist dat Framewise een HubSpot-app heeft geregistreerd. Neem contact op met support.",
+          "oauthCta": "Verbind met HubSpot",
+          "oauthRedirecting": "Doorsturen naar HubSpot…",
+          "portalLabel": "Hub"
         }
       },
       "keyTypeBadge": {
