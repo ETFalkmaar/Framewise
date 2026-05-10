@@ -61,6 +61,24 @@
       "optionalSection": "Optional",
       "emptyRequired": "No required items for this plan.",
       "emptyOptional": "No optional items for this plan.",
+      "categorySection": {
+        "title": "By category",
+        "subtitle": "Items are grouped per topic so you can tackle one area at a time."
+      },
+      "categoryProgress": "{completed} of {total} done",
+      "pendingRequiredBadge": "required pending",
+      "categoryName": {
+        "domain": "Domain",
+        "legal": "Legal",
+        "accounting": "Accounting",
+        "payments": "Payments",
+        "crm": "CRM",
+        "newsletter": "Newsletter",
+        "phone": "Phone",
+        "content": "Content"
+      },
+      "successTitle": "Ready to go live",
+      "successBody": "All required items are complete. Ask Framewise to publish the site — the publish button arrives in step 32.",
       "requiredBadge": "required",
       "optionalBadge": "optional",
       "autoCompletedHint": "Marked done automatically once you complete the step in {action}.",
