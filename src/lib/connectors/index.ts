@@ -119,3 +119,23 @@ export type {
   EBoekhoudenSessionResponse,
   EBoekhoudenClientOptions,
 } from './providers/e-boekhouden';
+
+// Mollie (step 17) — first payment provider. API-key flow with
+// test/live key detection.
+export {
+  mollieConnector,
+  MollieConnector,
+  MollieClient,
+  isMollieKey,
+  MOLLIE_ERROR_CODES,
+  mapMollieError,
+  mollieNetworkError,
+} from './providers/mollie';
+export type {
+  MollieCredentials,
+  MollieKeyType,
+  MollieMetadata,
+  MollieOrganization,
+  MolliePaymentMethod,
+  MollieClientOptions,
+} from './providers/mollie';

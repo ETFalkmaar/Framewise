@@ -81,6 +81,8 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
     expiresAt: t('expiresAt'),
     noConnection: t('noConnection'),
     connectedTo: t('connectedTo'),
+    testModeBadge: t('keyTypeBadge.test'),
+    liveBadge: t('keyTypeBadge.live'),
   };
 
   return (
