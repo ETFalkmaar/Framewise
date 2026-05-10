@@ -56,22 +56,32 @@ export async function initiateOAuthFlow(input: InitiateOAuthInput): Promise<Init
     exp: Date.now() + FLOW_STATE_TTL_MS,
   };
 
-  const url = new URL(connector.oauth.authorizeUrl);
-  url.searchParams.set('response_type', 'code');
-  url.searchParams.set('redirect_uri', callbackUrl);
-  url.searchParams.set('scope', connector.oauth.scopes.join(' '));
-  url.searchParams.set('state', state);
-  // client_id is connector-specific in real life — for the framework
-  // we use a placeholder so the URL is well-formed. Step 15+ will
-  // pass real client ids from env vars.
-  url.searchParams.set('client_id', `framewise-${connector.id}`);
-  if (pkce) {
-    url.searchParams.set('code_challenge', pkce.codeChallenge);
-    url.searchParams.set('code_challenge_method', 'S256');
+  // Per-connector override (Stripe, …): the connector knows about its
+  // own client_id env var and the provider's exact query-string shape.
+  // Falls back to the generic builder for the framework's mock and
+  // for connectors without provider-specific params.
+  let authorizeUrl: string;
+  if (connector.getAuthorizeUrl) {
+    authorizeUrl = await connector.getAuthorizeUrl({ state, callbackUrl });
+  } else {
+    const url = new URL(connector.oauth.authorizeUrl);
+    url.searchParams.set('response_type', 'code');
+    url.searchParams.set('redirect_uri', callbackUrl);
+    url.searchParams.set('scope', connector.oauth.scopes.join(' '));
+    url.searchParams.set('state', state);
+    // client_id is connector-specific in real life — for the framework
+    // we use a placeholder so the URL is well-formed. Step 15+ will
+    // pass real client ids from env vars.
+    url.searchParams.set('client_id', `framewise-${connector.id}`);
+    if (pkce) {
+      url.searchParams.set('code_challenge', pkce.codeChallenge);
+      url.searchParams.set('code_challenge_method', 'S256');
+    }
+    authorizeUrl = url.toString();
   }
 
   return {
-    authorizeUrl: url.toString(),
+    authorizeUrl,
     flowStateCookie: packFlowState(flowState),
     state,
   };
@@ -156,8 +166,6 @@ export async function handleOAuthCallback(input: HandleOAuthCallbackInput): Prom
     throw new FlowAbortedError();
   }
 
-  const exchange = await exchangeCodeForToken(connector, code, flowState.codeVerifier);
-
   const context: ConnectorContext = {
     tenantId: contextOverride?.tenantId ?? flowState.tenantId,
     userId: contextOverride?.userId ?? flowState.userId,
@@ -165,22 +173,46 @@ export async function handleOAuthCallback(input: HandleOAuthCallbackInput): Prom
     locale: contextOverride?.locale,
   };
 
-  const credentials: Record<string, string> = { access_token: exchange.accessToken };
-  if (exchange.refreshToken) credentials.refresh_token = exchange.refreshToken;
-  if (exchange.expiresAt) credentials.expires_at = exchange.expiresAt;
+  // Per-connector override (Stripe, …): the connector owns the entire
+  // exchange + verification cycle and hands back ready-to-persist
+  // credentials + metadata. Falls back to the framework's mock token
+  // exchange for connectors without an override.
+  let credentials: Record<string, string>;
+  let metadata: Record<string, unknown> | undefined;
 
-  const test = connector.testConnection
-    ? await connector.testConnection(credentials, context)
-    : { ok: true };
-  if (!test.ok) {
-    throw new InvalidCredentialsError(connector.id, test.error);
+  if (connector.handleOAuthCallback) {
+    const result = await connector.handleOAuthCallback({ code, state, context });
+    if (!result.ok) {
+      throw new InvalidCredentialsError(connector.id, result.error);
+    }
+    if (!result.credentials || !result.credentials.access_token) {
+      throw new InvalidCredentialsError(
+        connector.id,
+        'Connector returned no credentials after successful OAuth callback'
+      );
+    }
+    credentials = result.credentials;
+    metadata = result.metadata;
+  } else {
+    const exchange = await exchangeCodeForToken(connector, code, flowState.codeVerifier);
+    credentials = { access_token: exchange.accessToken };
+    if (exchange.refreshToken) credentials.refresh_token = exchange.refreshToken;
+    if (exchange.expiresAt) credentials.expires_at = exchange.expiresAt;
+
+    const test = connector.testConnection
+      ? await connector.testConnection(credentials, context)
+      : { ok: true };
+    if (!test.ok) {
+      throw new InvalidCredentialsError(connector.id, test.error);
+    }
+    metadata = test.metadata;
   }
 
-  const connectionId = await storeCredentials(connector, context, credentials);
+  const connectionId = await storeCredentials(connector, context, credentials, metadata);
 
   return {
     success: true,
     connectionId,
-    metadata: test.metadata,
+    metadata,
   };
 }

@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { type Locale } from '@/i18n/routing';
 
 import { getActiveTenantForUser } from '@/lib/auth';
-import { getConnector } from '@/lib/connectors';
+import { getConnector, getStripeOAuthConfig } from '@/lib/connectors';
 import { getProviderById } from '@/lib/countries';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,10 @@ import { OAuthButton } from '@/components/connectors/oauth-button';
 import { MoneybirdInstructions } from '@/components/connectors/moneybird/instructions';
 import { EBoekhoudenInstructions } from '@/components/connectors/e-boekhouden/instructions';
 import { MollieInstructions } from '@/components/connectors/mollie/instructions';
+import {
+  StripeConfigWarning,
+  StripeInstructions,
+} from '@/components/connectors/stripe/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -89,8 +93,11 @@ export default async function ConnectorConnectPage({
         </CardContent>
       </Card>
 
+      {connector.id === 'stripe' && <StripeInstructions />}
+
       {connector.authMethod === 'oauth' && (
         <section data-testid="oauth-flow">
+          {connector.id === 'stripe' && getStripeOAuthConfig() === null && <StripeConfigWarning />}
           <OAuthButton
             providerId={connector.id}
             copy={{
@@ -98,6 +105,7 @@ export default async function ConnectorConnectPage({
               starting: t('connectFlow.oauthRedirecting'),
               failed: t('connectFlow.testFailed'),
             }}
+            disabled={connector.id === 'stripe' && getStripeOAuthConfig() === null}
           />
         </section>
       )}

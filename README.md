@@ -504,6 +504,68 @@ in a later step).
    organisation name + active methods on the connection. CI
    uses a stubbed `fetch`; no real keys ever land in pipelines.
 
+### Stripe Connect (step 18)
+
+The first **OAuth** connector. Uses Stripe Connect **Standard
+accounts** so the customer keeps a full Stripe Dashboard, fees and
+payouts stay on their own bank, and Framewise only ever holds a
+`read_write` access token plus the `acct_xxx` identifier — pure
+BYOA. Available in NL **and** CW (the latter via Stripe Atlas /
+EU-entity routes; the wizard surfaces this in the country
+overview's `caveats` field, not in the connector itself).
+
+- **OAuth flow**: customer clicks "Connect with Stripe" →
+  `/api/connectors/oauth/start` → `connect.stripe.com/oauth/authorize`
+  → callback → `connect.stripe.com/oauth/token` exchange →
+  `/v1/account` probe → vault-stored credentials + livemode badge.
+- **Per-connector hooks** (`getAuthorizeUrl`, `handleOAuthCallback`):
+  the framework's generic OAuth orchestrator was widened in step 18
+  to delegate to provider-defined methods when present — Stripe
+  needs the real `client_id` from env vars and a custom
+  form-urlencoded token-exchange POST. Connectors without overrides
+  (the framework's mock) keep using the generic builder.
+- **Error mapping** (`mapStripeError`): handles both REST envelopes
+  (`{ error: { message, type } }`) and OAuth-token envelopes
+  (`{ error: "invalid_grant", error_description: "..." }`). 400 →
+  `VALIDATION_FAILED`, 401 → `InvalidCredentialsError`, 402 →
+  `PAYMENT_REQUIRED`, 403 → `INSUFFICIENT_PERMISSIONS`, 404 →
+  `RESOURCE_NOT_FOUND`, 429 → `RATE_LIMITED` (with `retry-after`),
+  5xx → `PROVIDER_ERROR`, network → `NETWORK_ERROR` via
+  `stripeNetworkError`.
+- **Configuration gate**: when `STRIPE_CLIENT_ID` /
+  `STRIPE_SECRET_KEY` are blank the wizard still renders but the
+  "Connect with Stripe" button is disabled and a `<StripeConfigWarning />`
+  banner explains that Framewise needs to register a Connect
+  platform first. Graceful — no other connector breaks.
+- **Metadata**: `stripe_user_id`, `account_country`,
+  `account_currency`, `business_name`, `livemode`,
+  `charges_enabled`, `payouts_enabled` — all surfaced on the
+  `provider_connections` row by widening `storeCredentials` to
+  accept and merge an optional metadata bag.
+- **UI**: 5-step `<StripeInstructions />` card above the OAuth
+  button with side-by-side BYOA + test/live warnings. The
+  connection card reuses Mollie's amber/emerald badge logic but
+  keys off `metadata.livemode` instead of `metadata.key_type`.
+
+#### Testing Stripe Connect locally
+
+1. Sign in to dashboard.stripe.com (test mode by default).
+2. Settings → Connect settings → click "Get started" → enable Connect.
+3. Copy the **Test mode client ID** (`ca_xxx`) → paste into
+   `.env.local` as `STRIPE_CLIENT_ID`.
+4. Developers → API keys → copy the **Secret key** (`sk_test_xxx`) →
+   paste as `STRIPE_SECRET_KEY`.
+5. Restart the dev server. `/account/connections/add/stripe` now
+   shows an enabled "Connect with Stripe" button. Clicking it
+   redirects you to a real test-mode OAuth page — completing the
+   handshake stores the connected `acct_xxx` and renders the
+   account name + amber `test mode` badge on the connections page.
+
+Without those env vars the wizard renders the config-incomplete
+banner instead — perfect for previewing the UI without a Stripe
+account. Tests stub all HTTP via `fetchImpl`; no real OAuth ever
+fires in CI.
+
 ## Status
 
-In development - Step 17 of 118 (revised plan)
+In development - Step 18 of 118 (revised plan)

@@ -34,9 +34,10 @@ export abstract class BaseConnector implements ConnectorDefinition {
 
   protected async storeCredentials(
     context: ConnectorContext,
-    credentials: Record<string, string>
+    credentials: Record<string, string>,
+    metadata?: Record<string, unknown>
   ): Promise<string> {
-    return storeCredentials(this, context, credentials);
+    return storeCredentials(this, context, credentials, metadata);
   }
 
   protected async revokeCredentials(
@@ -59,7 +60,8 @@ export abstract class BaseConnector implements ConnectorDefinition {
 export async function storeCredentials(
   connector: ConnectorDefinition,
   context: ConnectorContext,
-  credentials: Record<string, string>
+  credentials: Record<string, string>,
+  metadata?: Record<string, unknown>
 ): Promise<string> {
   const plaintext = JSON.stringify(credentials);
 
@@ -70,10 +72,22 @@ export async function storeCredentials(
 
   let connectionId: string;
   if (existing) {
+    const updates: Parameters<typeof connectionsRepo.update>[1] = {};
     if (existing.status !== 'connected') {
       // Re-enable a previously broken connection so the vault.storeToken
       // owner-check passes (it requires status to allow updates).
-      await connectionsRepo.update(existing.id, { status: 'connected' });
+      updates.status = 'connected';
+    }
+    if (metadata && Object.keys(metadata).length > 0) {
+      // Merge new metadata over the old (mock adapter shallow-merges
+      // for us; see adapters/mock/connections.ts). Drops the
+      // `last_error` key so a successful reconnect clears it.
+      const merged = { ...(existing.metadata ?? {}), ...metadata };
+      delete (merged as Record<string, unknown>).last_error;
+      updates.metadata = merged;
+    }
+    if (Object.keys(updates).length > 0) {
+      await connectionsRepo.update(existing.id, updates);
     }
     connectionId = existing.id;
   } else {
@@ -84,7 +98,7 @@ export async function storeCredentials(
       status: 'connected',
       auth_method: connector.authMethod as ProviderConnection['auth_method'],
       encrypted_token: null,
-      metadata: {},
+      metadata: metadata ?? {},
       expires_at: null,
     });
     connectionId = created.id;

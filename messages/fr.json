@@ -204,6 +204,26 @@
           },
           "testKeyWarning": "Sandbox uniquement. Aucun argent réel ; idéal pour démos et CI.",
           "liveKeyWarning": "Production. Transactions réelles. KvK + compte bancaire requis sur le compte Mollie."
+        },
+        "stripe": {
+          "title": "Stripe",
+          "description": "Paiements mondiaux — cartes, iDEAL, SEPA, Apple Pay, Google Pay.",
+          "instructions": {
+            "title": "Se connecter à Stripe",
+            "subtitle": "Authentification OAuth avec votre propre compte Stripe Standard. Cinq étapes, ~30 secondes.",
+            "step1": "Cliquez sur le bouton « Connecter Stripe » ci-dessous.",
+            "step2": "Connectez-vous à votre compte Stripe (ou créez-en un sur stripe.com).",
+            "step3": "Sélectionnez le compte à connecter à Framewise.",
+            "step4": "Accordez à Framewise un accès en lecture aux paiements et aux infos du compte.",
+            "step5": "Vous serez redirigé automatiquement vers Framewise dès que la liaison sera terminée."
+            ,"tip": "Nous détectons automatiquement si le compte est en mode test ou live et badgions la connexion en conséquence pour éviter toute confusion."
+          },
+          "byoaDisclaimer": "L'argent atterrit sur VOTRE compte Stripe. Framewise détient seulement un jeton de lecture et ne peut jamais déplacer les versements.",
+          "modeWarning": "Stripe distingue les comptes test et live. Le mode est toujours affiché clairement sur la fiche de connexion.",
+          "configWarningTitle": "Stripe Connect pas encore configuré",
+          "configWarning": "Cette intégration nécessite que Framewise enregistre une plateforme Stripe Connect. Veuillez contacter le support.",
+          "oauthCta": "Connecter Stripe",
+          "oauthRedirecting": "Redirection vers Stripe…"
         }
       },
       "keyTypeBadge": {

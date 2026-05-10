@@ -39,7 +39,7 @@ export async function submitApiKeyCredentials(input: SubmitApiKeyInput): Promise
     throw new InvalidCredentialsError(connector.id, test.error);
   }
 
-  const connectionId = await storeCredentials(connector, context, cleaned);
+  const connectionId = await storeCredentials(connector, context, cleaned, test.metadata);
   return {
     success: true,
     connectionId,

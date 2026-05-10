@@ -139,3 +139,32 @@ export type {
   MolliePaymentMethod,
   MollieClientOptions,
 } from './providers/mollie';
+
+// Stripe Connect (step 18) — first OAuth connector. Standard accounts:
+// the customer keeps a full Stripe Dashboard, money lands on their own
+// bank, fees are theirs. Framewise just holds a `read_write` access token.
+// Both `networkError` and `configurationIncomplete` exist on multiple
+// providers — re-export under provider-prefixed aliases.
+export {
+  stripeConnector,
+  StripeConnector,
+  StripeClient,
+  isStripeAccountId,
+  STRIPE_ERROR_CODES,
+  STRIPE_AUTHORIZE_URL,
+  STRIPE_TOKEN_URL,
+  buildAuthorizeUrl as buildStripeAuthorizeUrl,
+  exchangeCodeForToken as exchangeStripeCodeForToken,
+  getStripeOAuthConfig,
+  configurationIncomplete as stripeConfigurationIncomplete,
+  mapStripeError,
+  stripeNetworkError,
+} from './providers/stripe';
+export type {
+  StripeAccount,
+  StripeCredentials,
+  StripeMetadata,
+  StripeOAuthTokenResponse,
+  StripeClientOptions,
+  StripeOAuthConfig,
+} from './providers/stripe';
