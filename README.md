@@ -1288,6 +1288,46 @@ hook arrives in step 88.
 
 Adds 20 tests (image-helpers: 14, isr-config: 6) — total 891.
 
+### Onboarding wizard (step 30 — fase 10 part 1/5)
+
+The first super-admin tool. JIJ logs in as `framewise@example.com`, goes
+to `/admin/onboarding/new`, and walks through five steps to spin up a
+new customer in one go: company info, country, slug + plan, tax + legal
+address, and a review screen. Submitting calls a server action that
+runs `createTenant()` — an atomic-ish orchestrator that creates the
+tenant, the owner user, the tenant↔user link, the country settings,
+and seeds the per-country/per-plan setup checklist. The success card
+renders the freshly generated 16-character initial password exactly
+once; refresh of the page loses it.
+
+Permission gate: the page redirects to `/account` for any logged-in
+user that isn't the seeded super-admin id. The server action repeats
+the check so a malicious POST can't bypass the page-level guard.
+
+Files:
+
+- `src/lib/onboarding/types.ts` — `OnboardingFormData`,
+  `OnboardingResult`, `ONBOARDING_STEPS`.
+- `src/lib/onboarding/validation.ts` — five Zod schemas (one per
+  wizard step + a combined one) with country-conditional VAT/CRIB
+  refines.
+- `src/lib/onboarding/create-tenant.ts` — orchestrator + the
+  16-char alphanumeric password generator. Best-effort rollback on
+  failure mid-way; real transactions land with the Supabase
+  adapter (step 119).
+- `src/app/(i18n)/[locale]/(auth-required)/admin/onboarding/new/`
+  — server `page.tsx` (super-admin gate), `actions.ts` (server
+  action with re-validation), `wizard.tsx` (client form covering
+  all five steps).
+- Account page now exposes a "→ Nieuwe klant onboarden" shortcut
+  for super-admin sessions only.
+
+The first onboarded tenant lands with `status: 'onboarding'` so the
+maintenance shell renders until the super-admin manually flips the
+status (the site-live gate ships in step 32).
+
+Adds 42 tests (validation: 24, create-tenant: 18) — total 933.
+
 ## Status
 
-In development - Step 29 of 96 (revised plan) — **FASE 9 COMPLETE** (6/6, public renderer done)
+In development - Step 30 of 96 (revised plan) — FASE 10 deel 1/5 (super-admin onboarding wizard)

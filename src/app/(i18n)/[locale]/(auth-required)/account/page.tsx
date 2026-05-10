@@ -136,6 +136,15 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         >
           → {t('viewMedia')}
         </Link>
+        {superAdmin && (
+          <Link
+            href="/admin/onboarding/new"
+            data-testid="link-onboarding"
+            className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+          >
+            → Nieuwe klant onboarden
+          </Link>
+        )}
       </div>
       <p className="text-muted-foreground mt-3 font-mono text-xs">
         Mock auth — Supabase replacement scheduled for step 119/118.
