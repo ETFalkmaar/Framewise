@@ -26,6 +26,7 @@ import { getActiveProvider, uploadMedia, StorageError } from '@/lib/storage';
 import {
   ConnectorError,
   getAllConnectors,
+  getConnector,
   mockApiKeyConnector,
   submitApiKeyCredentials,
 } from '@/lib/connectors';
@@ -842,7 +843,71 @@ async function ConnectorFrameworkPlayground() {
           </CardContent>
         </Card>
       </div>
+
+      <MoneybirdConnectorDebug />
     </section>
+  );
+}
+
+function MoneybirdConnectorDebug() {
+  const moneybird = getConnector('moneybird');
+  if (!moneybird) {
+    return (
+      <Card size="sm" data-testid="moneybird-connector-debug">
+        <CardHeader>
+          <CardTitle className="text-sm">Moneybird connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 15+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card size="sm" data-testid="moneybird-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Moneybird connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          Real provider — first connector with live HTTP calls.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{moneybird.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{moneybird.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{moneybird.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">
+            {(moneybird.availableIn ?? []).join(', ') || '(any)'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">apiKey.fields </span>
+          <span className="text-foreground">{moneybird.apiKey?.fields.length ?? 0}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api base </span>
+          <span className="text-foreground">https://moneybird.com/api/v2</span>
+        </p>
+        <p className="text-muted-foreground italic">
+          testConnection is wired to the real Moneybird API; no debug call here so /debug/data never
+          burns rate limits.
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 

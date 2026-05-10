@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 
 import { ApiKeyWizard } from '@/components/connectors/api-key-wizard';
 import { OAuthButton } from '@/components/connectors/oauth-button';
+import { MoneybirdInstructions } from '@/components/connectors/moneybird/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -98,6 +99,8 @@ export default async function ConnectorConnectPage({
           />
         </section>
       )}
+
+      {connector.id === 'moneybird' && <MoneybirdInstructions />}
 
       {connector.authMethod === 'api_key' && connector.apiKey && (
         <section data-testid="api-key-flow">

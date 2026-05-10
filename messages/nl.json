@@ -154,6 +154,24 @@
       "neverUsed": "nog niet gebruikt",
       "expiresAt": "Verloopt",
       "noConnection": "Niet verbonden",
+      "connectedTo": "Verbonden met",
+      "providers": {
+        "moneybird": {
+          "title": "Moneybird",
+          "description": "Nederlandse boekhouding voor zzp en MKB.",
+          "instructions": {
+            "title": "Verbinding maken met Moneybird",
+            "subtitle": "Vier stappen. De token verlaat je browser pas nadat wij hem versleutelen.",
+            "step1": "Log in op je Moneybird-account via moneybird.com.",
+            "step2": "Open Instellingen → Ontwikkelaars → API tokens.",
+            "step3": "Klik op \"Nieuw toegangstoken aanmaken\", geef het een naam zoals \"Framewise\" en bevestig.",
+            "step4": "Kopieer de zojuist gegenereerde token en plak hem hieronder.",
+            "tip": "Heb je meerdere administraties? Pin er één met de Administratie ID, anders kiezen we automatisch de eerste die je token kan zien.",
+            "testFailedTitle": "Verbinding mislukt",
+            "testFailedMessage": "Controleer of de token zonder omringende spaties is gekopieerd."
+          }
+        }
+      },
       "statusLabel": {
         "connected": "Verbonden",
         "disconnected": "Niet verbonden",

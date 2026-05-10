@@ -13,7 +13,14 @@ export const CONNECTOR_ERROR_CODES = {
   ALREADY_REGISTERED: 'ALREADY_REGISTERED',
 } as const;
 
-export type ConnectorErrorCode = (typeof CONNECTOR_ERROR_CODES)[keyof typeof CONNECTOR_ERROR_CODES];
+/**
+ * Codes baked into the framework. Provider-specific connectors are
+ * free to introduce their own (e.g. Moneybird's `RATE_LIMITED`) — see
+ * the constructor's widened signature below.
+ */
+export type ConnectorErrorCode =
+  | (typeof CONNECTOR_ERROR_CODES)[keyof typeof CONNECTOR_ERROR_CODES]
+  | (string & {});
 
 export class ConnectorError extends Error {
   readonly code: ConnectorErrorCode;

@@ -366,6 +366,51 @@ Every third-party integration plugs into a uniform framework under
 The hub, OAuth callback, API-key wizard, audit log and disconnect
 flow then work for the new connector with no further changes.
 
+### Moneybird (step 15)
+
+First real connector. Dutch accounting (zzp + MKB) via personal
+access token — no OAuth dance, no client secret to provision.
+
+- **Auth**: user pastes a token from Moneybird → Settings →
+  Developers → API tokens. Optional `administration_id` pin if the
+  token sees multiple administrations; otherwise the first one
+  becomes the primary.
+- **`testConnection`**: a single `GET /administrations.json` proves
+  the token works AND returns the metadata we cache on
+  `provider_connections.metadata` so the connections card can show
+  "Connected to Mijn Bedrijf BV" without ever decrypting the token
+  on render.
+- **HTTP client**: `MoneybirdClient` (in
+  `src/lib/connectors/providers/moneybird/client.ts`) wraps `fetch`
+  with a 10s default timeout (5s for `testConnection`),
+  `Authorization: Bearer …`, `User-Agent: Framewise/1.0`, and an
+  `AbortController` so we never hang the request.
+- **Error mapping**: `mapMoneybirdError(response, body)` translates
+  401 → `InvalidCredentialsError`, 403 →
+  `INSUFFICIENT_PERMISSIONS`, 404 → `RESOURCE_NOT_FOUND`, 422 →
+  `VALIDATION_FAILED` (with body `errors` flattened), 429 →
+  `RATE_LIMITED` (with retry-after detail), 5xx →
+  `PROVIDER_ERROR`, default → `UNKNOWN_ERROR`. Network failures →
+  `NETWORK_ERROR` via `networkError(reason)`.
+- **UI**: `/<locale>/account/connections/add/moneybird` renders a
+  4-step `<MoneybirdInstructions />` card above the generic
+  API-key wizard. Tests run against a stubbed `fetch` (no real HTTP
+  in CI).
+
+#### Testing Moneybird locally
+
+1. Sign up for a free Moneybird trial account at moneybird.com.
+2. Create at least one administration (the wizard offers "test
+   bedrijf" defaults).
+3. Settings → Developers → API tokens → "Create new access token".
+   Pick a sensible name like `Framewise local`.
+4. In the dev server, log in as `owner@demo-restaurant.example`
+   (NL Pro tenant) and visit
+   `/account/connections/add/moneybird`. Paste the token.
+5. The wizard shows "Connected" on success and persists encrypted
+   credentials via the vault. CI runs the same connector against a
+   mocked `fetch` — no real token is ever needed in pipelines.
+
 ## Status
 
-In development - Step 14 of 118 (revised plan)
+In development - Step 15 of 118 (revised plan)

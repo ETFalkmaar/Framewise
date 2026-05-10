@@ -154,6 +154,24 @@
       "neverUsed": "never used",
       "expiresAt": "Expires",
       "noConnection": "Not connected",
+      "connectedTo": "Connected to",
+      "providers": {
+        "moneybird": {
+          "title": "Moneybird",
+          "description": "Dutch accounting for freelancers and SMEs.",
+          "instructions": {
+            "title": "Connect with Moneybird",
+            "subtitle": "Four steps. Token never leaves your browser until we encrypt it.",
+            "step1": "Sign in to your Moneybird account at moneybird.com.",
+            "step2": "Open Settings → Developers → API tokens.",
+            "step3": "Click \"Create new access token\", give it a name like \"Framewise\", and confirm.",
+            "step4": "Copy the freshly generated token and paste it into the field below.",
+            "tip": "If you manage multiple administrations, you can pin one by ID — otherwise we use the first one the token can see.",
+            "testFailedTitle": "Connection failed",
+            "testFailedMessage": "Double-check that the token was copied without surrounding spaces."
+          }
+        }
+      },
       "statusLabel": {
         "connected": "Connected",
         "disconnected": "Disconnected",

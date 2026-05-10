@@ -35,6 +35,8 @@ export interface ConnectionStatusCardProps {
     neverUsed: string;
     expiresAt: string;
     noConnection: string;
+    /** Optional label for the metadata line ("Connected to: …"). */
+    connectedTo?: string;
   };
   /**
    * Optional render function for action buttons (typically a
@@ -79,6 +81,21 @@ export function ConnectionStatusCard({
       <CardContent className="space-y-2 text-xs">
         {connection ? (
           <ul className="space-y-1 font-mono">
+            {(() => {
+              const meta = connection.metadata as
+                | { primary_administration_name?: string; account?: string }
+                | undefined;
+              const accountLabel = meta?.primary_administration_name ?? meta?.account ?? null;
+              if (!accountLabel || !labels.connectedTo) return null;
+              return (
+                <li
+                  className="text-muted-foreground"
+                  data-testid={`connection-account-${provider.id}`}
+                >
+                  {labels.connectedTo}: <span className="text-foreground">{accountLabel}</span>
+                </li>
+              );
+            })()}
             <li className="text-muted-foreground">
               {labels.lastUsed}:{' '}
               <span className="text-foreground">
