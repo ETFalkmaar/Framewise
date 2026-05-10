@@ -1018,6 +1018,63 @@ the renderer.
 
 Adds 27 tests (registry, locale-fallback, resolve-page) — total 741.
 
+### Public website renderer (step 25 — fase 9 part 2/6)
+
+Completes the block library with the 4 remaining types:
+
+- **`gallery`** — multi-image gallery with 3 layouts that share
+  the same data shape:
+  - `grid` (default): even responsive grid with aspect-square
+    cells. Use for matching photo sets.
+  - `carousel`: horizontal scroll-snap row, swipeable on touch.
+    Use when image count > 6 or images vary in importance.
+  - `masonry`: CSS columns layout — natural aspect ratios stacked
+    in a Pinterest-style grid.
+
+  Captions render on hover (desktop) or always (touch); alt text
+  is always present for screen readers.
+
+- **`faq`** — accordion of Q&A pairs. Server-rendered using
+  native `<details>` / `<summary>` elements so toggling works
+  without JavaScript. The `<ChevronDown />` icon rotates 180° via
+  Tailwind's `group-open:` variant. SEO-friendly and visible to
+  the AI agent that scrapes the markup.
+
+- **`pricing`** — comparison cards (up to ~3 per row). One plan
+  can be marked `highlight: true` to get a primary-coloured ring,
+  a `scale-105` boost, and a "Popular" / "Populair" badge in the
+  active locale. Features render as a bullet list with
+  `lucide-react` check icons.
+
+- **`contact`** — the only **client** block (`'use client'`)
+  because it owns local form state. Field set is configurable via
+  `block.props.fields` (any subset of
+  `name` / `email` / `phone` / `subject` / `message` in any
+  order). A hidden `website` honeypot blocks bots without ever
+  showing the field to humans — bots that fill it get a fake
+  "success" response so they don't learn the trick. MVP
+  behaviour: the payload logs to console + a translated success
+  message replaces the form. Real mail submission via Resend
+  lands in step 54; the `recipient_email` prop is already plumbed
+  through.
+
+#### Architecture additions
+
+- **Resolver extended**: `resolve-page.ts` now has defensive
+  parsers for each new block type — `parseGalleryImages`,
+  `parseFaqItems`, `parsePricingPlans`, `parseContactFields`.
+  Each drops malformed entries instead of crashing the page.
+- **`VALID_CONTACT_FORM_FIELDS`** exported alongside the type for
+  runtime validation in the resolver — keeps the type and the
+  runtime allow-list in lock-step.
+- **Seeds extended**: villa `over-ons` now has gallery + FAQ
+  appended; new villa `tarieven` page with 3 pricing tiers
+  (highlight on High-Season); villa `contact` + restaurant
+  `contact` got a contact form; restaurant `menu` got a gallery.
+
+Adds 27 tests (registry expansion, new `types.test.ts`,
+resolve-page parsers for all 4 new blocks) — total 768.
+
 ## Status
 
-In development - Step 24 of 96 (revised plan) — FASE 9 START (deel 1/6)
+In development - Step 25 of 96 (revised plan) — FASE 9 deel 2/6 (8 blocks live)

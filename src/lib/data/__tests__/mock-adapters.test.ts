@@ -47,9 +47,10 @@ describe('mock data layer — seed loading', () => {
     expect(counts.tenants).toBe(2);
     expect(counts.users).toBe(3);
     expect(counts.subscription_plans).toBe(3);
-    // Step 24 extends the seeds with extra demo pages (over-ons,
-    // concept, restaurant home/menu/contact) for the public renderer.
-    expect(counts.pages).toBe(8);
+    // Step 24 added villa over-ons + concept + restaurant
+    // home/menu/contact; step 25 adds the `tarieven` page to demo
+    // the new pricing block.
+    expect(counts.pages).toBe(9);
     expect(counts.bookings).toBe(2);
     expect(counts.availability).toBe(30);
     expect(counts.setup_checklist_items).toBeGreaterThanOrEqual(15);
@@ -106,14 +107,16 @@ describe('mock data layer — tenants CRUD', () => {
 describe('mock data layer — pages CRUD', () => {
   it('lists pages for a tenant ordered by order_index', async () => {
     const pages = await pagesRepo.listByTenant(VILLA_ID);
-    // Step 24 added `over-ons` (published) + `concept` (draft) for
-    // the public renderer demo. They land at order_index 3 + 99.
-    expect(pages).toHaveLength(5);
+    // Step 24: over-ons (3) + concept (99); step 25: tarieven (4).
+    // `concept` is draft but still listed by listByTenant — public
+    // filter happens in resolvePage.
+    expect(pages).toHaveLength(6);
     expect(pages.map((p) => p.slug)).toEqual([
       'home',
       'accommodation',
       'contact',
       'over-ons',
+      'tarieven',
       'concept',
     ]);
   });
