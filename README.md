@@ -247,6 +247,41 @@ pendingRequired, pendingOptional, percentageComplete, items }`
 `/debug/data` includes a Checklist playground mirroring the live
 state for the seeded tenants.
 
+## Token vault
+
+Provider tokens are encrypted at rest and every read / write is
+audited. The implementation lives under `src/lib/vault/` and is
+exposed through `@/lib/vault`.
+
+- **Algorithm**: AES-256-GCM with a fresh 12-byte IV per call.
+  Wire format `v1:<iv>:<authTag>:<ciphertext>` (all hex). The
+  `v1` prefix lets us migrate to a wrapped-key design later
+  without breaking old rows.
+- **Key**: `TOKEN_ENCRYPTION_KEY` env var, exactly 64 hex chars
+  (32 bytes). `.env.example` and the `crypto.ts` error message
+  document the `node -e "console.log(require('crypto').
+randomBytes(32).toString('hex'))"` recipe. Production refuses
+  to operate without a valid key.
+- **Public API**: `encrypt(plaintext)`, `decrypt(ciphertext)`,
+  `storeToken`, `getToken`, `rotateToken`, `revokeToken` (all
+  taking a `VaultActor` so tenant ownership can be checked
+  before any decrypt). Errors: `EncryptionError`,
+  `TokenNotFoundError`, `AccessDeniedError`.
+- **Audit log**: every `storeToken` / `getToken` / `rotateToken`
+  / `revokeToken` call writes an immutable row to
+  `token_access_log` (tenant id, connection id, action, success,
+  user id, ip, timestamp). Defensive: a failure to write the
+  audit row never aborts the caller's operation.
+- **UI**: `/<locale>/account/connections/audit` renders the log
+  newest-first as a table. `/account/connections` links to it.
+  `/debug/data` shows a Vault playground with a live encrypt /
+  decrypt round-trip and the five most recent audit rows.
+
+Step 119 swaps this for [Supabase Vault](https://supabase.com/docs/guides/database/vault)
+plus a Postgres trigger-based audit log. The public API
+(`storeToken` / `getToken` / `rotateToken` / `revokeToken`) stays
+the same so call sites don't change.
+
 ## Status
 
-In development - Step 11 of 118 (revised plan)
+In development - Step 12 of 118 (revised plan)

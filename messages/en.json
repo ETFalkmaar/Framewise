@@ -70,6 +70,28 @@
       "allConfigured": "All required connections are active.",
       "missing": "Missing required connections",
       "viewAll": "Manage connections",
+      "viewAuditLog": "View access log",
+      "audit": {
+        "title": "Token access log",
+        "subtitle": "Every encrypt, decrypt, refresh and revoke is recorded here.",
+        "entryCount": "entries",
+        "empty": "No access events yet for this tenant.",
+        "systemUser": "system",
+        "column": {
+          "timestamp": "Timestamp",
+          "connection": "Connection",
+          "action": "Action",
+          "success": "OK",
+          "user": "User",
+          "ip": "IP"
+        },
+        "actionLabel": {
+          "read": "read",
+          "write": "store",
+          "refresh": "refresh",
+          "revoke": "revoke"
+        }
+      },
       "byoaDisclaimer": "This account stays in your name. We only have access to perform the actions you authorise. You can revoke access at any time.",
       "lastUsed": "Last used",
       "neverUsed": "never used",

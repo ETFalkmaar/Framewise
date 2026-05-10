@@ -38,6 +38,7 @@ import setupChecklistItemsSeed from './seeds/setup_checklist_items.json';
 import providerConnectionsSeed from './seeds/provider_connections.json';
 import tenantCountrySettingsSeed from './seeds/tenant_country_settings.json';
 import tenantChecklistStatusSeed from './seeds/tenant_checklist_status.json';
+import tokenAccessLogSeed from './seeds/token_access_log.json';
 
 /**
  * In-memory store for the mock adapter. One Map per table keyed by `id`.
@@ -123,6 +124,7 @@ function loadSeeds(): void {
     ['provider_connections', providerConnectionsSeed as unknown as ProviderConnection[]],
     ['tenant_country_settings', tenantCountrySettingsSeed as unknown as TenantCountrySettings[]],
     ['tenant_checklist_status', tenantChecklistStatusSeed as unknown as TenantChecklistStatus[]],
+    ['token_access_log', tokenAccessLogSeed as unknown as TokenAccessLog[]],
   ];
 
   for (const [name, rows] of pairs) {

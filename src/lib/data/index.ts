@@ -20,6 +20,7 @@ import { mockSubscriptionsRepo } from './adapters/mock/subscriptions';
 import { mockSupportHoursRepo } from './adapters/mock/support-hours';
 import { mockTenantCountrySettingsRepo } from './adapters/mock/tenant-country-settings';
 import { mockTenantsRepo } from './adapters/mock/tenants';
+import { mockTokenAccessLogRepo } from './adapters/mock/token-access-log';
 import { mockTranslationsRepo } from './adapters/mock/translations';
 import { mockUsersRepo } from './adapters/mock/users';
 
@@ -41,6 +42,7 @@ import {
   tenantCountrySettingsRepo,
 } from './repositories/tenant-country-settings';
 import { setTenantsRepo, tenantsRepo } from './repositories/tenants';
+import { setTokenAccessLogRepo, tokenAccessLogRepo } from './repositories/token-access-log';
 import { setTranslationsRepo, translationsRepo } from './repositories/translations';
 import { setUsersRepo, usersRepo } from './repositories/users';
 
@@ -57,6 +59,7 @@ setSubscriptionsRepo(mockSubscriptionsRepo);
 setSupportHoursRepo(mockSupportHoursRepo);
 setTenantCountrySettingsRepo(mockTenantCountrySettingsRepo);
 setTenantsRepo(mockTenantsRepo);
+setTokenAccessLogRepo(mockTokenAccessLogRepo);
 setTranslationsRepo(mockTranslationsRepo);
 setUsersRepo(mockUsersRepo);
 
@@ -73,6 +76,7 @@ export {
   supportHoursRepo,
   tenantCountrySettingsRepo,
   tenantsRepo,
+  tokenAccessLogRepo,
   translationsRepo,
   usersRepo,
 };

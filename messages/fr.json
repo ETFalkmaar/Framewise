@@ -70,6 +70,28 @@
       "allConfigured": "Toutes les connexions requises sont actives.",
       "missing": "Connexions requises manquantes",
       "viewAll": "Gérer les connexions",
+      "viewAuditLog": "Consulter le journal d'accès",
+      "audit": {
+        "title": "Journal d'accès aux tokens",
+        "subtitle": "Chaque chiffrement, déchiffrement, rafraîchissement et révocation est enregistré ici.",
+        "entryCount": "entrées",
+        "empty": "Aucun événement d'accès pour ce tenant pour l'instant.",
+        "systemUser": "système",
+        "column": {
+          "timestamp": "Horodatage",
+          "connection": "Connexion",
+          "action": "Action",
+          "success": "OK",
+          "user": "Utilisateur",
+          "ip": "IP"
+        },
+        "actionLabel": {
+          "read": "lecture",
+          "write": "stockage",
+          "refresh": "rafraîchir",
+          "revoke": "révoquer"
+        }
+      },
       "byoaDisclaimer": "Ce compte reste à votre nom. Nous n'avons accès qu'aux actions que vous autorisez. Vous pouvez révoquer cet accès à tout moment.",
       "lastUsed": "Dernière utilisation",
       "neverUsed": "jamais utilisé",
