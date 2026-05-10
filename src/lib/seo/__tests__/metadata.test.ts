@@ -3,11 +3,7 @@ import type { Page, Tenant } from '@/types/database';
 import type { ContentBlock, Locale } from '@/lib/blocks/types';
 import type { ResolvedPage } from '@/lib/public-site/resolve-page';
 
-import {
-  buildPageMetadata,
-  extractPageDescription,
-  extractPageTitle,
-} from '../metadata';
+import { buildPageMetadata, extractPageDescription, extractPageTitle } from '../metadata';
 
 const BASE_URL = 'https://framewise-pi.vercel.app';
 const ALL_LOCALES: Locale[] = ['nl', 'fr', 'en'];

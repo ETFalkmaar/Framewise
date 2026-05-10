@@ -29,11 +29,7 @@ export type TenantStatus = 'onboarding' | 'live' | 'paused' | 'cancelled';
  * tenant's vertical (`Restaurant` for hospitality, `LodgingBusiness`
  * for villas/holiday homes, `LocalBusiness` for everything else).
  */
-export type OrganizationType =
-  | 'Organization'
-  | 'LocalBusiness'
-  | 'Restaurant'
-  | 'LodgingBusiness';
+export type OrganizationType = 'Organization' | 'LocalBusiness' | 'Restaurant' | 'LodgingBusiness';
 
 /** A multi-tenant site instance (one Framewise customer site). */
 export interface Tenant {
