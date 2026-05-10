@@ -47,6 +47,14 @@ export interface ConnectionStatusCardProps {
      * so no coloured badge.
      */
     portalLabel?: string;
+    /**
+     * Optional label for the "Free tier" badge (Brevo and any
+     * future newsletter / marketing connectors with a free-tier
+     * indicator). Distinct from the test/live mode chain — Brevo
+     * accounts are always "live" but the free vs paid distinction
+     * is still useful at-a-glance information.
+     */
+    freeTierBadge?: string;
   };
   /**
    * Optional render function for action buttons (typically a
@@ -113,6 +121,8 @@ export function ConnectionStatusCard({
                     company_name?: string;
                     /** Pipedrive-shaped: slug-style identifier — appears in `<slug>.pipedrive.com`. */
                     company_domain?: string;
+                    /** Brevo-shaped: `true` when the primary plan is `free`. */
+                    is_free_tier?: boolean;
                   }
                 | undefined;
               const accountLabel =
@@ -178,6 +188,15 @@ export function ConnectionStatusCard({
                       data-testid={`connection-key-type-${provider.id}`}
                     >
                       {labels.liveBadge}
+                    </Badge>
+                  )}
+                  {meta?.is_free_tier === true && labels.freeTierBadge && (
+                    <Badge
+                      variant="outline"
+                      className="border-blue-500/40 bg-blue-500/5 font-mono text-[9px] text-blue-700 dark:text-blue-300"
+                      data-testid={`connection-free-tier-${provider.id}`}
+                    >
+                      {labels.freeTierBadge}
                     </Badge>
                   )}
                 </li>

@@ -274,6 +274,30 @@
           "oauthRedirecting": "Redirecting to HubSpot…",
           "portalLabel": "Hub"
         },
+        "brevo": {
+          "title": "Brevo",
+          "description": "EU-hosted email marketing (formerly Sendinblue) — free tier 300 emails/day, GDPR-compliant.",
+          "instructions": {
+            "title": "Connect to Brevo",
+            "subtitle": "API-key handshake with your own Brevo account. Four steps, ~30 seconds.",
+            "step1": "Open your Brevo account (or sign up for free at brevo.com).",
+            "step2": "Navigate to SMTP & API → API Keys.",
+            "step3": "Click \"Generate a new API key\" and give it a name (e.g. \"Framewise\").",
+            "step4": "Copy the key (starts with `xkeysib-`) and paste it into the field below.",
+            "tip": "Brevo was called Sendinblue until 2023. Same API, same accounts — just a new name.",
+            "testFailedTitle": "Connection failed",
+            "testFailedMessage": "Double-check the API key starts with `xkeysib-` and was copied in full."
+          },
+          "byoaDisclaimer": "The API key lives on YOUR Brevo account. Framewise can send mail from your sender — contacts stay yours.",
+          "freeTierNotice": "Brevo's free tier: 300 emails/day, unlimited contacts. Plenty for most small businesses.",
+          "rebrandTitle": "Formerly Sendinblue",
+          "sendinblueRebrand": "Brevo was Sendinblue until 2023. Existing Sendinblue accounts work seamlessly — just log in at brevo.com.",
+          "gdprCompliant": "Hosting in France and Germany. EU data protection, no data transfer to the US.",
+          "planBadge": {
+            "free": "Free tier",
+            "paid": "Paid plan"
+          }
+        },
         "pipedrive": {
           "title": "Pipedrive",
           "description": "Sales-focused CRM with a visual deal pipeline — no free tier, 14-day trial available.",

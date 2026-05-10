@@ -257,3 +257,24 @@ export type {
   PipedriveClientOptions,
   PipedriveOAuthConfig,
 } from './providers/pipedrive';
+
+// Brevo (step 22) — first newsletter / email-marketing connector.
+// Formerly known as Sendinblue (rebranded 2023). API-key flow with
+// a CUSTOM `api-key` header (not Authorization: Bearer). Free tier
+// is 300 emails/day, unlimited contacts.
+export {
+  brevoConnector,
+  BrevoConnector,
+  BrevoClient,
+  isBrevoKey,
+  BREVO_ERROR_CODES,
+  mapBrevoError,
+  brevoNetworkError,
+} from './providers/brevo';
+export type {
+  BrevoAccount,
+  BrevoCredentials,
+  BrevoMetadata,
+  BrevoPlan,
+  BrevoClientOptions,
+} from './providers/brevo';

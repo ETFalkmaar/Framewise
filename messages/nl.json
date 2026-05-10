@@ -274,6 +274,30 @@
           "oauthRedirecting": "Doorsturen naar HubSpot…",
           "portalLabel": "Hub"
         },
+        "brevo": {
+          "title": "Brevo",
+          "description": "EU-gehoste e-mailmarketing (voorheen Sendinblue) — gratis tier 300 e-mails/dag, GDPR-compliant.",
+          "instructions": {
+            "title": "Verbinding maken met Brevo",
+            "subtitle": "API-key koppeling met je eigen Brevo account. Vier stappen, ~30 seconden.",
+            "step1": "Open je Brevo account (of maak gratis aan op brevo.com).",
+            "step2": "Ga naar SMTP & API → API Keys.",
+            "step3": "Klik \"Generate a new API key\" en geef het een naam (bijv. \"Framewise\").",
+            "step4": "Kopieer de key (begint met `xkeysib-`) en plak hem in het veld hieronder.",
+            "tip": "Brevo heet sinds 2023 zo — voorheen Sendinblue. Dezelfde API, dezelfde account, alleen een nieuwe naam.",
+            "testFailedTitle": "Verbinding mislukt",
+            "testFailedMessage": "Controleer of de API key correct is en met `xkeysib-` begint."
+          },
+          "byoaDisclaimer": "API key staat op jouw Brevo account. Framewise kan e-mails versturen vanuit jouw afzender, contacts blijven van jou.",
+          "freeTierNotice": "Brevo gratis tier: 300 e-mails/dag, onbeperkt contacts. Voor de meeste kleinere klanten ruim voldoende.",
+          "rebrandTitle": "Voorheen Sendinblue",
+          "sendinblueRebrand": "Brevo heette tot 2023 Sendinblue. Bestaande Sendinblue-accounts werken automatisch — gewoon inloggen op brevo.com.",
+          "gdprCompliant": "Hosting in Frankrijk en Duitsland. EU-databescherming, geen gegevens-overdracht naar de VS.",
+          "planBadge": {
+            "free": "Gratis tier",
+            "paid": "Betaald plan"
+          }
+        },
         "pipedrive": {
           "title": "Pipedrive",
           "description": "Sales-gericht CRM met visuele deal-pijplijn — geen gratis tier, wel 14-dagen proefperiode.",

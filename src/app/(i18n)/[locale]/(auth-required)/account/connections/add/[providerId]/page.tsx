@@ -37,6 +37,7 @@ import {
   PipedriveConfigWarning,
   PipedriveInstructions,
 } from '@/components/connectors/pipedrive/instructions';
+import { BrevoInstructions } from '@/components/connectors/brevo/instructions';
 
 export default async function ConnectorConnectPage({
   params,
@@ -148,6 +149,7 @@ export default async function ConnectorConnectPage({
       {connector.id === 'moneybird' && <MoneybirdInstructions />}
       {connector.id === 'e-boekhouden' && <EBoekhoudenInstructions />}
       {connector.id === 'mollie' && <MollieInstructions />}
+      {connector.id === 'brevo' && <BrevoInstructions />}
 
       {connector.authMethod === 'api_key' && connector.apiKey && (
         <section data-testid="api-key-flow">

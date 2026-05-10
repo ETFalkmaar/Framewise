@@ -867,6 +867,7 @@ async function ConnectorFrameworkPlayground() {
       <PayPalConnectorDebug />
       <HubSpotConnectorDebug />
       <PipedriveConnectorDebug />
+      <BrevoConnectorDebug />
     </section>
   );
 }
@@ -1513,6 +1514,80 @@ function PipedriveConnectorDebug() {
           handleOAuthCallback exchanges the code at oauth.pipedrive.com/oauth/token (Basic auth)
           then probes the region-specific /api/v1/users/me; no debug call here so /debug/data never
           burns through Pipedrive rate limits.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BrevoConnectorDebug() {
+  const brevo = getConnector('brevo');
+  if (!brevo) {
+    return (
+      <Card size="sm" data-testid="brevo-connector-debug" className="mt-4">
+        <CardHeader>
+          <CardTitle className="text-sm">Brevo connector</CardTitle>
+          <CardDescription className="font-mono text-xs">
+            not registered (this should not happen in step 22+)
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card size="sm" data-testid="brevo-connector-debug" className="mt-4">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-mono">
+            ✓ registered
+          </Badge>
+          <CardTitle className="text-sm">Brevo connector</CardTitle>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          First newsletter / email-marketing provider — formerly Sendinblue, free tier compatible.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-1 text-xs">
+        <p className="font-mono">
+          <span className="text-muted-foreground">id </span>
+          <span className="text-foreground">{brevo.id}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">category </span>
+          <span className="text-foreground">{brevo.category}</span>
+          <span className="text-muted-foreground"> · authMethod </span>
+          <span className="text-foreground">{brevo.authMethod}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">availableIn </span>
+          <span className="text-foreground">{(brevo.availableIn ?? []).join(', ') || '(any)'}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">apiKey.fields </span>
+          <span className="text-foreground">{brevo.apiKey?.fields.length ?? 0}</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">api base </span>
+          <span className="text-foreground">https://api.brevo.com/v3</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">auth header </span>
+          <span className="text-foreground">api-key: xkeysib-… (custom header, NOT Bearer)</span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">key format </span>
+          <span className="text-foreground">
+            xkeysib-{'<hex>'}-{'<alphanumeric>'}
+          </span>
+        </p>
+        <p className="font-mono">
+          <span className="text-muted-foreground">free tier </span>
+          <span className="text-foreground">300 emails/day, unlimited contacts</span>
+        </p>
+        <p className="text-muted-foreground italic">
+          testConnection performs a single GET /v3/account against api.brevo.com; no debug call here
+          so /debug/data never burns through Brevo rate limits.
         </p>
       </CardContent>
     </Card>
