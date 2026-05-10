@@ -811,6 +811,68 @@ banner instead — perfect for previewing the UI without a Pipedrive
 developer account. Tests stub all HTTP via `fetchImpl`; no real
 OAuth ever fires in CI.
 
+### Brevo (step 22)
+
+The first **newsletter / email-marketing** connector — and the
+fifth category in the hub UI alongside accounting, payments, CRM,
+and the dev-only test connectors. Internationally available
+(NL + CW). Brevo's free tier covers 300 emails/day with unlimited
+contacts, so every Framewise tenant can use it without a budget
+question.
+
+- **API-key flow** (no OAuth, no env vars): customer pastes their
+  own `xkeysib-…` key. Pattern reused from
+  Mollie / Moneybird / e-Boekhouden.
+- **Custom `api-key` header**: Brevo doesn't use
+  `Authorization: Bearer …` — the wire shape is just a literal
+  `api-key: xkeysib-…` header. Tests assert that
+  `Authorization` is `undefined` so a future "helpful" edit
+  doesn't accidentally regress to Bearer auth (the most common
+  mistake when integrating Brevo for the first time).
+- **Test endpoint**: `GET /v3/account` returns the merchant's
+  email, address, and a list of plans. We surface a single
+  primary plan + summed credits across all entries because Brevo
+  can return multiple rows when a free marketing plan and a paid
+  SMTP add-on co-exist on the same account.
+- **Free-tier badge**: when `metadata.is_free_tier === true`, the
+  connection card renders a blue "Free tier" badge alongside the
+  account info. Distinct from the test/live mode chain
+  (Mollie / Stripe / PayPal) — Brevo accounts are always "live"
+  but the free vs paid distinction is still useful at-a-glance.
+- **Sendinblue rebrand**: Brevo was Sendinblue until 2023.
+  Existing accounts work seamlessly; the wizard surfaces a
+  callout for users who remember the old name.
+- **GDPR**: hosting in France + Germany. EU data protection, no
+  data transfer to the US — the wizard surfaces this for tenants
+  who care.
+- **Error mapping** (`mapBrevoError`): standard
+  `{ code, message }` envelope. 400 → `VALIDATION_FAILED`,
+  401 → `InvalidCredentialsError`, 402 → `PAYMENT_REQUIRED`
+  (insufficient credits — useful for future "this account is out
+  of free emails" UX), 403 → `INSUFFICIENT_PERMISSIONS`,
+  404 → `RESOURCE_NOT_FOUND`, 405 → `METHOD_NOT_ALLOWED`,
+  406 → `NOT_ACCEPTABLE`, 429 → `RATE_LIMITED` (with
+  `retry-after`), 5xx → `PROVIDER_ERROR`, network →
+  `NETWORK_ERROR` via `brevoNetworkError`.
+- **Metadata**: `email`, `company_name`, `full_name`, `country`,
+  `plan_type`, `credits_remaining`, `is_free_tier`.
+- **UI**: 4-step `<BrevoInstructions />` card with side-by-side
+  Free Tier + BYOA notices, GDPR positioning, and a Sendinblue
+  rebrand callout. The `xkeysib-` regex on the input field
+  rejects obvious typos client-side before any server round-trip.
+
+#### Testing Brevo locally
+
+1. Sign up for a free Brevo account at brevo.com (no credit card).
+2. Top-right account menu → SMTP & API → API Keys.
+3. Click **Generate a new API key**, name it "Framewise dev",
+   copy the `xkeysib-…` key.
+4. In the dev server, log in as `owner@demo-restaurant.example`
+   and visit `/account/connections/add/brevo`. Paste the key.
+5. The wizard runs `GET /v3/account` and stores the email +
+   company name + plan type on the connection. CI uses a stubbed
+   `fetch`; no real keys ever land in pipelines.
+
 ## Status
 
-In development - Step 21 of 118 (revised plan)
+In development - Step 22 of 118 (revised plan)

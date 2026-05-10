@@ -274,6 +274,30 @@
           "oauthRedirecting": "Redirection vers HubSpot…",
           "portalLabel": "Hub"
         },
+        "brevo": {
+          "title": "Brevo",
+          "description": "E-mail marketing hébergé en UE (ex-Sendinblue) — formule gratuite 300 e-mails/jour, conforme RGPD.",
+          "instructions": {
+            "title": "Se connecter à Brevo",
+            "subtitle": "Authentification par clé API avec votre propre compte Brevo. Quatre étapes, ~30 secondes.",
+            "step1": "Ouvrez votre compte Brevo (ou inscrivez-vous gratuitement sur brevo.com).",
+            "step2": "Allez dans SMTP & API → API Keys.",
+            "step3": "Cliquez « Generate a new API key » et donnez-lui un nom (par ex. « Framewise »).",
+            "step4": "Copiez la clé (commence par `xkeysib-`) et collez-la dans le champ ci-dessous.",
+            "tip": "Brevo s'appelle ainsi depuis 2023 — auparavant Sendinblue. Même API, mêmes comptes, simplement un nouveau nom.",
+            "testFailedTitle": "Échec de la connexion",
+            "testFailedMessage": "Vérifiez que la clé API commence par `xkeysib-` et a été copiée dans son intégralité."
+          },
+          "byoaDisclaimer": "La clé API est sur VOTRE compte Brevo. Framewise peut envoyer des e-mails depuis votre expéditeur — vos contacts restent à vous.",
+          "freeTierNotice": "Formule gratuite Brevo : 300 e-mails/jour, contacts illimités. Largement suffisant pour la plupart des petites entreprises.",
+          "rebrandTitle": "Anciennement Sendinblue",
+          "sendinblueRebrand": "Brevo s'appelait Sendinblue jusqu'en 2023. Les comptes Sendinblue existants fonctionnent automatiquement — connectez-vous simplement sur brevo.com.",
+          "gdprCompliant": "Hébergement en France et en Allemagne. Protection des données UE, pas de transfert vers les États-Unis.",
+          "planBadge": {
+            "free": "Niveau gratuit",
+            "paid": "Plan payant"
+          }
+        },
         "pipedrive": {
           "title": "Pipedrive",
           "description": "CRM orienté ventes avec un pipeline visuel — pas de formule gratuite, essai de 14 jours.",

@@ -84,6 +84,7 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
     testModeBadge: t('keyTypeBadge.test'),
     liveBadge: t('keyTypeBadge.live'),
     portalLabel: t('providers.hubspot.portalLabel'),
+    freeTierBadge: t('providers.brevo.planBadge.free'),
   };
 
   return (
