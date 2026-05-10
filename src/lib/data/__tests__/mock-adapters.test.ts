@@ -47,7 +47,9 @@ describe('mock data layer — seed loading', () => {
     expect(counts.tenants).toBe(2);
     expect(counts.users).toBe(3);
     expect(counts.subscription_plans).toBe(3);
-    expect(counts.pages).toBe(3);
+    // Step 24 extends the seeds with extra demo pages (over-ons,
+    // concept, restaurant home/menu/contact) for the public renderer.
+    expect(counts.pages).toBe(8);
     expect(counts.bookings).toBe(2);
     expect(counts.availability).toBe(30);
     expect(counts.setup_checklist_items).toBeGreaterThanOrEqual(15);
@@ -104,8 +106,16 @@ describe('mock data layer — tenants CRUD', () => {
 describe('mock data layer — pages CRUD', () => {
   it('lists pages for a tenant ordered by order_index', async () => {
     const pages = await pagesRepo.listByTenant(VILLA_ID);
-    expect(pages).toHaveLength(3);
-    expect(pages.map((p) => p.slug)).toEqual(['home', 'accommodation', 'contact']);
+    // Step 24 added `over-ons` (published) + `concept` (draft) for
+    // the public renderer demo. They land at order_index 3 + 99.
+    expect(pages).toHaveLength(5);
+    expect(pages.map((p) => p.slug)).toEqual([
+      'home',
+      'accommodation',
+      'contact',
+      'over-ons',
+      'concept',
+    ]);
   });
 
   it('creates and publishes a page', async () => {

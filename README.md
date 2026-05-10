@@ -955,6 +955,69 @@ Without those env vars the wizard renders the config-incomplete
 banner instead. Tests stub all HTTP via `fetchImpl`; no real
 OAuth ever fires in CI.
 
+### Public website renderer (step 24 — fase 9 part 1/6)
+
+The first slice of the public website. Customers' tenants now
+render real content blocks at three entry points:
+
+- **Path-prefix** (`/sites/<tenant>` and
+  `/sites/<tenant>/<page-slug>`) — the dev-friendly route.
+  Resolves the tenant via the path-prefix strategy in
+  `src/lib/tenant/resolver.ts`. A small "admin preview" banner
+  sits at the top so it's obvious which entry was used.
+- **Subdomain / custom-domain** (`<tenant>.framewise.app/<slug>`,
+  `villa-bonbini.com/<slug>`) — the canonical public route via
+  the catch-all at `[locale]/(public)/[...slug]/page.tsx`. No
+  banner; this is what real visitors see.
+
+All three routes use the same `<PublicPageRenderer />`
+(`src/components/public-site/`) so the output is byte-for-byte
+identical regardless of how the tenant was resolved.
+
+#### Block types shipped (4 of 8)
+
+- **`hero`** — full-bleed section with optional background image,
+  dark/light overlay, headline + subheadline + CTA.
+- **`text`** — `prose`-class article body with left / center /
+  right alignment.
+- **`image`** — single image with caption + alt text, optional
+  full-bleed, `next/image` with `sizes` matched to the layout.
+- **`cta`** — coloured panel (primary / neutral / accent) with
+  headline + subheadline + button.
+
+The remaining four block types (`gallery`, `faq`, `pricing`,
+`contact`) ship in step 25. The block registry skips unknown
+types gracefully, so partially-migrated databases never crash
+the renderer.
+
+#### Architecture
+
+- **Block registry** (`src/lib/blocks/registry.tsx`) — static
+  `Record<BlockType, React.ComponentType>`. Adding a new block
+  type means: declare in `types.ts`, add to `KNOWN_BLOCK_TYPES`,
+  register the component. The `renderBlock()` helper returns
+  `null` for unknown types so callers can `.map()` without
+  worry.
+- **Page resolver** (`src/lib/public-site/resolve-page.ts`) —
+  takes `{ tenantId, pageSlug, locale }`, returns
+  `ResolvedPage | null`. Empty slug maps to `home` (matches the
+  seed convention). Filters out `draft` pages so unpublished
+  drafts return 404. Defensive parsing on `block.data`: rows
+  with missing required fields are dropped, not surfaced.
+- **Locale fallback** (`src/lib/public-site/locale-fallback.ts`)
+  — `getTranslatedString(map, locale, defaultLocale)` with a
+  three-step chain: exact match → tenant default → first
+  non-empty value (alphabetical for determinism). Empty strings
+  count as missing so a partial translation doesn't render a
+  blank.
+- **Discriminated union** in `src/lib/blocks/types.ts` — every
+  block type has its own `props` shape; the registry's
+  `getBlockComponent()` lookup is the single point where the
+  type widens to `ContentBlock`. JSX inside components stays
+  fully typed.
+
+Adds 27 tests (registry, locale-fallback, resolve-page) — total 741.
+
 ## Status
 
-In development - Step 23 of 118 (revised plan) — fase 6/7 COMPLEET, 9 connectors live
+In development - Step 24 of 96 (revised plan) — FASE 9 START (deel 1/6)

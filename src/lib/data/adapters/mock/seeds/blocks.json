@@ -5,11 +5,21 @@
     "block_type": "hero",
     "order_index": 0,
     "data": {
-      "headline": "Welcome to Demo Villa Curaçao",
-      "subline": "Your private paradise in the Caribbean",
-      "cta_label": "Check availability",
-      "cta_href": "/accommodation",
-      "image_url": "/seed/villa-hero.jpg"
+      "headline_translations": {
+        "nl": "Ervaar Curaçao in stijl",
+        "en": "Experience Curaçao in style"
+      },
+      "subheadline_translations": {
+        "nl": "Luxe villa met privézwembad",
+        "en": "Luxury villa with private pool"
+      },
+      "image_url": "https://picsum.photos/seed/villa-hero/1920/1080",
+      "cta_text_translations": {
+        "nl": "Bekijk beschikbaarheid",
+        "en": "Check availability"
+      },
+      "cta_link": "/booking",
+      "background_overlay": "dark"
     },
     "created_at": "2026-02-02T10:05:00.000Z",
     "updated_at": "2026-04-15T11:30:00.000Z"
@@ -20,92 +30,300 @@
     "block_type": "text",
     "order_index": 1,
     "data": {
-      "title": "About the villa",
-      "body": "Set on the southern coast, the villa offers panoramic ocean views, a private pool and direct beach access."
+      "content_translations": {
+        "nl": "Onze villa biedt 4 ruime slaapkamers, een prachtig privézwembad, en uitzicht op de Caribische zee. Ideaal voor families en vriendengroepen die op zoek zijn naar een onvergetelijke vakantie.",
+        "en": "Our villa offers 4 spacious bedrooms, a beautiful private pool, and views of the Caribbean Sea. Perfect for families and groups seeking an unforgettable vacation."
+      },
+      "alignment": "left"
     },
     "created_at": "2026-02-02T10:10:00.000Z",
-    "updated_at": "2026-02-02T10:10:00.000Z"
+    "updated_at": "2026-04-15T11:30:00.000Z"
   },
   {
     "id": "10000000-0000-0000-0000-000000000003",
     "page_id": "f0000000-0000-0000-0000-000000000001",
-    "block_type": "gallery",
+    "block_type": "image",
     "order_index": 2,
     "data": {
-      "images": ["/seed/villa-1.jpg", "/seed/villa-2.jpg", "/seed/villa-3.jpg"]
+      "image_url": "https://picsum.photos/seed/villa-pool/1200/800",
+      "alt_translations": {
+        "nl": "Privézwembad met zeezicht",
+        "en": "Private pool with sea view"
+      },
+      "caption_translations": {
+        "nl": "Het privézwembad",
+        "en": "The private pool"
+      },
+      "full_width": true
     },
     "created_at": "2026-02-02T10:15:00.000Z",
     "updated_at": "2026-04-10T09:00:00.000Z"
   },
   {
     "id": "10000000-0000-0000-0000-000000000004",
-    "page_id": "f0000000-0000-0000-0000-000000000002",
+    "page_id": "f0000000-0000-0000-0000-000000000001",
+    "block_type": "cta",
+    "order_index": 3,
+    "data": {
+      "headline_translations": {
+        "nl": "Klaar om te boeken?",
+        "en": "Ready to book?"
+      },
+      "subheadline_translations": {
+        "nl": "Beschikbaarheid het hele jaar",
+        "en": "Available year-round"
+      },
+      "button_text_translations": {
+        "nl": "Bekijk beschikbaarheid",
+        "en": "Check availability"
+      },
+      "button_link": "/booking",
+      "background_color": "primary"
+    },
+    "created_at": "2026-02-02T10:20:00.000Z",
+    "updated_at": "2026-04-15T11:30:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000020",
+    "page_id": "f0000000-0000-0000-0000-000000000004",
     "block_type": "hero",
     "order_index": 0,
     "data": {
-      "headline": "Accommodation",
-      "subline": "Three bedrooms, two bathrooms, sleeps six"
+      "headline_translations": { "nl": "Over de villa", "en": "About the villa" },
+      "subheadline_translations": {
+        "nl": "Ontdek wat onze villa zo bijzonder maakt",
+        "en": "Discover what makes our villa special"
+      },
+      "image_url": "https://picsum.photos/seed/villa-about/1920/1080",
+      "background_overlay": "dark"
     },
-    "created_at": "2026-02-02T10:35:00.000Z",
-    "updated_at": "2026-02-02T10:35:00.000Z"
+    "created_at": "2026-04-01T09:05:00.000Z",
+    "updated_at": "2026-04-15T11:30:00.000Z"
   },
   {
-    "id": "10000000-0000-0000-0000-000000000005",
-    "page_id": "f0000000-0000-0000-0000-000000000002",
-    "block_type": "pricing",
+    "id": "10000000-0000-0000-0000-000000000021",
+    "page_id": "f0000000-0000-0000-0000-000000000004",
+    "block_type": "text",
     "order_index": 1,
     "data": {
-      "from_price_cents": 35000,
-      "currency": "EUR",
-      "label": "per night"
+      "content_translations": {
+        "nl": "Onze villa is gebouwd in 2018 en met liefde ingericht door lokale ambachtslieden. Elke kamer combineert traditionele Caribische details met moderne luxe.",
+        "en": "Our villa was built in 2018 and lovingly designed by local craftspeople. Every room blends traditional Caribbean details with modern luxury."
+      },
+      "alignment": "left"
     },
-    "created_at": "2026-02-02T10:40:00.000Z",
-    "updated_at": "2026-02-02T10:40:00.000Z"
+    "created_at": "2026-04-01T09:10:00.000Z",
+    "updated_at": "2026-04-01T09:10:00.000Z"
   },
   {
-    "id": "10000000-0000-0000-0000-000000000006",
-    "page_id": "f0000000-0000-0000-0000-000000000002",
-    "block_type": "faq",
+    "id": "10000000-0000-0000-0000-000000000022",
+    "page_id": "f0000000-0000-0000-0000-000000000004",
+    "block_type": "image",
     "order_index": 2,
     "data": {
-      "items": [
-        {
-          "question": "Is breakfast included?",
-          "answer": "Breakfast is available on request for an additional fee."
-        },
-        {
-          "question": "Do you allow pets?",
-          "answer": "Sorry, the villa is pet-free."
-        }
-      ]
+      "image_url": "https://picsum.photos/seed/villa-interior/1200/800",
+      "alt_translations": { "nl": "Interieur van de villa", "en": "Villa interior" },
+      "caption_translations": { "nl": "De woonkamer", "en": "The living room" },
+      "full_width": false
     },
-    "created_at": "2026-02-02T10:45:00.000Z",
-    "updated_at": "2026-02-02T10:45:00.000Z"
+    "created_at": "2026-04-01T09:15:00.000Z",
+    "updated_at": "2026-04-01T09:15:00.000Z"
   },
   {
-    "id": "10000000-0000-0000-0000-000000000007",
+    "id": "10000000-0000-0000-0000-000000000030",
     "page_id": "f0000000-0000-0000-0000-000000000003",
-    "block_type": "contact",
+    "block_type": "hero",
     "order_index": 0,
     "data": {
-      "email": "hello@demo-villa.example.com",
-      "phone": "+599 9 555-0101",
-      "address": "Caracasbaaiweg 1, Willemstad, Curaçao"
+      "headline_translations": { "nl": "Contact opnemen", "en": "Get in touch" },
+      "subheadline_translations": {
+        "nl": "Vragen? Neem gerust contact met ons op",
+        "en": "Questions? We're happy to help"
+      },
+      "image_url": "https://picsum.photos/seed/villa-contact/1920/1080",
+      "background_overlay": "light"
     },
     "created_at": "2026-02-02T11:05:00.000Z",
-    "updated_at": "2026-03-20T14:00:00.000Z"
+    "updated_at": "2026-04-15T11:30:00.000Z"
   },
   {
-    "id": "10000000-0000-0000-0000-000000000008",
+    "id": "10000000-0000-0000-0000-000000000031",
     "page_id": "f0000000-0000-0000-0000-000000000003",
-    "block_type": "cta",
+    "block_type": "text",
     "order_index": 1,
     "data": {
-      "headline": "Plan your stay",
-      "cta_label": "Check availability",
-      "cta_href": "/accommodation"
+      "content_translations": {
+        "nl": "Mail ons op hello@demo-villa.example.com of bel +599 9 555-0101 (Caracasbaaiweg 1, Willemstad, Curaçao). We reageren binnen 24 uur.",
+        "en": "Email hello@demo-villa.example.com or call +599 9 555-0101 (Caracasbaaiweg 1, Willemstad, Curaçao). We reply within 24 hours."
+      },
+      "alignment": "center"
     },
     "created_at": "2026-02-02T11:10:00.000Z",
-    "updated_at": "2026-02-02T11:10:00.000Z"
+    "updated_at": "2026-04-15T11:30:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000040",
+    "page_id": "f0000000-0000-0000-0000-000000000005",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline_translations": { "nl": "Concept-pagina", "en": "Concept page" },
+      "subheadline_translations": {
+        "nl": "Nog niet zichtbaar voor bezoekers",
+        "en": "Not yet visible to visitors"
+      }
+    },
+    "created_at": "2026-05-01T09:05:00.000Z",
+    "updated_at": "2026-05-01T09:05:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000050",
+    "page_id": "f0000000-0000-0000-0000-000000000010",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline_translations": { "nl": "Restaurant De Tafel", "en": "Restaurant De Tafel" },
+      "subheadline_translations": {
+        "nl": "Authentieke Nederlandse keuken met internationale invloeden",
+        "en": "Authentic Dutch cuisine with international influences"
+      },
+      "image_url": "https://picsum.photos/seed/restaurant-hero/1920/1080",
+      "cta_text_translations": { "nl": "Reserveer een tafel", "en": "Book a table" },
+      "cta_link": "/contact",
+      "background_overlay": "dark"
+    },
+    "created_at": "2026-03-15T09:05:00.000Z",
+    "updated_at": "2026-05-01T15:00:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000051",
+    "page_id": "f0000000-0000-0000-0000-000000000010",
+    "block_type": "text",
+    "order_index": 1,
+    "data": {
+      "content_translations": {
+        "nl": "Ons restaurant is gevestigd in een monumentaal grachtenpand uit 1742. Onze chef-kok combineert klassieke Nederlandse gerechten met seizoensgebonden ingrediënten van lokale producenten.",
+        "en": "Our restaurant occupies a monumental canal house from 1742. Our chef pairs classic Dutch dishes with seasonal ingredients from local producers."
+      },
+      "alignment": "left"
+    },
+    "created_at": "2026-03-15T09:10:00.000Z",
+    "updated_at": "2026-03-15T09:10:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000052",
+    "page_id": "f0000000-0000-0000-0000-000000000010",
+    "block_type": "image",
+    "order_index": 2,
+    "data": {
+      "image_url": "https://picsum.photos/seed/restaurant-dish/1200/800",
+      "alt_translations": { "nl": "Een seizoensgerecht", "en": "A seasonal dish" },
+      "caption_translations": {
+        "nl": "Tarbot met seizoensgroenten",
+        "en": "Turbot with seasonal vegetables"
+      },
+      "full_width": true
+    },
+    "created_at": "2026-03-15T09:15:00.000Z",
+    "updated_at": "2026-03-15T09:15:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000053",
+    "page_id": "f0000000-0000-0000-0000-000000000010",
+    "block_type": "cta",
+    "order_index": 3,
+    "data": {
+      "headline_translations": { "nl": "Reserveer vandaag nog", "en": "Book today" },
+      "subheadline_translations": {
+        "nl": "We hebben plek voor 2 tot 12 personen",
+        "en": "Tables for 2 to 12 guests"
+      },
+      "button_text_translations": { "nl": "Reserveer een tafel", "en": "Book a table" },
+      "button_link": "/contact",
+      "background_color": "primary"
+    },
+    "created_at": "2026-03-15T09:20:00.000Z",
+    "updated_at": "2026-03-15T09:20:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000060",
+    "page_id": "f0000000-0000-0000-0000-000000000011",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline_translations": { "nl": "Onze menukaart", "en": "Our menu" },
+      "subheadline_translations": {
+        "nl": "Verse seizoensgebonden gerechten",
+        "en": "Fresh seasonal dishes"
+      },
+      "image_url": "https://picsum.photos/seed/restaurant-menu/1920/1080",
+      "background_overlay": "dark"
+    },
+    "created_at": "2026-03-15T09:35:00.000Z",
+    "updated_at": "2026-03-15T09:35:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000061",
+    "page_id": "f0000000-0000-0000-0000-000000000011",
+    "block_type": "text",
+    "order_index": 1,
+    "data": {
+      "content_translations": {
+        "nl": "Ons drie-gangen seizoensmenu wisselt elke maand. Vraag onze gastheer naar de allergeneninformatie. Vegetarische en glutenvrije opties altijd beschikbaar.",
+        "en": "Our three-course seasonal menu rotates every month. Ask our host for allergen info. Vegetarian and gluten-free options always available."
+      },
+      "alignment": "left"
+    },
+    "created_at": "2026-03-15T09:40:00.000Z",
+    "updated_at": "2026-03-15T09:40:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000062",
+    "page_id": "f0000000-0000-0000-0000-000000000011",
+    "block_type": "image",
+    "order_index": 2,
+    "data": {
+      "image_url": "https://picsum.photos/seed/restaurant-tartare/1200/800",
+      "alt_translations": { "nl": "Een voorgerecht", "en": "A starter" },
+      "caption_translations": {
+        "nl": "Rundertartaar met truffel",
+        "en": "Beef tartare with truffle"
+      },
+      "full_width": false
+    },
+    "created_at": "2026-03-15T09:45:00.000Z",
+    "updated_at": "2026-03-15T09:45:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000070",
+    "page_id": "f0000000-0000-0000-0000-000000000012",
+    "block_type": "hero",
+    "order_index": 0,
+    "data": {
+      "headline_translations": { "nl": "Contact & reserveren", "en": "Contact & book" },
+      "subheadline_translations": {
+        "nl": "Reserveer een tafel of stuur ons een bericht",
+        "en": "Book a table or send us a message"
+      },
+      "image_url": "https://picsum.photos/seed/restaurant-contact/1920/1080",
+      "background_overlay": "light"
+    },
+    "created_at": "2026-03-15T10:05:00.000Z",
+    "updated_at": "2026-03-15T10:05:00.000Z"
+  },
+  {
+    "id": "10000000-0000-0000-0000-000000000071",
+    "page_id": "f0000000-0000-0000-0000-000000000012",
+    "block_type": "text",
+    "order_index": 1,
+    "data": {
+      "content_translations": {
+        "nl": "Bel +31 20 555-0102 of mail reserveer@demo-restaurant.example. Geopend dinsdag t/m zaterdag, 17:00 — 22:30 uur.",
+        "en": "Call +31 20 555-0102 or email reserveer@demo-restaurant.example. Open Tuesday through Saturday, 17:00 — 22:30."
+      },
+      "alignment": "center"
+    },
+    "created_at": "2026-03-15T10:10:00.000Z",
+    "updated_at": "2026-03-15T10:10:00.000Z"
   }
 ]
