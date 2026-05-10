@@ -78,13 +78,16 @@ export { mockApiKeyConnector, mockOAuthConnector } from './test-doubles';
 // connector registry on import — keep these as side-effect imports.
 // Step 15 ships Moneybird; steps 16–23 add the next five.
 // ──────────────────────────────────────────────────────────────────
+// Moneybird (step 15) — both modules export a `networkError` helper, so
+// the barrel re-exports each provider's helper under a provider-prefixed
+// alias to avoid a name collision.
 export {
   moneybirdConnector,
   MoneybirdConnector,
   MoneybirdClient,
   MONEYBIRD_ERROR_CODES,
   mapMoneybirdError,
-  networkError,
+  networkError as moneybirdNetworkError,
 } from './providers/moneybird';
 export type {
   MoneybirdAdministration,
@@ -92,3 +95,27 @@ export type {
   MoneybirdMetadata,
   MoneybirdClientOptions,
 } from './providers/moneybird';
+
+// e-Boekhouden (step 16) — REST API with two-token (User + Source) flow
+// and a 55-minute session cache.
+export {
+  eBoekhoudenConnector,
+  EBoekhoudenConnector,
+  EBoekhoudenClient,
+  EBOEKHOUDEN_ERROR_CODES,
+  configurationIncomplete,
+  mapEBoekhoudenError,
+  networkError as eBoekhoudenNetworkError,
+  __resetSessionCache as __resetEBoekhoudenSessionCache,
+  __peekCachedSession as __peekEBoekhoudenSession,
+  getCachedSession as getEBoekhoudenCachedSession,
+  invalidateCachedSession as invalidateEBoekhoudenCachedSession,
+  setCachedSession as setEBoekhoudenCachedSession,
+} from './providers/e-boekhouden';
+export type {
+  EBoekhoudenAdministration,
+  EBoekhoudenCredentials,
+  EBoekhoudenMetadata,
+  EBoekhoudenSessionResponse,
+  EBoekhoudenClientOptions,
+} from './providers/e-boekhouden';
