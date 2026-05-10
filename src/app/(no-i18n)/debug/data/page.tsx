@@ -20,6 +20,8 @@ import {
   ValidationError,
 } from '@/lib/validation';
 import { computeChecklistProgress } from '@/lib/checklist';
+import { decrypt, encrypt, EncryptionError } from '@/lib/vault';
+import { tokenAccessLogRepo } from '@/lib/data';
 import { resolveTenant, type TenantResolutionResult } from '@/lib/tenant';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -110,6 +112,8 @@ export default async function DebugDataPage() {
       <ConnectionsPlayground />
 
       <ChecklistPlayground />
+
+      <VaultPlayground />
 
       <AuthPlayground />
     </main>
@@ -497,6 +501,114 @@ async function ChecklistPlayground() {
             </CardContent>
           </Card>
         ))}
+      </div>
+    </section>
+  );
+}
+
+async function VaultPlayground() {
+  const sample = 'test_token_value';
+  let cipher: string | null = null;
+  let plaintext: string | null = null;
+  let error: string | null = null;
+  try {
+    cipher = encrypt(sample);
+    plaintext = decrypt(cipher);
+  } catch (err) {
+    error = err instanceof EncryptionError ? `${err.code}: ${err.message}` : String(err);
+  }
+
+  const recent = await tokenAccessLogRepo.listAll(5);
+
+  const cipherSnippet = cipher ? `${cipher.slice(0, 30)}…` : null;
+
+  return (
+    <section className="mb-16 space-y-4" data-testid="vault-playground">
+      <div>
+        <h2 className="text-display-md font-semibold tracking-tight">Vault playground</h2>
+        <Separator className="mt-3" />
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Live AES-256-GCM round-trip from <code className="font-mono">@/lib/vault</code>. The
+        ciphertext snippet changes on every reload because the IV is random.
+      </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card size="sm" data-testid="vault-roundtrip">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Badge variant={error ? 'destructive' : 'secondary'} className="font-mono">
+                {error ? '✗ failed' : '✓ ok'}
+              </Badge>
+              <CardTitle className="text-sm">encrypt → decrypt</CardTitle>
+            </div>
+            <CardDescription className="font-mono text-xs">plaintext: {sample}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2 text-xs">
+            {error ? (
+              <p className="text-destructive font-mono">{error}</p>
+            ) : (
+              <>
+                <p>
+                  <span className="text-muted-foreground font-mono">cipher </span>
+                  <span className="text-foreground font-mono break-all">{cipherSnippet}</span>
+                </p>
+                <p>
+                  <span className="text-muted-foreground font-mono">decrypted </span>
+                  <span
+                    className={
+                      plaintext === sample
+                        ? 'text-foreground font-mono'
+                        : 'text-destructive font-mono'
+                    }
+                  >
+                    {plaintext}
+                  </span>
+                </p>
+                <p
+                  className={
+                    plaintext === sample
+                      ? 'text-emerald-700 dark:text-emerald-300'
+                      : 'text-destructive'
+                  }
+                >
+                  {plaintext === sample ? '✓ round-trip identical' : '✗ mismatch'}
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+        <Card size="sm" data-testid="vault-recent-audit">
+          <CardHeader>
+            <CardTitle className="text-sm">Recent token_access_log entries</CardTitle>
+            <CardDescription className="font-mono text-xs">
+              latest {recent.length} of all tenants
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-xs">
+            {recent.length === 0 ? (
+              <p className="text-muted-foreground">(none)</p>
+            ) : (
+              <ul className="space-y-1 font-mono">
+                {recent.map((row) => (
+                  <li key={row.id} className="flex flex-wrap gap-2">
+                    <span className="text-muted-foreground">
+                      {row.timestamp.replace('T', ' ').slice(0, 19)}
+                    </span>
+                    <span className="text-foreground">{row.action}</span>
+                    <span
+                      className={
+                        row.success ? 'text-emerald-700 dark:text-emerald-300' : 'text-destructive'
+                      }
+                    >
+                      {row.success ? '✓' : '✗'}
+                    </span>
+                    <span className="text-muted-foreground">{row.connection_id.slice(0, 8)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

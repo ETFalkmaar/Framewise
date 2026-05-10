@@ -94,11 +94,18 @@ export default async function ConnectionsPage({ params }: { params: Promise<{ lo
           <h1 className="text-display-lg mt-3 font-bold tracking-tight">{t('title')}</h1>
           <p className="text-muted-foreground mt-2 max-w-xl text-sm">{t('subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2 font-mono text-xs">
+        <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
           <Badge variant="secondary">
             {countryConfig?.flagEmoji} {tenant.country}
           </Badge>
           <Badge variant="outline">{tenant.name}</Badge>
+          <Link
+            href="/account/connections/audit"
+            data-testid="link-audit-log"
+            className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-2 py-1 ring-1 transition"
+          >
+            🔒 {t('viewAuditLog')}
+          </Link>
         </div>
       </header>
 

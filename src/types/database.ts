@@ -398,7 +398,15 @@ export interface ProviderConnection {
 // ────────────────────────────────────────────────────────────────────────────
 // 20. token_access_log
 // ────────────────────────────────────────────────────────────────────────────
-export type TokenAction = 'read' | 'refresh' | 'revoke';
+/**
+ * What was attempted against an encrypted credential row.
+ *
+ * - `read`    — `getToken()` decryption.
+ * - `write`   — `storeToken()` first-time encrypt + persist.
+ * - `refresh` — `rotateToken()` re-encrypt with a new plaintext.
+ * - `revoke`  — `revokeToken()` clear + mark disconnected.
+ */
+export type TokenAction = 'read' | 'write' | 'refresh' | 'revoke';
 
 /** Audit log row for every access of a tenant's encrypted credentials. */
 export interface TokenAccessLog {

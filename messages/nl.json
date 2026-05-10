@@ -70,6 +70,28 @@
       "allConfigured": "Alle vereiste verbindingen zijn actief.",
       "missing": "Ontbrekende verbindingen",
       "viewAll": "Beheer verbindingen",
+      "viewAuditLog": "Toegangslog bekijken",
+      "audit": {
+        "title": "Token-toegangslog",
+        "subtitle": "Elke encryptie, decryptie, refresh en intrekking wordt hier vastgelegd.",
+        "entryCount": "regels",
+        "empty": "Nog geen toegangsgebeurtenissen voor deze tenant.",
+        "systemUser": "systeem",
+        "column": {
+          "timestamp": "Tijdstip",
+          "connection": "Verbinding",
+          "action": "Actie",
+          "success": "OK",
+          "user": "Gebruiker",
+          "ip": "IP"
+        },
+        "actionLabel": {
+          "read": "lezen",
+          "write": "opslaan",
+          "refresh": "vernieuwen",
+          "revoke": "intrekken"
+        }
+      },
       "byoaDisclaimer": "Dit account staat op jouw naam. Wij hebben enkel toegang om de gekozen acties uit te voeren. Je kunt deze toegang op elk moment intrekken.",
       "lastUsed": "Laatst gebruikt",
       "neverUsed": "nog niet gebruikt",
