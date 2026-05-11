@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
 import {
   customerCancelBooking,
@@ -82,6 +82,13 @@ export interface CustomerSelfServiceProps {
   booking: Booking;
   /** `null` when the customer hasn't confirmed their email yet. */
   verified: boolean;
+  /** True when verified via `?email=` query param but no cookie yet.
+   *  The component calls `verifyBookingEmail` on mount to set the
+   *  cookie so subsequent cancel/reschedule actions are accepted. */
+  needsCookieRefresh?: boolean;
+  /** Email value to feed to `verifyBookingEmail` on mount when
+   *  `needsCookieRefresh` is true. */
+  verifiedEmail?: string | null;
   cancelAllowed: boolean;
   cancelDenialReason?: SelfServiceError;
   rescheduleAllowed: boolean;
@@ -108,7 +115,22 @@ export interface CustomerSelfServiceProps {
  *     past. Customer sees the reason + a CTA to book again.
  */
 export function CustomerSelfService(props: CustomerSelfServiceProps): React.ReactElement {
-  const { verified } = props;
+  const { verified, needsCookieRefresh, verifiedEmail } = props;
+  const refreshed = useRef(false);
+
+  // When the server rendered as verified-by-email but no cookie was
+  // set (cookies can't be set during server render), fire the action
+  // once on mount so subsequent cancel/reschedule calls are accepted.
+  useEffect(() => {
+    if (!needsCookieRefresh || refreshed.current || !verifiedEmail) return;
+    refreshed.current = true;
+    void verifyBookingEmail({
+      tenantSlug: props.tenantSlug,
+      reference: props.booking.reference_code,
+      email: verifiedEmail,
+    });
+  }, [needsCookieRefresh, verifiedEmail, props.tenantSlug, props.booking.reference_code]);
+
   if (!verified) return <EmailVerifyForm {...props} />;
   return <BookingDetailView {...props} />;
 }
