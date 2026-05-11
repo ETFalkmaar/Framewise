@@ -572,6 +572,24 @@
         "cancelled": "Site preview niet beschikbaar — klant is geannuleerd."
       }
     },
+    "switcher": {
+      "selectClient": "Selecteer klant",
+      "searchPlaceholder": "Zoek klant…",
+      "recent": "Recent bezocht",
+      "allTenants": "Alle klanten",
+      "noResults": "Geen klanten gevonden"
+    },
+    "search": {
+      "trigger": "Zoeken…",
+      "shortcut": "Ctrl+K",
+      "placeholder": "Zoek klanten, sites, connectoren…",
+      "noResults": "Geen resultaten",
+      "categories": {
+        "tenant": "Klanten",
+        "site": "Sites",
+        "connection": "Connectoren"
+      }
+    },
     "auditLogPage": {
       "title": "Audit log",
       "backToDashboard": "Terug naar dashboard",

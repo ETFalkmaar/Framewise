@@ -572,6 +572,24 @@
         "cancelled": "Aperçu indisponible — le client est annulé."
       }
     },
+    "switcher": {
+      "selectClient": "Sélectionner un client",
+      "searchPlaceholder": "Rechercher un client…",
+      "recent": "Récemment visité",
+      "allTenants": "Tous les clients",
+      "noResults": "Aucun client trouvé"
+    },
+    "search": {
+      "trigger": "Rechercher…",
+      "shortcut": "Ctrl+K",
+      "placeholder": "Rechercher clients, sites, connecteurs…",
+      "noResults": "Aucun résultat",
+      "categories": {
+        "tenant": "Clients",
+        "site": "Sites",
+        "connection": "Connecteurs"
+      }
+    },
     "auditLogPage": {
       "title": "Journal d'audit",
       "backToDashboard": "Retour au tableau de bord",

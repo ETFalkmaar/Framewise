@@ -26,6 +26,24 @@ export {
 export { buildAuditLogCsv, getCsvFilename, CSV_BOM } from './audit-log-export';
 
 export {
+  globalSearch,
+  MIN_QUERY_LENGTH,
+  MAX_RESULTS,
+  type SearchResult,
+  type SearchResultType,
+} from './global-search';
+
+export {
+  RECENT_TENANTS_COOKIE,
+  RECENT_TENANTS_LIMIT,
+  RECENT_TENANTS_MAX_AGE_SECONDS,
+  hydrateRecentTenants,
+  parseRecentTenantsCookie,
+  serializeRecentTenants,
+  updateRecentTenants,
+} from './recent-tenants';
+
+export {
   getConnectionStatusForTenant,
   groupConnectorsByCategory,
   type ConnectorWithStatus,
