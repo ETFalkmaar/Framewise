@@ -16,6 +16,7 @@ import { mockBookingsRepo } from './adapters/mock/bookings';
 import { mockChecklistRepo } from './adapters/mock/checklist';
 import { mockConnectionsRepo } from './adapters/mock/connections';
 import { mockMediaRepo } from './adapters/mock/media';
+import { mockNotificationsRepo } from './adapters/mock/notifications';
 import { mockPageVersionsRepo } from './adapters/mock/page-versions';
 import { mockPagesRepo } from './adapters/mock/pages';
 import { mockSubscriptionsRepo } from './adapters/mock/subscriptions';
@@ -37,6 +38,7 @@ import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
 import { checklistRepo, setChecklistRepo } from './repositories/checklist';
 import { connectionsRepo, setConnectionsRepo } from './repositories/connections';
 import { mediaRepo, setMediaRepo } from './repositories/media';
+import { notificationsRepo, setNotificationsRepo } from './repositories/notifications';
 import { pageVersionsRepo, setPageVersionsRepo } from './repositories/page-versions';
 import { pagesRepo, setPagesRepo } from './repositories/pages';
 import { subscriptionsRepo, setSubscriptionsRepo } from './repositories/subscriptions';
@@ -59,6 +61,7 @@ setBookingsRepo(mockBookingsRepo);
 setChecklistRepo(mockChecklistRepo);
 setConnectionsRepo(mockConnectionsRepo);
 setMediaRepo(mockMediaRepo);
+setNotificationsRepo(mockNotificationsRepo);
 setPagesRepo(mockPagesRepo);
 setPageVersionsRepo(mockPageVersionsRepo);
 setSubscriptionsRepo(mockSubscriptionsRepo);
@@ -78,6 +81,7 @@ export {
   checklistRepo,
   connectionsRepo,
   mediaRepo,
+  notificationsRepo,
   pagesRepo,
   pageVersionsRepo,
   subscriptionsRepo,
