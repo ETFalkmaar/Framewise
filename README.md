@@ -1995,6 +1995,57 @@ site goes live.
 Adds 22 tests (notifications-repo: 9, notify helpers: 4,
 email-stub: 3, go-live: 6) — total 1281.
 
+### Booking calendar UI + data model (step 49 — fase 14 part 1/7)
+
+First half of the booking-module fundering. Extends the existing
+villa-nights `Booking` entity with a time-slot model (party_size,
+start_time / end_time, reference_code, booking_type discriminator)
+and a per-tenant `bookings_enabled` flag so non-Enterprise tenants
+hit a feature-disabled empty state. Customers (Enterprise + owner
+role) get a month calendar + day-detail page; super-admins can
+toggle the feature on/off + adopt the calendar view per tenant.
+
+- `Booking` (extended) — `booking_type: 'time_slot' | 'all_day'`,
+  `start_time` / `end_time` (ISO datetime), `party_size`,
+  `customer_*` aliases, `internal_notes`, `reference_code`,
+  `confirmed_at` / `cancelled_at` / `no_show_at` /
+  `cancellation_reason`. Status union gains `'no_show'`. Mock
+  adapter backfills legacy seeds (same backfill pattern as the
+  earlier steps).
+- `Tenant.bookings_enabled` + `booking_timezone` — defaults to
+  `false` / `null`; demo-villa seed flips to `true` + `'America/Curacao'`
+  via the store loader's normalisation.
+- `bookingsRepo` (extended) — `findByReferenceCode`, `listByDate`,
+  `countByTenantInRange`, range/status filters on `listByTenant`.
+  `BK-{YYYY}-{nnnn}` reference codes auto-generated per tenant.
+- `AuditLogAction` extended with five booking codes
+  (`booking_confirmed` / `booking_cancelled` / `booking_no_show` /
+  `booking_notes_updated` / `tenant_bookings_toggled`).
+- `permissions/bookings` — `canViewBookings`, `canManageBookings`,
+  `canEnableBookings`. View needs editor membership + enabled flag;
+  manage needs owner; enable is super-admin only.
+- Customer server actions: `confirmBookingAction`,
+  `cancelBookingAction` (with optional reason), `markNoShowAction`,
+  `updateInternalNotesAction`. All write to the audit log.
+- Super-admin action: `toggleBookingsForTenant` flips the flag +
+  optionally sets the timezone, writes the before/after to the
+  audit log.
+- `<BookingCalendar>` (server) — 6×7 grid, status dots per cell,
+  click-through to `/account/bookings/[date]`.
+- `/account/bookings` route — gate check + month query params +
+  empty-state for disabled tenants.
+- `/account/bookings/[date]` route — per-day booking cards with
+  status badge, reference code, customer + notes + actions.
+- `<BookingActions>` (client) — context-aware Confirm / Cancel /
+  Mark no-show buttons gated by `canManageBookings`.
+- `/account` shortcut link surfaces when the tenant has the flag
+  enabled.
+- Translations under `bookings.*` in NL / FR / EN.
+
+Adds 23 tests (permissions/bookings: 11, bookings-repo step-49: 12)
+— total 1304. Step 50 lands the availability rules + slot generator
++ admin toggle UI on top of this foundation.
+
 ## Status
 
-In development - Step 48 of 96 (revised plan) — FASE 13 COMPLEET (2/2)!
+In development - Step 49 of 96 (revised plan) — FASE 14 START (1/7)
