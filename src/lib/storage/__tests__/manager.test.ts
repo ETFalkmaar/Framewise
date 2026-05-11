@@ -160,6 +160,7 @@ describe('uploadMedia (mock provider)', () => {
         width: null,
         height: null,
         uploaded_by_user_id: SUPER,
+        deleted_at: null,
       });
     } catch (e) {
       caught = e;

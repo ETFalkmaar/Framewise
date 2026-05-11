@@ -160,12 +160,12 @@ describe('saveBlockContentFor', () => {
   });
 
   it('returns invalid_payload when newData is not an object', async () => {
-    // @ts-expect-error testing runtime guard
+    // Force-cast through `unknown` to exercise the runtime guard.
     const result = await saveBlockContentFor({
       userId: VILLA_OWNER_ID,
       tenantId: VILLA_ID,
       blockId: VILLA_HOME_TEXT_BLOCK,
-      newData: null,
+      newData: null as unknown as Record<string, unknown>,
     });
     expect(result.errorCode).toBe('invalid_payload');
   });
