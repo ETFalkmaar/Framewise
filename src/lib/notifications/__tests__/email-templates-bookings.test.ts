@@ -87,7 +87,7 @@ describe('booking email templates (step 52)', () => {
       expect(tpl.body).toContain('BK-2026-0042');
     });
 
-    it("body addresses the customer by name", () => {
+    it('body addresses the customer by name', () => {
       const tpl = bookingCustomerConfirmationEmail(fakeBooking(), fakeTenant(), 'nl');
       expect(tpl.body).toContain('Test Klant');
     });
