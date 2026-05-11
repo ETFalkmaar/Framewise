@@ -118,11 +118,8 @@ describe('canCustomerReschedule (step 54)', () => {
     expect(r.allowed).toBe(false);
   });
 
-  it("rejects a past booking", () => {
-    const r = canCustomerReschedule(
-      fakeBooking({ start_time: '2026-06-14T12:00:00.000Z' }),
-      NOW
-    );
+  it('rejects a past booking', () => {
+    const r = canCustomerReschedule(fakeBooking({ start_time: '2026-06-14T12:00:00.000Z' }), NOW);
     expect(r.allowed).toBe(false);
     expect(r.reason).toBe('past_booking');
   });

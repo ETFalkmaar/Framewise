@@ -184,7 +184,7 @@ describe('customer self-service actions (step 54)', () => {
       expect(audits.some((a) => a.action === 'booking_cancelled_by_customer')).toBe(true);
     });
 
-    it("rejects when the booking already happened in the past", async () => {
+    it('rejects when the booking already happened in the past', async () => {
       // Create one via repo directly with a past start_time.
       const past = await bookingsRepo.create({
         tenant_id: VILLA_TENANT_ID,
@@ -307,7 +307,7 @@ describe('customer self-service actions (step 54)', () => {
       expect(meta.newReference).toBe(r.newReference);
     });
 
-    it("emits an email_queued audit on success", async () => {
+    it('emits an email_queued audit on success', async () => {
       const { booking, slots } = await makeBookingFarOut();
       await verifyBookingEmail({
         tenantSlug: VILLA_SLUG,

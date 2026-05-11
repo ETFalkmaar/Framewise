@@ -55,6 +55,8 @@ export interface PublicBookingFormCopy {
     timeLabel: string;
     partyLabel: string;
     newBooking: string;
+    /** Step 54 — "Manage this reservation" link to the lookup page. */
+    manageLink: string;
   };
   errors: Record<CreatePublicBookingError, string>;
   /** Names indexed 0-6 (Sun..Sat). */
@@ -216,6 +218,8 @@ export function PublicBookingForm({
           partySize={partySize}
           locale={locale}
           onReset={handleReset}
+          tenantSlug={tenantSlug}
+          customerEmail={email}
         />
       )}
     </div>
@@ -547,6 +551,8 @@ function ConfirmationStep({
   partySize,
   locale,
   onReset,
+  tenantSlug,
+  customerEmail,
 }: {
   copy: PublicBookingFormCopy;
   reference: string;
@@ -554,6 +560,8 @@ function ConfirmationStep({
   partySize: number;
   locale: string;
   onReset: () => void;
+  tenantSlug: string;
+  customerEmail: string;
 }): React.ReactElement {
   const dt = new Date(slot.start_time);
   const dateStr = dt.toLocaleDateString(locale, {
@@ -597,14 +605,23 @@ function ConfirmationStep({
           <dd className="font-mono">{partySize}</dd>
         </div>
       </dl>
-      <button
-        type="button"
-        onClick={onReset}
-        data-testid="booking-new"
-        className="ring-border bg-background hover:bg-muted mt-6 rounded-md px-4 py-2 text-sm ring-1"
-      >
-        {copy.confirmation.newBooking}
-      </button>
+      <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <a
+          href={`/sites/${tenantSlug}/booking/${reference}?email=${encodeURIComponent(customerEmail)}`}
+          data-testid="booking-manage-link"
+          className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm"
+        >
+          {copy.confirmation.manageLink}
+        </a>
+        <button
+          type="button"
+          onClick={onReset}
+          data-testid="booking-new"
+          className="ring-border bg-background hover:bg-muted rounded-md px-4 py-2 text-sm ring-1"
+        >
+          {copy.confirmation.newBooking}
+        </button>
+      </div>
     </section>
   );
 }

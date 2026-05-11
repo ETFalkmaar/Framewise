@@ -158,7 +158,8 @@
       "dateLabel": "Date",
       "timeLabel": "Time",
       "partyLabel": "Guests",
-      "newBooking": "Make another reservation"
+      "newBooking": "Make another reservation",
+      "manageLink": "Manage or cancel reservation"
     },
     "errors": {
       "validation_failed": "Check your details and try again",
@@ -166,6 +167,79 @@
       "slot_no_longer_available": "This time just got fully booked. Please pick another.",
       "spam_detected": "Something went wrong. Please try again.",
       "unknown_error": "Unknown error. Please try again later."
+    },
+    "selfService": {
+      "title": "Your reservation",
+      "viewReservation": "View reservation",
+      "manageReservation": "Manage reservation",
+      "emailVerifyTitle": "Confirm your email",
+      "emailVerifySubtitle": "Enter the email address you used for this reservation",
+      "emailVerifyPlaceholder": "you@example.com",
+      "emailVerifyButton": "Show reservation",
+      "emailMismatch": "This email address doesn't match the reservation",
+      "details": {
+        "reference": "Reservation code",
+        "date": "Date",
+        "time": "Time",
+        "party": "Guests",
+        "customer": "Booked by",
+        "notes": "Notes"
+      },
+      "status": {
+        "pending": "Awaiting confirmation",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "noShow": "No show",
+        "past": "Past"
+      },
+      "cancel": {
+        "button": "Cancel reservation",
+        "confirmTitle": "Cancel reservation?",
+        "confirmBody": "Are you sure you want to cancel this reservation? This action can't be undone.",
+        "reasonLabel": "Reason (optional)",
+        "reasonPlaceholder": "E.g. plans changed",
+        "submit": "Confirm cancellation",
+        "cancelButton": "Close",
+        "successHeadline": "Reservation cancelled",
+        "successBody": "Your reservation has been cancelled. We've sent a confirmation to your email.",
+        "tooClose": "Cancellation no longer possible (less than 2 hours before start)",
+        "alreadyCancelled": "This reservation is already cancelled",
+        "past": "This reservation has already passed"
+      },
+      "reschedule": {
+        "button": "Change date/time",
+        "title": "Reschedule reservation",
+        "selectNewDate": "Pick a new date",
+        "selectNewTime": "Pick a new time",
+        "preview": "From {oldDate} {oldTime} to {newDate} {newTime}",
+        "confirm": "Confirm change",
+        "cancelButton": "Close",
+        "tooClose": "Rescheduling no longer possible (less than 4 hours before start)",
+        "successHeadline": "Reservation rescheduled",
+        "successBody": "Your reservation has been rescheduled. Redirecting to the new one...",
+        "noSlots": "No available times on this day",
+        "spotsLeft": "{count} left",
+        "closed": "Closed"
+      },
+      "cancelled": {
+        "title": "Reservation cancelled",
+        "subtitle": "This reservation was cancelled on {date}",
+        "newBooking": "Make a new reservation"
+      },
+      "past": {
+        "title": "This reservation has passed",
+        "subtitle": "Reservation from {date}",
+        "newBooking": "Make a new reservation"
+      },
+      "errors": {
+        "forbidden": "Please confirm your email to continue",
+        "notFound": "Reservation not found",
+        "wrongStatus": "This action is no longer available for this reservation",
+        "slotNotAvailable": "This time slot is no longer available",
+        "validationFailed": "Please check your details",
+        "unknown": "Unknown error. Please try again later."
+      }
     }
   },
   "notifications": {

@@ -158,7 +158,8 @@
       "dateLabel": "Datum",
       "timeLabel": "Tijd",
       "partyLabel": "Personen",
-      "newBooking": "Nog een reservering maken"
+      "newBooking": "Nog een reservering maken",
+      "manageLink": "Reservering aanpassen of annuleren"
     },
     "errors": {
       "validation_failed": "Controleer je gegevens en probeer opnieuw",
@@ -166,6 +167,79 @@
       "slot_no_longer_available": "Dit tijdslot is helaas net volgeboekt. Kies een andere tijd.",
       "spam_detected": "Er ging iets mis. Probeer opnieuw.",
       "unknown_error": "Onbekende fout. Probeer later opnieuw."
+    },
+    "selfService": {
+      "title": "Je reservering",
+      "viewReservation": "Reservering bekijken",
+      "manageReservation": "Reservering beheren",
+      "emailVerifyTitle": "Bevestig je email",
+      "emailVerifySubtitle": "Vul het email adres in dat je hebt gebruikt voor deze reservering",
+      "emailVerifyPlaceholder": "je@example.com",
+      "emailVerifyButton": "Reservering tonen",
+      "emailMismatch": "Dit email adres komt niet overeen met de reservering",
+      "details": {
+        "reference": "Reserveringscode",
+        "date": "Datum",
+        "time": "Tijd",
+        "party": "Personen",
+        "customer": "Op naam van",
+        "notes": "Opmerkingen"
+      },
+      "status": {
+        "pending": "In afwachting van bevestiging",
+        "confirmed": "Bevestigd",
+        "cancelled": "Geannuleerd",
+        "completed": "Voltooid",
+        "noShow": "Niet verschenen",
+        "past": "Verlopen"
+      },
+      "cancel": {
+        "button": "Reservering annuleren",
+        "confirmTitle": "Reservering annuleren?",
+        "confirmBody": "Weet je zeker dat je deze reservering wilt annuleren? Deze actie kan niet ongedaan worden gemaakt.",
+        "reasonLabel": "Reden (optioneel)",
+        "reasonPlaceholder": "Bijv. plannen gewijzigd",
+        "submit": "Bevestig annulering",
+        "cancelButton": "Sluiten",
+        "successHeadline": "Reservering geannuleerd",
+        "successBody": "Je reservering is geannuleerd. We hebben een bevestiging gestuurd naar je email.",
+        "tooClose": "Annulering is niet meer mogelijk (minder dan 2 uur voor aanvang)",
+        "alreadyCancelled": "Deze reservering is al geannuleerd",
+        "past": "Deze reservering is al voorbij"
+      },
+      "reschedule": {
+        "button": "Wijzig datum/tijd",
+        "title": "Verzet reservering",
+        "selectNewDate": "Kies een nieuwe datum",
+        "selectNewTime": "Kies een nieuwe tijd",
+        "preview": "Van {oldDate} {oldTime} naar {newDate} {newTime}",
+        "confirm": "Bevestig wijziging",
+        "cancelButton": "Sluiten",
+        "tooClose": "Verzetten is niet meer mogelijk (minder dan 4 uur voor aanvang)",
+        "successHeadline": "Reservering verzet",
+        "successBody": "Je reservering is verzet. We brengen je naar de nieuwe reservering...",
+        "noSlots": "Geen beschikbare tijden voor deze dag",
+        "spotsLeft": "{count} vrij",
+        "closed": "Gesloten"
+      },
+      "cancelled": {
+        "title": "Reservering geannuleerd",
+        "subtitle": "Deze reservering is geannuleerd op {date}",
+        "newBooking": "Maak nieuwe reservering"
+      },
+      "past": {
+        "title": "Deze reservering is voorbij",
+        "subtitle": "Reservering van {date}",
+        "newBooking": "Maak nieuwe reservering"
+      },
+      "errors": {
+        "forbidden": "Bevestig eerst je email om verder te gaan",
+        "notFound": "Reservering niet gevonden",
+        "wrongStatus": "Deze actie is niet meer mogelijk voor deze reservering",
+        "slotNotAvailable": "Dit tijdslot is helaas niet meer beschikbaar",
+        "validationFailed": "Controleer je gegevens",
+        "unknown": "Onbekende fout. Probeer later opnieuw."
+      }
     }
   },
   "notifications": {
