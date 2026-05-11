@@ -109,9 +109,7 @@ export function BookingCalendar({
         >
           ← {copy.previousMonth}
         </Link>
-        <span className="text-sm font-semibold">
-          {monthLabel(year, month, copy)}
-        </span>
+        <span className="text-sm font-semibold">{monthLabel(year, month, copy)}</span>
         <Link
           href={nextMonthHref}
           data-testid="calendar-next-month"
@@ -121,7 +119,7 @@ export function BookingCalendar({
         </Link>
       </div>
 
-      <div className="grid grid-cols-7 border-b border-border bg-muted/30 text-center font-mono text-[10px] uppercase">
+      <div className="border-border bg-muted/30 grid grid-cols-7 border-b text-center font-mono text-[10px] uppercase">
         {copy.weekdayShort.map((w, idx) => (
           <div key={idx} className="p-2">
             {w}

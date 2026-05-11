@@ -79,7 +79,7 @@ export default async function AvailabilityPage({
       </header>
 
       <h2 className="mb-2 text-lg font-semibold">{t('rulesSection')}</h2>
-      <p className="text-muted-foreground mb-4 text-xs font-mono">
+      <p className="text-muted-foreground mb-4 font-mono text-xs">
         {/* Spacer to give the section a defined column before the list renders inline. */}
       </p>
 

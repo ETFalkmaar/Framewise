@@ -96,7 +96,10 @@ export default async function BookingsDayPage({
                   </div>
                   <h2 className="mt-2 text-lg font-semibold">{b.customer_name}</h2>
                   <p className="text-muted-foreground text-sm">
-                    {formatTime(b.start_time)} · {b.party_size === 1 ? t('card.partySize_one') : t('card.partySize', { count: b.party_size })}
+                    {formatTime(b.start_time)} ·{' '}
+                    {b.party_size === 1
+                      ? t('card.partySize_one')
+                      : t('card.partySize', { count: b.party_size })}
                   </p>
                 </div>
                 <div className="text-right font-mono text-[11px]">
@@ -127,9 +130,7 @@ export default async function BookingsDayPage({
               )}
 
               {b.cancellation_reason && (
-                <p className="text-destructive mt-3 text-xs">
-                  ⚠ {b.cancellation_reason}
-                </p>
+                <p className="text-destructive mt-3 text-xs">⚠ {b.cancellation_reason}</p>
               )}
 
               {canManage && (

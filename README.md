@@ -1940,9 +1940,9 @@ writes a `site_publish_*` row into the new `audit_logs` table.
   / approved-live / rejected-with-notes); window.confirm gate
   before submit + cancel.
 - `PublishRequestCard` (client) — admin-side approve/reject card
-  + two modals. Surfaces only when `publish_request_status ===
-  'pending'`. Both modals overlay the dashboard so the
-  super-admin keeps the tenant context in view.
+  - two modals. Surfaces only when `publish_request_status ===
+'pending'`. Both modals overlay the dashboard so the
+    super-admin keeps the tenant context in view.
 - Translations under `account.publish.*` + `admin.publish.*` in
   NL / FR / EN.
 
@@ -2044,7 +2044,8 @@ toggle the feature on/off + adopt the calendar view per tenant.
 
 Adds 23 tests (permissions/bookings: 11, bookings-repo step-49: 12)
 — total 1304. Step 50 lands the availability rules + slot generator
-+ admin toggle UI on top of this foundation.
+
+- admin toggle UI on top of this foundation.
 
 ## Status
 

@@ -99,10 +99,7 @@ export default async function AccountBookingsPage({
       </header>
 
       {bookings.length === 0 ? (
-        <p
-          className="text-muted-foreground py-10 text-center text-sm"
-          data-testid="bookings-empty"
-        >
+        <p className="text-muted-foreground py-10 text-center text-sm" data-testid="bookings-empty">
           {t('noBookingsThisMonth')}
         </p>
       ) : null}
@@ -134,12 +131,7 @@ export default async function AccountBookingsPage({
   );
 }
 
-function clampInt(
-  raw: string | undefined,
-  lo: number,
-  hi: number,
-  fallback: number
-): number {
+function clampInt(raw: string | undefined, lo: number, hi: number, fallback: number): number {
   if (!raw) return fallback;
   const n = Number(raw);
   if (!Number.isFinite(n)) return fallback;

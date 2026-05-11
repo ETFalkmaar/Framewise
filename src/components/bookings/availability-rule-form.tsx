@@ -163,7 +163,9 @@ export function AvailabilityRuleForm({
             data-testid="rule-form-duration"
             className="bg-background border-input mt-1 w-full rounded-md border px-3 py-2 text-sm"
           />
-          <span className="text-muted-foreground mt-1 block text-[10px]">{copy.slotDurationHint}</span>
+          <span className="text-muted-foreground mt-1 block text-[10px]">
+            {copy.slotDurationHint}
+          </span>
         </label>
 
         <div className="grid grid-cols-3 gap-3">

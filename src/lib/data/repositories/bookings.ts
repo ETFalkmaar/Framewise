@@ -41,7 +41,20 @@ export interface BookingsRepository {
       | 'cancelled_at'
       | 'cancellation_reason'
       | 'no_show_at'
-    > & Partial<Pick<Booking, 'booking_type' | 'start_time' | 'end_time' | 'party_size' | 'customer_name' | 'customer_email' | 'customer_phone' | 'internal_notes'>>
+    > &
+      Partial<
+        Pick<
+          Booking,
+          | 'booking_type'
+          | 'start_time'
+          | 'end_time'
+          | 'party_size'
+          | 'customer_name'
+          | 'customer_email'
+          | 'customer_phone'
+          | 'internal_notes'
+        >
+      >
   ): Promise<Booking>;
   update(id: string, data: Partial<Booking>): Promise<Booking>;
   cancel(id: string): Promise<Booking>;

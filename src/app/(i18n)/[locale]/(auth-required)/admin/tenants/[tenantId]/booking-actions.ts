@@ -41,8 +41,7 @@ export async function toggleBookingsForTenant(input: {
   try {
     await tenantsRepo.update(tenant.id, {
       bookings_enabled: input.enabled,
-      booking_timezone:
-        input.timezone !== undefined ? input.timezone : tenant.booking_timezone,
+      booking_timezone: input.timezone !== undefined ? input.timezone : tenant.booking_timezone,
     });
     await auditLogsRepo.create({
       tenant_id: tenant.id,

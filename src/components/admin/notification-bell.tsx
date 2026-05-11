@@ -96,11 +96,7 @@ export function NotificationBell({
       {open && (
         <>
           {/* Clickaway backdrop */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setOpen(false)}
-            aria-hidden
-          />
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden />
           <div
             data-testid="notification-dropdown"
             role="menu"
@@ -119,7 +115,7 @@ export function NotificationBell({
               </button>
             </div>
 
-            <ul className="max-h-[400px] divide-y divide-border overflow-y-auto">
+            <ul className="divide-border max-h-[400px] divide-y overflow-y-auto">
               {recent.length === 0 ? (
                 <li className="text-muted-foreground p-4 text-center text-sm">{copy.empty}</li>
               ) : (
@@ -134,7 +130,7 @@ export function NotificationBell({
                       {TYPE_ICON[n.type]}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium leading-tight">{n.title}</p>
+                      <p className="text-sm leading-tight font-medium">{n.title}</p>
                       <p className="text-muted-foreground mt-1 line-clamp-2 text-xs">{n.body}</p>
                       <p className="text-muted-foreground mt-1 font-mono text-[10px]">
                         {formatRelativeTime(n.created_at, copy.relativeTime)}
@@ -157,7 +153,7 @@ export function NotificationBell({
             <Link
               href="/admin/notifications"
               onClick={() => setOpen(false)}
-              className="border-border text-center font-mono text-[11px] underline border-t p-3"
+              className="border-border border-t p-3 text-center font-mono text-[11px] underline"
             >
               {copy.viewAll}
             </Link>
@@ -168,10 +164,7 @@ export function NotificationBell({
   );
 }
 
-function formatRelativeTime(
-  iso: string,
-  copy: NotificationBellCopy['relativeTime']
-): string {
+function formatRelativeTime(iso: string, copy: NotificationBellCopy['relativeTime']): string {
   const then = new Date(iso).getTime();
   if (Number.isNaN(then)) return '';
   const diffMs = Date.now() - then;

@@ -80,7 +80,7 @@ export function BookingActions({
           onClick={handleConfirm}
           disabled={pending}
           data-testid="booking-confirm"
-          className="bg-emerald-600 hover:bg-emerald-700 rounded-md px-3 py-1.5 font-mono text-xs text-white transition disabled:opacity-50"
+          className="rounded-md bg-emerald-600 px-3 py-1.5 font-mono text-xs text-white transition hover:bg-emerald-700 disabled:opacity-50"
         >
           {copy.confirm}
         </button>
