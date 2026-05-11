@@ -36,7 +36,7 @@ describe('AI agent permission gates (step 56)', () => {
       await expect(canViewAgent(SUPER_ADMIN_ID, tenant)).resolves.toBe(true);
     });
 
-    it("tenant editor sees the agent when the feature flag is on", async () => {
+    it('tenant editor sees the agent when the feature flag is on', async () => {
       const tenant = await villa({ ai_agent_enabled: true });
       await expect(canViewAgent(VILLA_OWNER_ID, tenant)).resolves.toBe(true);
     });

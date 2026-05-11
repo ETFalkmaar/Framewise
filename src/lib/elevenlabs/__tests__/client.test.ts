@@ -1,10 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  ElevenLabsClient,
-  STUB_VOICES,
-  createElevenLabsClient,
-} from '@/lib/elevenlabs/client';
+import { ElevenLabsClient, STUB_VOICES, createElevenLabsClient } from '@/lib/elevenlabs/client';
 
 describe('ElevenLabsClient stub mode (step 56)', () => {
   it('defaults to stub mode when no apiKey is provided', () => {
@@ -12,12 +8,12 @@ describe('ElevenLabsClient stub mode (step 56)', () => {
     expect(client.isStubMode()).toBe(true);
   });
 
-  it("isStubMode() is false when an apiKey is supplied (live mode)", () => {
+  it('isStubMode() is false when an apiKey is supplied (live mode)', () => {
     const client = new ElevenLabsClient({ apiKey: 'sk-test' });
     expect(client.isStubMode()).toBe(false);
   });
 
-  it("respects an explicit stubMode override even with an apiKey", () => {
+  it('respects an explicit stubMode override even with an apiKey', () => {
     const client = new ElevenLabsClient({ apiKey: 'sk-test', stubMode: true });
     expect(client.isStubMode()).toBe(true);
   });
@@ -50,7 +46,7 @@ describe('ElevenLabsClient stub mode (step 56)', () => {
     expect(r.document_id).toMatch(/^stub-doc-/);
   });
 
-  it("deleteAgent + removeKnowledgeBaseDocument return mode=stub without hitting the API", async () => {
+  it('deleteAgent + removeKnowledgeBaseDocument return mode=stub without hitting the API', async () => {
     const client = new ElevenLabsClient();
     const a = await client.deleteAgent('any');
     const d = await client.removeKnowledgeBaseDocument('any', 'doc');
@@ -62,8 +58,7 @@ describe('ElevenLabsClient stub mode (step 56)', () => {
 describe('ElevenLabsClient live mode (step 56)', () => {
   it('createAgent hits the convai/agents endpoint with the API key header', async () => {
     const fetcher = vi.fn(
-      async () =>
-        new Response(JSON.stringify({ agent_id: 'live-abc' }), { status: 200 })
+      async () => new Response(JSON.stringify({ agent_id: 'live-abc' }), { status: 200 })
     ) as unknown as typeof fetch;
     const client = new ElevenLabsClient({ apiKey: 'sk-test', fetcher });
     const r = await client.createAgent({
@@ -73,8 +68,7 @@ describe('ElevenLabsClient live mode (step 56)', () => {
     });
     expect(r.mode).toBe('live');
     expect(r.agent_id).toBe('live-abc');
-    const call = (fetcher as unknown as { mock: { calls: unknown[][] } }).mock
-      .calls[0];
+    const call = (fetcher as unknown as { mock: { calls: unknown[][] } }).mock.calls[0];
     expect(String(call[0])).toContain('/convai/agents');
     const init = call[1] as RequestInit;
     expect(init.method).toBe('POST');

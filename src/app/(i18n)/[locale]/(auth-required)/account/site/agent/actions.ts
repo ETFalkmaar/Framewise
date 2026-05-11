@@ -102,12 +102,9 @@ export async function provisionAgent(): Promise<AgentActionResult> {
   }
 
   const subscription = await subscriptionsRepo.findByTenant(c.tenant.id);
-  const plan = subscription
-    ? await subscriptionsRepo.findPlanById(subscription.plan_id)
-    : null;
+  const plan = subscription ? await subscriptionsRepo.findPlanById(subscription.plan_id) : null;
   const channel = agentChannelsForPlan(plan?.code ?? null);
-  const language: AgentLanguage =
-    (c.tenant.default_locale as AgentLanguage | undefined) ?? 'nl';
+  const language: AgentLanguage = (c.tenant.default_locale as AgentLanguage | undefined) ?? 'nl';
 
   // Create or roll-forward the row, then flip to `provisioning`.
   let agent = existing;
