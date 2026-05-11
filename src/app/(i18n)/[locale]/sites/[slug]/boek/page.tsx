@@ -117,6 +117,7 @@ export default async function PublicBookingPage({
             timeLabel: t('confirmation.timeLabel'),
             partyLabel: t('confirmation.partyLabel'),
             newBooking: t('confirmation.newBooking'),
+            manageLink: t('confirmation.manageLink'),
           },
           errors: {
             validation_failed: t('errors.validation_failed'),

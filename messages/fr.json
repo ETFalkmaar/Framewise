@@ -158,7 +158,8 @@
       "dateLabel": "Date",
       "timeLabel": "Heure",
       "partyLabel": "Personnes",
-      "newBooking": "Faire une autre réservation"
+      "newBooking": "Faire une autre réservation",
+      "manageLink": "Modifier ou annuler la réservation"
     },
     "errors": {
       "validation_failed": "Vérifiez vos informations et réessayez",
@@ -166,6 +167,79 @@
       "slot_no_longer_available": "Ce créneau vient malheureusement d'être pris. Choisissez une autre heure.",
       "spam_detected": "Une erreur est survenue. Réessayez.",
       "unknown_error": "Erreur inconnue. Réessayez plus tard."
+    },
+    "selfService": {
+      "title": "Votre réservation",
+      "viewReservation": "Voir la réservation",
+      "manageReservation": "Gérer la réservation",
+      "emailVerifyTitle": "Confirmez votre e-mail",
+      "emailVerifySubtitle": "Saisissez l'adresse e-mail utilisée pour cette réservation",
+      "emailVerifyPlaceholder": "vous@exemple.com",
+      "emailVerifyButton": "Afficher la réservation",
+      "emailMismatch": "Cette adresse e-mail ne correspond pas à la réservation",
+      "details": {
+        "reference": "Code de réservation",
+        "date": "Date",
+        "time": "Heure",
+        "party": "Personnes",
+        "customer": "Au nom de",
+        "notes": "Remarques"
+      },
+      "status": {
+        "pending": "En attente de confirmation",
+        "confirmed": "Confirmé",
+        "cancelled": "Annulé",
+        "completed": "Terminé",
+        "noShow": "Non présenté",
+        "past": "Expiré"
+      },
+      "cancel": {
+        "button": "Annuler la réservation",
+        "confirmTitle": "Annuler la réservation ?",
+        "confirmBody": "Êtes-vous sûr de vouloir annuler cette réservation ? Cette action est irréversible.",
+        "reasonLabel": "Motif (facultatif)",
+        "reasonPlaceholder": "Ex. changement de plans",
+        "submit": "Confirmer l'annulation",
+        "cancelButton": "Fermer",
+        "successHeadline": "Réservation annulée",
+        "successBody": "Votre réservation a été annulée. Nous avons envoyé une confirmation à votre e-mail.",
+        "tooClose": "Annulation impossible (moins de 2 heures avant le début)",
+        "alreadyCancelled": "Cette réservation est déjà annulée",
+        "past": "Cette réservation est déjà passée"
+      },
+      "reschedule": {
+        "button": "Modifier date/heure",
+        "title": "Reprogrammer la réservation",
+        "selectNewDate": "Choisissez une nouvelle date",
+        "selectNewTime": "Choisissez une nouvelle heure",
+        "preview": "De {oldDate} {oldTime} à {newDate} {newTime}",
+        "confirm": "Confirmer la modification",
+        "cancelButton": "Fermer",
+        "tooClose": "Reprogrammation impossible (moins de 4 heures avant le début)",
+        "successHeadline": "Réservation reprogrammée",
+        "successBody": "Votre réservation a été reprogrammée. Nous vous redirigeons vers la nouvelle...",
+        "noSlots": "Aucun créneau disponible ce jour-là",
+        "spotsLeft": "{count} libres",
+        "closed": "Fermé"
+      },
+      "cancelled": {
+        "title": "Réservation annulée",
+        "subtitle": "Cette réservation a été annulée le {date}",
+        "newBooking": "Faire une nouvelle réservation"
+      },
+      "past": {
+        "title": "Cette réservation est passée",
+        "subtitle": "Réservation du {date}",
+        "newBooking": "Faire une nouvelle réservation"
+      },
+      "errors": {
+        "forbidden": "Confirmez d'abord votre e-mail pour continuer",
+        "notFound": "Réservation introuvable",
+        "wrongStatus": "Cette action n'est plus possible pour cette réservation",
+        "slotNotAvailable": "Ce créneau n'est plus disponible",
+        "validationFailed": "Vérifiez vos informations",
+        "unknown": "Erreur inconnue. Réessayez plus tard."
+      }
     }
   },
   "notifications": {
