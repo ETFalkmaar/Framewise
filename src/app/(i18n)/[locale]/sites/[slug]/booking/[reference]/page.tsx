@@ -9,7 +9,6 @@ import { getPublicAvailabilityForRange } from '@/lib/bookings/public-availabilit
 import { bookingsRepo, tenantsRepo } from '@/lib/data';
 import { CustomerSelfService } from '@/components/bookings/customer-self-service';
 import type { SelfServiceError } from './actions';
-import { verifyBookingEmail } from './actions';
 
 /**
  * Public booking lookup page (step 54, fase 14 part 6/7) at
@@ -41,19 +40,22 @@ export default async function CustomerBookingLookupPage({
   const booking = await bookingsRepo.findByReferenceCode(reference);
   if (!booking || booking.tenant_id !== tenant.id) notFound();
 
-  // Cookie-or-query-param verify resolution.
+  // Cookie-or-query-param verify resolution. We CANNOT call
+  // `verifyBookingEmail` from a server-component render path because
+  // Next 15 forbids `cookies().set()` outside of server actions /
+  // route handlers. Instead, do the email match inline so the page
+  // renders in verified-mode immediately; the client component will
+  // call `verifyBookingEmail` on mount to set the cookie for the
+  // subsequent cancel/reschedule actions.
   const cookieStore = await cookies();
   const cookieName = `booking_verified_${reference}`;
-  let verified = cookieStore.get(cookieName)?.value === 'true';
-
-  if (!verified && search.email) {
-    const r = await verifyBookingEmail({
-      tenantSlug: slug,
-      reference,
-      email: search.email,
-    });
-    if (r.success) verified = true;
-  }
+  const verifiedByCookie = cookieStore.get(cookieName)?.value === 'true';
+  const verifiedByEmailParam =
+    !!search.email && search.email.toLowerCase() === booking.customer_email.toLowerCase();
+  const verified = verifiedByCookie || verifiedByEmailParam;
+  // Signal to the client component when it needs to refresh the
+  // cookie so cancel/reschedule work without re-prompting.
+  const needsCookieRefresh = verifiedByEmailParam && !verifiedByCookie;
 
   // Pre-load the 14-day availability snapshot so the reschedule
   // modal renders instantly when opened.
@@ -99,6 +101,8 @@ export default async function CustomerBookingLookupPage({
         tenantSlug={slug}
         booking={booking}
         verified={verified}
+        needsCookieRefresh={needsCookieRefresh}
+        verifiedEmail={search.email ?? null}
         cancelAllowed={cancelGate.allowed}
         cancelDenialReason={cancelGate.reason as SelfServiceError | undefined}
         rescheduleAllowed={rescheduleGate.allowed}
