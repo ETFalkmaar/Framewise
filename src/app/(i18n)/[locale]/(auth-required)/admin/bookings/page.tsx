@@ -1,10 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import {
-  getCrossTenantBookingKPIs,
-  listCrossTenantBookings,
-} from '@/lib/bookings/admin-kpi';
+import { getCrossTenantBookingKPIs, listCrossTenantBookings } from '@/lib/bookings/admin-kpi';
 import { getCurrentUser, isUserSuperAdmin } from '@/lib/auth';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
@@ -172,10 +169,7 @@ export default async function AdminBookingsPage({
                   className="border-border hover:bg-muted/30 border-b"
                 >
                   <td className="border-border border-r p-2 text-xs">
-                    <Link
-                      href={`/admin/tenants/${tenantId}`}
-                      className="hover:underline"
-                    >
+                    <Link href={`/admin/tenants/${tenantId}`} className="hover:underline">
                       {tenantName}
                     </Link>
                   </td>
