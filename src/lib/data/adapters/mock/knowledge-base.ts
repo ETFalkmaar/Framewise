@@ -32,11 +32,7 @@ export const mockKnowledgeBaseRepo: KnowledgeBaseRepository = {
 
   async findByPageId(agentId, pageId) {
     for (const d of table('knowledge_base_documents').values()) {
-      if (
-        d.agent_id === agentId &&
-        d.page_id === pageId &&
-        d.created_by_user_id === null
-      ) {
+      if (d.agent_id === agentId && d.page_id === pageId && d.created_by_user_id === null) {
         return d;
       }
     }
@@ -84,11 +80,7 @@ export const mockKnowledgeBaseRepo: KnowledgeBaseRepository = {
   async deleteByPageId(agentId, pageId) {
     const matching: string[] = [];
     for (const [id, doc] of table('knowledge_base_documents').entries()) {
-      if (
-        doc.agent_id === agentId &&
-        doc.page_id === pageId &&
-        doc.created_by_user_id === null
-      ) {
+      if (doc.agent_id === agentId && doc.page_id === pageId && doc.created_by_user_id === null) {
         matching.push(id);
       }
     }

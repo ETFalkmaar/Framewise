@@ -44,10 +44,7 @@ import {
   agentVoiceConfigsRepo,
   setAgentVoiceConfigsRepo,
 } from './repositories/agent-voice-configs';
-import {
-  knowledgeBaseRepo,
-  setKnowledgeBaseRepo,
-} from './repositories/knowledge-base';
+import { knowledgeBaseRepo, setKnowledgeBaseRepo } from './repositories/knowledge-base';
 import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
 import { availabilityRulesRepo, setAvailabilityRulesRepo } from './repositories/availability-rules';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';

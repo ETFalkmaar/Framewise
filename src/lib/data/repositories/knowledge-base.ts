@@ -14,10 +14,7 @@ export interface KnowledgeBaseRepository {
   create(
     data: Omit<KnowledgeBaseDocument, 'id' | 'created_at' | 'updated_at'>
   ): Promise<KnowledgeBaseDocument>;
-  update(
-    id: string,
-    data: Partial<KnowledgeBaseDocument>
-  ): Promise<KnowledgeBaseDocument>;
+  update(id: string, data: Partial<KnowledgeBaseDocument>): Promise<KnowledgeBaseDocument>;
   updateStatus(
     id: string,
     status: KnowledgeSyncStatus,
