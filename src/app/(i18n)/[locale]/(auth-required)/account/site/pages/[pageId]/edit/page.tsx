@@ -120,6 +120,7 @@ export default async function EditPagePage({
           pageId={page.id}
           blocks={blocks}
           canEdit
+          locale={locale}
           copy={{
             blockType: blockTypeLabels,
             editBlock: t('editBlock'),
@@ -127,6 +128,36 @@ export default async function EditPagePage({
             dragHandle: t('dragHandle'),
             reordering: t('reordering'),
             reorderError: t('reorderError'),
+          }}
+          modalCopy={{
+            title: t('editBlock'),
+            cancel: t('cancel'),
+            save: t('save'),
+            saving: t('saving'),
+            saved: t('saved'),
+            saveError: t('saveError'),
+            comingSoon: t('blockEditComingSoon'),
+            tiptap: {
+              bold: t('tiptap.bold'),
+              italic: t('tiptap.italic'),
+              link: t('tiptap.link'),
+              linkUrl: t('tiptap.linkUrl'),
+              linkApply: t('tiptap.linkApply'),
+              linkCancel: t('tiptap.linkCancel'),
+              linkRemove: t('tiptap.linkRemove'),
+              heading: t('tiptap.heading'),
+              bulletList: t('tiptap.bulletList'),
+            },
+            blockForms: {
+              textContent: t('blockForms.textContent'),
+              heroTitle: t('blockForms.heroTitle'),
+              heroSubtitle: t('blockForms.heroSubtitle'),
+              heroCtaText: t('blockForms.heroCtaText'),
+              heroCtaUrl: t('blockForms.heroCtaUrl'),
+              heroOverlay: t('blockForms.heroOverlay'),
+              heroOverlayLight: t('blockForms.heroOverlayLight'),
+              heroOverlayDark: t('blockForms.heroOverlayDark'),
+            },
           }}
         />
       )}
