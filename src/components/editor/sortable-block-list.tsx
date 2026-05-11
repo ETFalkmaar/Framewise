@@ -64,6 +64,17 @@ export interface SortableBlockListProps {
   mediaLibrary: Media[];
   copy: SortableBlockListCopy;
   modalCopy: BlockEditModalProps['copy'];
+  /**
+   * Step 45 — called whenever the local optimistic block list
+   * changes (drag-reorder or block save). The parent (EditPageLayout)
+   * mirrors this into a draft state shared with the preview iframe,
+   * so the iframe can show uncommitted edits without waiting on
+   * server revalidation.
+   *
+   * Optional so existing tests + the history-preview screen keep
+   * working unchanged.
+   */
+  onBlocksChange?: (blocks: Block[]) => void;
 }
 
 /**
@@ -83,6 +94,7 @@ export function SortableBlockList({
   mediaLibrary,
   copy,
   modalCopy,
+  onBlocksChange,
 }: SortableBlockListProps) {
   const [blocks, setBlocks] = useState<Block[]>(initial);
   const [pending, startTransition] = useTransition();
@@ -91,6 +103,17 @@ export function SortableBlockList({
   const editingBlock = editingBlockId
     ? (blocks.find((b) => b.id === editingBlockId) ?? null)
     : null;
+
+  /**
+   * Step 45 — keep the parent's draft state in sync. Wraps
+   * `setBlocks` so every code path (drag, save, rollback) bubbles
+   * the new list up. Callers without an `onBlocksChange` (history
+   * preview, tests) get the original behaviour.
+   */
+  function applyBlocks(next: Block[]): void {
+    setBlocks(next);
+    onBlocksChange?.(next);
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -107,7 +130,7 @@ export function SortableBlockList({
 
     const next = arrayMove(blocks, oldIndex, newIndex);
     const previous = blocks;
-    setBlocks(next);
+    applyBlocks(next);
 
     startTransition(async () => {
       setError(null);
@@ -116,7 +139,7 @@ export function SortableBlockList({
         newOrder: next.map((b) => b.id),
       });
       if (!result.success) {
-        setBlocks(previous);
+        applyBlocks(previous);
         setError(result.error ?? copy.reorderError);
       }
     });

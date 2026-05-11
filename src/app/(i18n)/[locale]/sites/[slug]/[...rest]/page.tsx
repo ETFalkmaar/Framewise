@@ -2,8 +2,12 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
+import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
+import { subscriptionsRepo } from '@/lib/data';
+import { getPreviewDraft } from '@/lib/editor/preview-cookie';
+import { canEditBlocks } from '@/lib/permissions';
 import { getCurrentTenant } from '@/lib/tenant';
-import { resolvePage } from '@/lib/public-site/resolve-page';
+import { resolvePage, resolvePreviewPage } from '@/lib/public-site/resolve-page';
 import { type Locale } from '@/i18n/routing';
 import { Badge } from '@/components/ui/badge';
 import { PublicLayout } from '@/components/public-site/public-layout';
@@ -31,6 +35,10 @@ export const revalidate = 60;
  * exists in the database. Step 24 only ships single-segment slugs
  * (over-ons, contact, …) but the routing supports deeper nesting
  * out of the box for step 30+.
+ *
+ * Step 45 adds the same preview-mode escape hatch as the homepage
+ * variant: `?preview=true&pageId=<id>` for authenticated editors
+ * pulls draft blocks from the cookie.
  */
 export async function generateMetadata({
   params,
@@ -57,10 +65,13 @@ export async function generateMetadata({
 
 export default async function TenantSiteSubPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: Locale; slug: string; rest: string[] }>;
+  searchParams: Promise<{ preview?: string; pageId?: string; v?: string }>;
 }) {
   const { locale, slug, rest } = await params;
+  const search = await searchParams;
   setRequestLocale(locale);
 
   const tenant = await getCurrentTenant();
@@ -68,11 +79,24 @@ export default async function TenantSiteSubPage({
 
   const pageSlug = (rest ?? []).join('/');
 
-  const resolved = await resolvePage({
+  const previewMode = await resolvePreviewModeForTenant({
     tenantId: tenant.id,
-    pageSlug,
-    locale,
+    requestedPreview: search.preview === 'true',
+    requestedPageId: search.pageId,
   });
+
+  const resolved = previewMode
+    ? await resolvePreviewPage({
+        tenantId: tenant.id,
+        pageSlug,
+        locale,
+        draftBlocks: previewMode.draftBlocks,
+      })
+    : await resolvePage({
+        tenantId: tenant.id,
+        pageSlug,
+        locale,
+      });
   if (!resolved) notFound();
 
   const baseUrl = resolveBaseUrl();
@@ -92,9 +116,53 @@ export default async function TenantSiteSubPage({
         data-testid="jsonld-webpage"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageLd) }}
       />
-      <AdminPreviewBanner tenantName={tenant.name} tenantSlug={slug} pageSlug={pageSlug} />
+      {previewMode ? (
+        <PreviewModeBanner />
+      ) : (
+        <AdminPreviewBanner tenantName={tenant.name} tenantSlug={slug} pageSlug={pageSlug} />
+      )}
       <PublicPageRenderer resolved={resolved} />
     </PublicLayout>
+  );
+}
+
+interface PreviewModeContext {
+  draftBlocks: import('@/types/database').Block[] | null;
+}
+
+async function resolvePreviewModeForTenant(input: {
+  tenantId: string;
+  requestedPreview: boolean;
+  requestedPageId: string | undefined;
+}): Promise<PreviewModeContext | null> {
+  if (!input.requestedPreview || !input.requestedPageId) return null;
+
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  const activeTenant = await getActiveTenantForUser();
+  if (!activeTenant || activeTenant.id !== input.tenantId) return null;
+
+  const subscription = await subscriptionsRepo.findByTenant(activeTenant.id);
+  const plan = subscription ? await subscriptionsRepo.findPlanById(subscription.plan_id) : null;
+  const editable = await canEditBlocks(user.id, activeTenant, plan?.code ?? null);
+  if (!editable) return null;
+
+  const draft = await getPreviewDraft(input.requestedPageId);
+  return { draftBlocks: draft?.blocks ?? null };
+}
+
+function PreviewModeBanner() {
+  return (
+    <div
+      data-testid="preview-mode-banner"
+      className="flex items-center justify-center gap-2 border-b border-amber-500/30 bg-amber-500/15 px-4 py-2 text-xs text-amber-700 dark:text-amber-300"
+    >
+      <Badge variant="outline" className="font-mono">
+        live preview
+      </Badge>
+      <span>Voorvertoning — wijzigingen worden direct getoond</span>
+    </div>
   );
 }
 
