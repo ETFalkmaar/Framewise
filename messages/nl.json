@@ -524,7 +524,8 @@
         "title": "Recente activiteit",
         "empty": "Nog geen activiteit voor deze klant.",
         "by": "door",
-        "ago": "geleden"
+        "ago": "geleden",
+        "viewAll": "Bekijk alles"
       },
       "auditActions": {
         "tenant_created": "Tenant aangemaakt",
@@ -569,6 +570,37 @@
         "openInNewTab": "Open in nieuw tabblad",
         "maintenanceMode": "De site staat momenteel in onderhoudsmodus.",
         "cancelled": "Site preview niet beschikbaar — klant is geannuleerd."
+      }
+    },
+    "auditLogPage": {
+      "title": "Audit log",
+      "backToDashboard": "Terug naar dashboard",
+      "exportCsv": "Exporteer naar CSV",
+      "exporting": "Bezig met exporteren…",
+      "exportError": "Export mislukt.",
+      "detailsToggle": "Details",
+      "detailsCollapse": "Inklappen",
+      "empty": "Geen events match deze filters.",
+      "showingResults": "{shown} van {total} events",
+      "pagination": "Pagina {page} van {totalPages} · {totalCount} totaal",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "filters": {
+        "title": "Filters",
+        "dateFrom": "Van",
+        "dateTo": "Tot",
+        "actionTypes": "Type actie",
+        "performedBy": "Uitgevoerd door",
+        "search": "Zoek in details",
+        "reset": "Filters wissen",
+        "allActions": "Alle acties",
+        "allUsers": "Alle gebruikers"
+      },
+      "columns": {
+        "timestamp": "Tijdstip",
+        "action": "Actie",
+        "performedBy": "Uitgevoerd door",
+        "details": "Details"
       }
     }
   }

@@ -121,11 +121,13 @@ export default async function AdminTenantDashboardPage({
           <AuditLogCard
             events={auditEvents}
             now={renderedAtMs}
+            tenantId={tenant.id}
             copy={{
               title: t('auditLog.title'),
               empty: t('auditLog.empty'),
               by: t('auditLog.by'),
               ago: t('auditLog.ago'),
+              viewAll: t('auditLog.viewAll'),
               actionLabels: auditActionLabels,
             }}
           />

@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from '@/i18n/navigation';
 import type { AuditAction, AuditLogEvent } from '@/lib/admin';
 
 interface AuditCopy {
@@ -6,6 +7,7 @@ interface AuditCopy {
   empty: string;
   by: string;
   ago: string;
+  viewAll: string;
   actionLabels: Record<AuditAction, string>;
 }
 
@@ -31,21 +33,32 @@ export interface AuditLogCardProps {
    * card snapshots `Date.now()` once and passes it in.
    */
   now: number;
+  tenantId: string;
 }
 
 /**
- * Recent-activity feed on the per-tenant dashboard (step 36).
+ * Recent-activity feed on the per-tenant dashboard (step 36),
+ * with the "View all" deep-link added in step 37 to point at
+ * the dedicated audit-log viewer.
+ *
  * Server component — the "X ago" string is computed from the
  * caller-supplied `now`, so each render is deterministic given
  * the same inputs.
  */
-export function AuditLogCard({ events, copy, now }: AuditLogCardProps) {
+export function AuditLogCard({ events, copy, now, tenantId }: AuditLogCardProps) {
   const referenceMs = now;
 
   return (
     <Card data-testid="audit-log-card">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
         <CardTitle className="text-sm">{copy.title}</CardTitle>
+        <Link
+          href={`/admin/tenants/${tenantId}/audit`}
+          data-testid="audit-log-view-all"
+          className="text-muted-foreground hover:text-foreground font-mono text-[11px] underline"
+        >
+          {copy.viewAll} →
+        </Link>
       </CardHeader>
       <CardContent className="space-y-3">
         {events.length === 0 ? (

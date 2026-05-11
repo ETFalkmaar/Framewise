@@ -1543,6 +1543,42 @@ preview link.
 
 Adds 19 tests (audit-log-view: 10, connection-status: 9) — total 1048.
 
+### Audit-log full viewer + CSV export (step 37 — fase 11 part 3/4)
+
+The dashboard card from step 36 shows the last 20 events.
+Step 37 promotes the audit log to a first-class page so the
+super-admin can filter, paginate, and export the full history
+— critical for compliance + troubleshooting once a customer
+has been live for a while.
+
+- `src/lib/admin/audit-log-filters.ts` — `listFilteredAuditEvents()`.
+  Re-runs `listRecentAuditEvents()` with a 10 000-event cap,
+  then filter-chains by date range / action types (multi) /
+  user / case-insensitive search over metadata + user name,
+  sorts (asc | desc), paginates (default 50), and derives the
+  `uniqueActionTypes` + `uniqueUsers` for the filter dropdowns.
+  Filters AND across dimensions; within `actionTypes` it's OR.
+- `src/lib/admin/audit-log-export.ts` — `buildAuditLogCsv()`
+  with UTF-8 BOM + CRLF line endings (Excel-friendly) + RFC
+  4180 quoting. `getCsvFilename()` produces a date-stamped,
+  filesystem-safe name (`audit-log-{slug}-{YYYY-MM-DD}.csv`).
+- `src/components/admin/audit/` — `<AuditFilters />` (client,
+  URL-mirrored, debounced search), `<AuditTable />` (server
+  shell), `<AuditRow />` (client island for expand state with
+  pretty-printed JSON metadata), `<ExportCsvButton />` (client
+  download trigger via `Blob` + anchor `click()`).
+- `/admin/tenants/[tenantId]/audit/page.tsx` — super-admin
+  gate, query-param parser, full page assembly + pagination.
+  `actions.ts` exposes `exportAuditLogCsvAction` which re-runs
+  the filter chain server-side without a page cap so the
+  download mirrors the visible filter set, not just the
+  current page.
+- Step 36 dashboard card gets a "View all →" deep-link into
+  the new viewer (`audit-log-view-all` testid).
+- Translations: `admin.auditLogPage.*` in NL / FR / EN.
+
+Adds 29 tests (audit-log-filters: 18, audit-log-export: 11) — total 1077.
+
 ## Status
 
-In development - Step 36 of 96 (revised plan) — FASE 11 deel 2/4 (per-tenant super-admin dashboard)
+In development - Step 37 of 96 (revised plan) — FASE 11 deel 3/4 (audit log full viewer)
