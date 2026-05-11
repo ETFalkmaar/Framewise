@@ -4,12 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { getActiveTenantForUser, requireCurrentUser } from '@/lib/auth';
-import {
-  agentSettingsRepo,
-  agentVoiceConfigsRepo,
-  aiAgentsRepo,
-  auditLogsRepo,
-} from '@/lib/data';
+import { agentSettingsRepo, agentVoiceConfigsRepo, aiAgentsRepo, auditLogsRepo } from '@/lib/data';
 import { createElevenLabsClient } from '@/lib/elevenlabs/client';
 import { getVoiceById } from '@/lib/elevenlabs/voice-catalog';
 import { canConfigureAgent } from '@/lib/permissions/ai-agent';
@@ -74,9 +69,7 @@ const selectVoiceSchema = z.object({
   voice_id: z.string().min(1),
 });
 
-export async function selectVoice(input: {
-  voice_id: string;
-}): Promise<VoiceActionResult> {
+export async function selectVoice(input: { voice_id: string }): Promise<VoiceActionResult> {
   const parsed = selectVoiceSchema.safeParse(input);
   if (!parsed.success) return { success: false, error: 'validation_failed' };
 

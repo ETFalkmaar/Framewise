@@ -383,6 +383,40 @@
       "enabledLabel": "Assistant IA activé",
       "channelLabel": "Canal",
       "basicPlanWarning": "L'assistant IA nécessite un plan Pro ou Enterprise."
+    },
+    "voice": {
+      "title": "Configuration vocale",
+      "subtitle": "Choisissez une voix pour votre assistant IA et ajustez le rendu.",
+      "backToAgent": "Retour à l'assistant",
+      "tabLabel": "Voix",
+      "enterpriseOnly": "Enterprise",
+      "notAvailable": "La voix n'est disponible qu'en Enterprise",
+      "notAvailableHint": "Passez à Enterprise pour choisir une voix et activer les réponses vocales.",
+      "upgradeCTA": "Passer à Enterprise",
+      "tabsLabel": "Langue",
+      "card": {
+        "select": "Sélectionner",
+        "selected": "Sélectionné ✓",
+        "premium": "Premium",
+        "playSample": "Écouter",
+        "stopSample": "Arrêter"
+      },
+      "settings": {
+        "title": "Paramètres vocaux",
+        "stability": "Stabilité",
+        "stabilityHint": "Plus élevé = prosodie plus stable. Plus bas = plus de variation.",
+        "similarityBoost": "Similarité",
+        "similarityHint": "Plus élevé = plus proche de la voix d'origine.",
+        "style": "Style",
+        "styleHint": "Plus élevé = intonation plus expressive.",
+        "speakerBoost": "Speaker boost",
+        "speakerBoostHint": "Améliore la clarté et la cohérence vocale.",
+        "testWithGreeting": "Tester avec l'accueil",
+        "save": "Enregistrer les paramètres",
+        "saving": "Enregistrement...",
+        "saved": "Enregistré ✓",
+        "saveError": "Impossible d'enregistrer"
+      }
     }
   },
   "adminBookings": {

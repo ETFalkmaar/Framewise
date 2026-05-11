@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  STUB_VOICES,
-  getVoiceById,
-  getVoicesByLanguage,
-} from '@/lib/elevenlabs/voice-catalog';
+import { STUB_VOICES, getVoiceById, getVoicesByLanguage } from '@/lib/elevenlabs/voice-catalog';
 
 describe('voice catalog (step 57)', () => {
   it('exports voices in all four supported agent languages', () => {

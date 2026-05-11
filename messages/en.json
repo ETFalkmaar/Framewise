@@ -383,6 +383,40 @@
       "enabledLabel": "AI Assistant enabled",
       "channelLabel": "Channel",
       "basicPlanWarning": "AI Assistant requires a Pro or Enterprise plan."
+    },
+    "voice": {
+      "title": "Voice configuration",
+      "subtitle": "Pick a voice for your AI assistant and dial in the sound.",
+      "backToAgent": "Back to assistant",
+      "tabLabel": "Voice",
+      "enterpriseOnly": "Enterprise",
+      "notAvailable": "Voice is only available on Enterprise",
+      "notAvailableHint": "Upgrade to Enterprise to pick a voice and turn on spoken responses.",
+      "upgradeCTA": "Upgrade to Enterprise",
+      "tabsLabel": "Language",
+      "card": {
+        "select": "Select",
+        "selected": "Selected ✓",
+        "premium": "Premium",
+        "playSample": "Play",
+        "stopSample": "Stop"
+      },
+      "settings": {
+        "title": "Voice settings",
+        "stability": "Stability",
+        "stabilityHint": "Higher = steadier prosody. Lower = more variation.",
+        "similarityBoost": "Similarity boost",
+        "similarityHint": "Higher = closer to the original voice.",
+        "style": "Style",
+        "styleHint": "Higher = more expressive intonation.",
+        "speakerBoost": "Speaker boost",
+        "speakerBoostHint": "Improves clarity and consistency.",
+        "testWithGreeting": "Test with greeting",
+        "save": "Save settings",
+        "saving": "Saving...",
+        "saved": "Saved ✓",
+        "saveError": "Failed to save"
+      }
     }
   },
   "adminBookings": {

@@ -105,7 +105,7 @@ describe('voice config server actions (step 57)', () => {
       expect(r.error).toBe('validation_failed');
     });
 
-    it("returns voice_not_available when the agent channel is text-only", async () => {
+    it('returns voice_not_available when the agent channel is text-only', async () => {
       const agent = await ensureAgent();
       // Demote the channel to mimic a Pro plan.
       await aiAgentsRepo.update(agent!.id, { channel: 'text' });
@@ -120,7 +120,7 @@ describe('voice config server actions (step 57)', () => {
       expect(r.error).toBe('not_provisioned');
     });
 
-    it("returns feature_not_enabled when tenant.ai_agent_enabled is off", async () => {
+    it('returns feature_not_enabled when tenant.ai_agent_enabled is off', async () => {
       await ensureAgent();
       await tenantsRepo.update(VILLA_TENANT_ID, { ai_agent_enabled: false });
       const r = await selectVoice({ voice_id: 'stub-voice-nl-anna' });
@@ -219,9 +219,7 @@ describe('voice config server actions (step 57)', () => {
       const audits = await auditLogsRepo.listByTenant(VILLA_TENANT_ID, {
         limit: 50,
       });
-      expect(audits.some((a) => a.action === 'agent_voice_settings_updated')).toBe(
-        true
-      );
+      expect(audits.some((a) => a.action === 'agent_voice_settings_updated')).toBe(true);
     });
   });
 
