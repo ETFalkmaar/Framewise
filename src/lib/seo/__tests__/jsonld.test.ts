@@ -35,6 +35,7 @@ const VILLA: Tenant = {
   publish_rejected_by_user_id: null,
   bookings_enabled: false,
   booking_timezone: null,
+    calendar_feed_token: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };

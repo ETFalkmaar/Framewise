@@ -97,6 +97,14 @@ export interface Tenant {
    * Example: `'Europe/Amsterdam'`, `'America/Curacao'`.
    */
   booking_timezone: string | null;
+  /**
+   * Calendar-feed subscription token (step 55, fase 14 finale).
+   * Random 32-char token the tenant owner generates from
+   * `/account/bookings/calendar`. Embedded in the feed URL so
+   * subscribers can rotate / revoke without re-issuing accounts.
+   * `null` until the owner enables the feed.
+   */
+  calendar_feed_token: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

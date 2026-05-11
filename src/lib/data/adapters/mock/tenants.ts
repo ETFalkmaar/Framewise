@@ -52,6 +52,8 @@ export const mockTenantsRepo: TenantsRepository = {
       // toggles it after onboarding confirms the Enterprise plan.
       bookings_enabled: false,
       booking_timezone: null,
+      // Step 55 — calendar feed off until the owner generates a token.
+      calendar_feed_token: null,
     };
     table('tenants').set(row.id, row);
     return row;
