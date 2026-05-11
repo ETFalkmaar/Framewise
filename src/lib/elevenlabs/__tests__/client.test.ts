@@ -110,7 +110,10 @@ describe('ElevenLabsClient live mode (step 56)', () => {
       name: 'Aria',
       language: 'en',
       accent: 'warm',
+      gender: null,
+      description: '',
       sample_url: 'https://example.com/aria.mp3',
+      is_premium: false,
     });
   });
 

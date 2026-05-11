@@ -3,6 +3,7 @@ import type {
   AgentConversation,
   AgentKnowledge,
   AgentSettings,
+  AgentVoiceConfig,
   AuditLog,
   AvailabilityRule,
   BookingException,
@@ -92,6 +93,7 @@ type MockRow<K extends TableName> = {
   booking_exceptions: BookingException;
   ai_agents: AIAgent;
   agent_settings: AgentSettings;
+  agent_voice_configs: AgentVoiceConfig;
 }[K];
 
 const TABLES: TableName[] = [
@@ -123,6 +125,7 @@ const TABLES: TableName[] = [
   'booking_exceptions',
   'ai_agents',
   'agent_settings',
+  'agent_voice_configs',
 ];
 
 function emptyStore(): Store {

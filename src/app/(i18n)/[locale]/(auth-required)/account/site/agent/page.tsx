@@ -154,8 +154,25 @@ async function ActiveAgentView({
   };
   const t = await getTranslations('agent');
   void locale;
+  const isVoiceCapable = agent.channel === 'voice' || agent.channel === 'both';
   return (
-    <section data-testid="agent-active">
+    <section data-testid="agent-active" className="space-y-6">
+      <nav className="flex flex-wrap gap-2">
+        <Link
+          href="/account/site/agent/voice"
+          data-testid="link-voice-config"
+          aria-disabled={!isVoiceCapable}
+          className={`ring-border rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition ${
+            isVoiceCapable
+              ? 'bg-background hover:bg-muted'
+              : 'bg-muted/30 text-muted-foreground cursor-not-allowed'
+          }`}
+        >
+          {isVoiceCapable
+            ? `🎙 ${t('voice.tabLabel')}`
+            : `🎙 ${t('voice.tabLabel')} (${t('voice.enterpriseOnly')})`}
+        </Link>
+      </nav>
       <AgentSettingsForm
         agentName={agent.name}
         agentChannel={agent.channel}

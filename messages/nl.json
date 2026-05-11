@@ -383,6 +383,40 @@
       "enabledLabel": "AI Assistent ingeschakeld",
       "channelLabel": "Kanaal",
       "basicPlanWarning": "AI Assistent vereist een Pro of Enterprise plan."
+    },
+    "voice": {
+      "title": "Voice configuratie",
+      "subtitle": "Kies een stem voor je AI assistent en stem het geluid af.",
+      "backToAgent": "Terug naar assistent",
+      "tabLabel": "Voice",
+      "enterpriseOnly": "Enterprise",
+      "notAvailable": "Voice is alleen beschikbaar in Enterprise",
+      "notAvailableHint": "Upgrade naar Enterprise om een stem te kiezen en gesproken antwoorden in te schakelen.",
+      "upgradeCTA": "Upgrade naar Enterprise",
+      "tabsLabel": "Taal",
+      "card": {
+        "select": "Selecteer",
+        "selected": "Geselecteerd ✓",
+        "premium": "Premium",
+        "playSample": "Beluister",
+        "stopSample": "Stop"
+      },
+      "settings": {
+        "title": "Voice instellingen",
+        "stability": "Stability",
+        "stabilityHint": "Hoger = stabielere prosodie. Lager = meer variatie.",
+        "similarityBoost": "Similarity boost",
+        "similarityHint": "Hoger = dichter bij de originele stem.",
+        "style": "Style",
+        "styleHint": "Hoger = expressievere intonatie.",
+        "speakerBoost": "Speaker boost",
+        "speakerBoostHint": "Verbetert spraakduidelijkheid en consistentie.",
+        "testWithGreeting": "Test met begroeting",
+        "save": "Instellingen opslaan",
+        "saving": "Bezig met opslaan...",
+        "saved": "Opgeslagen ✓",
+        "saveError": "Kon niet opslaan"
+      }
     }
   },
   "adminBookings": {
