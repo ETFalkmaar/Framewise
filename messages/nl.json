@@ -158,6 +158,22 @@
         "togglePreviewHide": "Verberg voorvertoning",
         "errorTitle": "Voorvertoning bijwerken mislukt",
         "draftWaiting": "Wijzigingen worden binnenkort getoond…"
+      },
+      "saveStatus": {
+        "saving": "Bezig met opslaan…",
+        "savedRecently": "✓ Opgeslagen",
+        "savedAt": "Opgeslagen om {time}",
+        "conflict": "⚠ Conflict",
+        "error": "⚠ Opslaan mislukt"
+      },
+      "conflict": {
+        "title": "Conflict ontdekt",
+        "description": "Iemand anders heeft dit blok ook bewerkt. Wat wil je doen?",
+        "theirVersion": "Hun versie",
+        "yourChanges": "Jouw wijzigingen",
+        "savedAt": "Opgeslagen om {time}",
+        "keepTheirs": "Hun versie behouden",
+        "overwriteWithMine": "Mijn wijzigingen overschrijven"
       }
     },
     "media": {

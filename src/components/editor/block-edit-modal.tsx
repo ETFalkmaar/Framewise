@@ -6,8 +6,10 @@ import type { Block, BlockType, LocaleCode, Media } from '@/types/database';
 
 import { saveBlockContentAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
 
+import { ConflictDialog, type ConflictDialogCopy } from './conflict-dialog';
 import { ImagePicker } from './image-picker';
 import { LocaleTabs } from './locale-tabs';
+import { SaveStatusIndicator, type SaveStatusIndicatorCopy } from './save-status-indicator';
 import { TipTapEditor } from './tiptap-editor';
 
 interface BlockEditModalCopy {
@@ -57,6 +59,10 @@ interface BlockEditModalCopy {
     tabLabels: Record<LocaleCode, string>;
     missingLabel: string;
   };
+  /** Step 46 — save-status pill copy. */
+  saveStatus: SaveStatusIndicatorCopy;
+  /** Step 46 — conflict dialog copy. */
+  conflict: ConflictDialogCopy;
 }
 
 export interface BlockEditModalProps {
@@ -228,7 +234,27 @@ function TextBlockForm({ block, pageId, locale, onClose, copy, onLocalSave }: Fo
     fr: initialTranslations.fr ?? '',
     en: initialTranslations.en ?? '',
   });
-  const { pending, error, saved, save } = useSaveBlock();
+  const {
+    pending,
+    error,
+    saved,
+    save,
+    conflictWith,
+    dismissConflict,
+    expectedVersion,
+    setExpectedVersion,
+  } = useSaveBlock();
+
+  // Step 46 — pin expectedVersion at modal open, refresh on each
+  // successful save so back-to-back edits stay in sync without
+  // tripping their own follow-up saves.
+  useEffect(() => {
+    setExpectedVersion(block.version);
+  }, [block.id, block.version, setExpectedVersion]);
+
+  const buildPayload = () => ({
+    content_translations: { ...initialTranslations, ...contentTranslations },
+  });
 
   return (
     <div data-testid="text-block-form" className="space-y-4">
@@ -242,7 +268,7 @@ function TextBlockForm({ block, pageId, locale, onClose, copy, onLocalSave }: Fo
           copy={copy.locales}
           renderField={(value, onChange, loc) => (
             <TipTapEditor
-              key={loc} // remount per locale so TipTap reinitialises content
+              key={loc}
               id={`text-content-${loc}`}
               initialContent={value}
               onChange={onChange}
@@ -258,14 +284,36 @@ function TextBlockForm({ block, pageId, locale, onClose, copy, onLocalSave }: Fo
         saved={saved}
         onCancel={onClose}
         onSave={() => {
-          const newData = {
-            content_translations: { ...initialTranslations, ...contentTranslations },
-          };
+          const newData = buildPayload();
           onLocalSave?.(block.id, newData);
-          save({ pageId, blockId: block.id, newData }, onClose);
+          save({ pageId, blockId: block.id, newData, expectedVersion }, onClose);
         }}
         copy={copy}
+        saveStatusCopy={copy.saveStatus}
       />
+
+      {conflictWith && (
+        <ConflictDialog
+          currentVersion={conflictWith}
+          yourChanges={{ ...block, data: buildPayload(), version: expectedVersion }}
+          onReload={() => {
+            // Discard local changes — close modal, server revalidate
+            // re-renders with the conflicting (server-side) block.
+            dismissConflict();
+            onClose();
+          }}
+          onOverwrite={() => {
+            // Force-save: skip the expectedVersion check so the
+            // local payload lands regardless of the new server
+            // version. After this the form closes via onClose on
+            // success.
+            const newData = buildPayload();
+            onLocalSave?.(block.id, newData);
+            save({ pageId, blockId: block.id, newData }, onClose);
+          }}
+          copy={copy.conflict}
+        />
+      )}
     </div>
   );
 }
@@ -307,7 +355,30 @@ function HeroBlockForm({
   const [imageUrl, setImageUrl] = useState<string>((initial.image_url as string) ?? '');
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const { pending, error, saved, save } = useSaveBlock();
+  const {
+    pending,
+    error,
+    saved,
+    save,
+    conflictWith,
+    dismissConflict,
+    expectedVersion,
+    setExpectedVersion,
+  } = useSaveBlock();
+
+  // Step 46 — pin expectedVersion at modal open (same pattern as TextBlockForm).
+  useEffect(() => {
+    setExpectedVersion(block.version);
+  }, [block.id, block.version, setExpectedVersion]);
+
+  const buildPayload = () => ({
+    headline_translations: { ...headlineTranslations, ...headlines },
+    subheadline_translations: { ...subheadlineTranslations, ...subheadlines },
+    cta_text_translations: { ...ctaTextTranslations, ...ctaTexts },
+    cta_link: ctaLink,
+    background_overlay: overlay,
+    image_url: imageUrl,
+  });
 
   return (
     <div data-testid="hero-block-form" className="space-y-4">
@@ -399,19 +470,31 @@ function HeroBlockForm({
         saved={saved}
         onCancel={onClose}
         onSave={() => {
-          const newData = {
-            headline_translations: { ...headlineTranslations, ...headlines },
-            subheadline_translations: { ...subheadlineTranslations, ...subheadlines },
-            cta_text_translations: { ...ctaTextTranslations, ...ctaTexts },
-            cta_link: ctaLink,
-            background_overlay: overlay,
-            image_url: imageUrl,
-          };
+          const newData = buildPayload();
           onLocalSave?.(block.id, newData);
-          save({ pageId, blockId: block.id, newData }, onClose);
+          save({ pageId, blockId: block.id, newData, expectedVersion }, onClose);
         }}
         copy={copy}
+        saveStatusCopy={copy.saveStatus}
       />
+
+      {conflictWith && (
+        <ConflictDialog
+          currentVersion={conflictWith}
+          yourChanges={{ ...block, data: buildPayload(), version: expectedVersion }}
+          onReload={() => {
+            dismissConflict();
+            onClose();
+          }}
+          onOverwrite={() => {
+            const newData = buildPayload();
+            onLocalSave?.(block.id, newData);
+            save({ pageId, blockId: block.id, newData }, onClose);
+          }}
+          copy={copy.conflict}
+        />
+      )}
+
       {pickerOpen && (
         <ImagePicker
           initial={mediaLibrary}
@@ -465,7 +548,27 @@ function ImageBlockForm({
   });
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const { pending, error, saved, save } = useSaveBlock();
+  const {
+    pending,
+    error,
+    saved,
+    save,
+    conflictWith,
+    dismissConflict,
+    expectedVersion,
+    setExpectedVersion,
+  } = useSaveBlock();
+
+  // Step 46 — pin expectedVersion at modal open.
+  useEffect(() => {
+    setExpectedVersion(block.version);
+  }, [block.id, block.version, setExpectedVersion]);
+
+  const buildPayload = () => ({
+    image_url: imageUrl,
+    alt_translations: { ...altTranslations, ...altTexts },
+    caption_translations: { ...captionTranslations, ...captions },
+  });
 
   return (
     <div data-testid="image-block-form" className="space-y-4">
@@ -517,16 +620,30 @@ function ImageBlockForm({
         saved={saved}
         onCancel={onClose}
         onSave={() => {
-          const newData = {
-            image_url: imageUrl,
-            alt_translations: { ...altTranslations, ...altTexts },
-            caption_translations: { ...captionTranslations, ...captions },
-          };
+          const newData = buildPayload();
           onLocalSave?.(block.id, newData);
-          save({ pageId, blockId: block.id, newData }, onClose);
+          save({ pageId, blockId: block.id, newData, expectedVersion }, onClose);
         }}
         copy={copy}
+        saveStatusCopy={copy.saveStatus}
       />
+
+      {conflictWith && (
+        <ConflictDialog
+          currentVersion={conflictWith}
+          yourChanges={{ ...block, data: buildPayload(), version: expectedVersion }}
+          onReload={() => {
+            dismissConflict();
+            onClose();
+          }}
+          onOverwrite={() => {
+            const newData = buildPayload();
+            onLocalSave?.(block.id, newData);
+            save({ pageId, blockId: block.id, newData }, onClose);
+          }}
+          copy={copy.conflict}
+        />
+      )}
 
       {pickerOpen && (
         <ImagePicker
@@ -617,6 +734,8 @@ function FormFooter({
   onCancel,
   onSave,
   copy,
+  saveStatusCopy,
+  lastSavedAt,
 }: {
   pending: boolean;
   error: string | null;
@@ -624,6 +743,8 @@ function FormFooter({
   onCancel: () => void;
   onSave: () => void;
   copy: BlockEditModalCopy;
+  saveStatusCopy?: SaveStatusIndicatorCopy;
+  lastSavedAt?: Date | null;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -640,24 +761,36 @@ function FormFooter({
           ✓ {copy.saved}
         </p>
       )}
-      <div className="flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          data-testid="block-form-cancel"
-          className="ring-border bg-background hover:bg-muted rounded-md px-4 py-2 font-mono text-xs ring-1"
-        >
-          {copy.cancel}
-        </button>
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={pending}
-          data-testid="block-form-save"
-          className="bg-primary text-primary-foreground rounded-md px-4 py-2 font-mono text-xs disabled:opacity-50"
-        >
-          {pending ? copy.saving : copy.save}
-        </button>
+      <div className="flex items-center justify-between gap-3">
+        {/* Step 46 — save-status pill on the left, action buttons on the right. */}
+        <div className="min-h-[20px]">
+          {saveStatusCopy && (
+            <SaveStatusIndicator
+              status={pending ? 'saving' : saved ? 'saved' : 'idle'}
+              lastSavedAt={lastSavedAt ?? null}
+              copy={saveStatusCopy}
+            />
+          )}
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            data-testid="block-form-cancel"
+            className="ring-border bg-background hover:bg-muted rounded-md px-4 py-2 font-mono text-xs ring-1"
+          >
+            {copy.cancel}
+          </button>
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={pending}
+            data-testid="block-form-save"
+            className="bg-primary text-primary-foreground rounded-md px-4 py-2 font-mono text-xs disabled:opacity-50"
+          >
+            {pending ? copy.saving : copy.save}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -667,31 +800,71 @@ function useSaveBlock(): {
   pending: boolean;
   error: string | null;
   saved: boolean;
+  /**
+   * Conflict state from the most recent save attempt (step 46).
+   * `conflictWith` holds the server-side block the form should
+   * either adopt (reload) or overwrite. `null` clears the dialog.
+   */
+  conflictWith: import('@/types/database').Block | null;
+  /** Current expectedVersion the form pins. Increments after each
+   * successful save so back-to-back edits stay in sync. */
+  expectedVersion: number;
+  setExpectedVersion: (n: number) => void;
+  dismissConflict: () => void;
   save: (
-    input: { pageId: string; blockId: string; newData: Record<string, unknown> },
+    input: {
+      pageId: string;
+      blockId: string;
+      newData: Record<string, unknown>;
+      expectedVersion?: number;
+    },
     onSuccess: () => void
   ) => void;
 } {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [conflictWith, setConflictWith] = useState<import('@/types/database').Block | null>(null);
+  const [expectedVersion, setExpectedVersion] = useState<number>(0);
 
   function save(
-    input: { pageId: string; blockId: string; newData: Record<string, unknown> },
+    input: {
+      pageId: string;
+      blockId: string;
+      newData: Record<string, unknown>;
+      expectedVersion?: number;
+    },
     onSuccess: () => void
   ): void {
     setError(null);
     setSaved(false);
+    setConflictWith(null);
     startTransition(async () => {
       const result = await saveBlockContentAction(input);
       if (result.success) {
         setSaved(true);
+        if (typeof result.newVersion === 'number') {
+          setExpectedVersion(result.newVersion);
+        }
         setTimeout(onSuccess, 700);
+      } else if (result.conflict && result.currentBlock) {
+        // Step 46 — conflict surfaces as its own UI path; don't
+        // collapse it into the generic error pill.
+        setConflictWith(result.currentBlock);
       } else {
         setError(result.error ?? 'Onbekende fout');
       }
     });
   }
 
-  return { pending, error, saved, save };
+  return {
+    pending,
+    error,
+    saved,
+    conflictWith,
+    expectedVersion,
+    setExpectedVersion,
+    dismissConflict: () => setConflictWith(null),
+    save,
+  };
 }

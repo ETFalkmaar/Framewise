@@ -136,10 +136,16 @@ function loadSeeds(): void {
       // Step 42: backfill the new `deleted_at` field on legacy
       // seed rows so soft-delete filtering doesn't accidentally
       // hide every seeded media item.
-      const normalised =
-        name === 'media' && !('deleted_at' in row)
-          ? { ...row, deleted_at: null }
-          : row;
+      // Step 46: backfill the new `version` field on legacy block
+      // seed rows so the optimistic-concurrency check has a
+      // starting token (1) for every existing block.
+      let normalised: typeof row = row;
+      if (name === 'media' && !('deleted_at' in normalised)) {
+        normalised = { ...normalised, deleted_at: null } as typeof row;
+      }
+      if (name === 'blocks' && !('version' in normalised)) {
+        normalised = { ...normalised, version: 1 } as typeof row;
+      }
       table.set(normalised.id, normalised);
     }
   }

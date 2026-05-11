@@ -82,12 +82,26 @@ export interface SaveBlockContentInput {
   pageId: string;
   blockId: string;
   newData: Record<string, unknown>;
+  /** Step 46 — pin the block version observed by the editor; the
+   * action returns `conflict: true` if the persisted block has
+   * moved on since. Omit to force-save without the check. */
+  expectedVersion?: number;
 }
 
 export interface SaveBlockContentResult {
   success: boolean;
   errorCode?: SaveBlockErrorCode | 'unauthenticated' | 'no_active_tenant';
   error?: string;
+  /** Step 46 — `true` when a version mismatch caused the save to
+   * abort. The client should show a conflict dialog rather than
+   * treating this as a generic error. */
+  conflict?: boolean;
+  /** Step 46 — current block on conflict so the dialog can render
+   * the server-side data alongside the user's local changes. */
+  currentBlock?: import('@/types/database').Block;
+  /** Step 46 — fresh version on success so the form can pin its
+   * `expectedVersion` for the next save. */
+  newVersion?: number;
 }
 
 const SAVE_BLOCK_ERROR_MESSAGES: Record<
@@ -143,9 +157,20 @@ export async function saveBlockContentAction(
     tenantId: tenant.id,
     blockId: input.blockId,
     newData: input.newData,
+    expectedVersion: input.expectedVersion,
   });
 
   if (!outcome.success) {
+    // Step 46 — conflicts are not generic errors; surface the
+    // server-side block so the dialog can show both sides.
+    if (outcome.conflict) {
+      return {
+        success: false,
+        conflict: true,
+        currentBlock: outcome.currentBlock,
+        error: 'Iemand anders heeft dit blok ook bewerkt.',
+      };
+    }
     return {
       success: false,
       errorCode: outcome.errorCode,
@@ -156,5 +181,5 @@ export async function saveBlockContentAction(
   revalidatePath(`/account/site/pages/${input.pageId}/edit`);
   revalidatePath(`/sites/${tenant.slug}`);
 
-  return { success: true };
+  return { success: true, newVersion: outcome.newVersion };
 }

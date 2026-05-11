@@ -271,6 +271,15 @@ export interface Block {
   data: Record<string, unknown>;
   created_at: ISODateTime;
   updated_at: ISODateTime;
+  /**
+   * Optimistic-concurrency token (step 46, fase 12 part 8/8).
+   * Starts at 1 on insert and increments on every `update`. Block
+   * saves that pass an `expectedVersion` and find it stale get a
+   * conflict response instead of a silent overwrite, so two
+   * editors can't blow away each other's work without seeing the
+   * conflict dialog first.
+   */
+  version: number;
 }
 
 // ────────────────────────────────────────────────────────────────────────────

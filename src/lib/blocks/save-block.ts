@@ -2,6 +2,7 @@ import { blocksRepo, pagesRepo, subscriptionsRepo, tenantsRepo } from '@/lib/dat
 import { sanitizeHtml } from '@/lib/editor/sanitize-html';
 import { createPageSnapshot } from '@/lib/editor/snapshot';
 import { canEditBlocks } from '@/lib/permissions';
+import type { Block } from '@/types/database';
 
 /**
  * Pure (testable) implementation of the block-content save use
@@ -19,6 +20,14 @@ import { canEditBlocks } from '@/lib/permissions';
  * Heuristic for "this looks like HTML": any string value that
  * begins with `<` and contains `>`. Cheap, covers TipTap output,
  * doesn't punish bare strings like CTA URLs or alt text.
+ *
+ * Step 46 — optimistic concurrency: callers may pass
+ * `expectedVersion`. If the persisted block's `version` doesn't
+ * match, we return `success: false, conflict: true` along with the
+ * current block so the UI can ask the user what to do (reload
+ * server version vs overwrite). Without `expectedVersion`, the
+ * save proceeds unconditionally — preserving backwards
+ * compatibility with the step-41 callers.
  */
 export type SaveBlockErrorCode =
   | 'tenant_not_found'
@@ -34,12 +43,29 @@ export interface SaveBlockInput {
   tenantId: string;
   blockId: string;
   newData: Record<string, unknown>;
+  /**
+   * Optimistic-concurrency token (step 46). When present and the
+   * persisted block's `version` differs, the save short-circuits
+   * with `success: false, conflict: true` and the current block in
+   * `currentBlock`. Omit to opt out of the check (e.g. for the
+   * "force overwrite" path from the conflict dialog).
+   */
+  expectedVersion?: number;
 }
 
 export interface SaveBlockOutcome {
   success: boolean;
   errorCode?: SaveBlockErrorCode;
   errorDetail?: string;
+  /** Step 46 — set to `true` when the save was rejected because the
+   * `expectedVersion` didn't match the persisted block. */
+  conflict?: boolean;
+  /** Step 46 — populated on conflict so the UI can preview the
+   * server-side version and let the user pick reload vs overwrite. */
+  currentBlock?: Block;
+  /** Step 46 — exposed on success so the client can pin the new
+   * `expectedVersion` for the next save without an extra fetch. */
+  newVersion?: number;
 }
 
 export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBlockOutcome> {
@@ -50,10 +76,7 @@ export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBl
   const tenant = await tenantsRepo.findById(input.tenantId);
   if (!tenant) return { success: false, errorCode: 'tenant_not_found' };
 
-  // `BlocksRepository` only exposes `findByPageId` today (step 119
-  // adds a proper `findById` against Supabase). For the mock we
-  // scan the tenant's pages until the block surfaces.
-  const blockRow = await findBlockByScan(tenant.id, input.blockId);
+  const blockRow = await blocksRepo.findById(input.blockId);
   if (!blockRow) return { success: false, errorCode: 'block_not_found' };
 
   const page = await pagesRepo.findById(blockRow.page_id);
@@ -67,6 +90,20 @@ export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBl
   const allowed = await canEditBlocks(input.userId, tenant, plan?.code ?? null);
   if (!allowed) return { success: false, errorCode: 'forbidden' };
 
+  // Step 46 — optimistic concurrency. If the caller pinned a
+  // version and the persisted block has moved on, reject the save
+  // without touching the DB and hand back the current row so the
+  // UI can render the conflict dialog (reload theirs / overwrite
+  // mine). Callers that omit `expectedVersion` skip this check;
+  // the manual "force overwrite" path uses that escape hatch.
+  if (typeof input.expectedVersion === 'number' && blockRow.version !== input.expectedVersion) {
+    return {
+      success: false,
+      conflict: true,
+      currentBlock: blockRow,
+    };
+  }
+
   const sanitized = sanitizePayload(input.newData);
   const merged = mergeData(blockRow.data, sanitized);
 
@@ -78,8 +115,9 @@ export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBl
     changeSummary: 'block_content_saved',
   });
 
+  let updated;
   try {
-    await blocksRepo.update(input.blockId, { data: merged });
+    updated = await blocksRepo.update(input.blockId, { data: merged });
   } catch (err) {
     return {
       success: false,
@@ -88,7 +126,7 @@ export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBl
     };
   }
 
-  return { success: true };
+  return { success: true, newVersion: updated.version };
 }
 
 function looksLikeHtml(value: string): boolean {
@@ -131,19 +169,4 @@ function mergeData(
     out[key] = raw;
   }
   return out;
-}
-
-/**
- * Mock-adapter fallback: walk pages by tenant and find the block
- * by id. Step 119 swaps to a real `findById` on `blocksRepo` and
- * this helper goes away.
- */
-async function findBlockByScan(tenantId: string, blockId: string) {
-  const pages = await pagesRepo.listByTenant(tenantId);
-  for (const page of pages) {
-    const blocks = await blocksRepo.findByPageId(page.id);
-    const hit = blocks.find((b) => b.id === blockId);
-    if (hit) return hit;
-  }
-  return null;
 }

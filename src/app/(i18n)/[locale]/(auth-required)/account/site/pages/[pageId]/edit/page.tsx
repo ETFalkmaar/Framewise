@@ -61,6 +61,8 @@ export default async function EditPagePage({
   const tHistory = await getTranslations('account.history');
   const tType = await getTranslations('account.editor.blockType');
   const tPreview = await getTranslations('account.editor.preview');
+  const tSaveStatus = await getTranslations('account.editor.saveStatus');
+  const tConflict = await getTranslations('account.editor.conflict');
 
   const blockTypeLabels: Record<BlockType, string> = {
     hero: tType('hero'),
@@ -228,6 +230,22 @@ export default async function EditPagePage({
               en: t('locales.en'),
             },
             missingLabel: t('missingTranslation'),
+          },
+          saveStatus: {
+            saving: tSaveStatus('saving'),
+            savedRecently: tSaveStatus('savedRecently'),
+            savedAt: tSaveStatus('savedAt'),
+            conflict: tSaveStatus('conflict'),
+            error: tSaveStatus('error'),
+          },
+          conflict: {
+            title: tConflict('title'),
+            description: tConflict('description'),
+            theirVersion: tConflict('theirVersion'),
+            yourChanges: tConflict('yourChanges'),
+            savedAt: tConflict('savedAt'),
+            keepTheirs: tConflict('keepTheirs'),
+            overwriteWithMine: tConflict('overwriteWithMine'),
           },
         }}
         header={header}

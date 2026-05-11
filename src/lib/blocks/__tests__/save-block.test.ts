@@ -147,16 +147,19 @@ describe('saveBlockContentFor', () => {
   });
 
   it('rejects when the block belongs to a different tenant', async () => {
-    // restaurant owner trying to save a villa block while sending villa tenantId works (they're forbidden);
-    // here villa owner sends restaurant tenantId — block_not_found because scan is scoped to that tenant.
+    // Step 46 — `saveBlockContentFor` now uses `blocksRepo.findById`
+    // (instead of the tenant-scoped scan from step 41), so a cross-
+    // tenant block resolves but its parent page fails the tenant
+    // check. The more specific `page_tenant_mismatch` is preferable
+    // because it tells the operator the block does exist somewhere
+    // — just not under this tenant.
     const result = await saveBlockContentFor({
       userId: VILLA_OWNER_ID,
       tenantId: RESTAURANT_ID,
       blockId: VILLA_HOME_TEXT_BLOCK,
       newData: { alignment: 'center' },
     });
-    // The villa block is not visible when scanning the restaurant's pages.
-    expect(result.errorCode).toBe('block_not_found');
+    expect(result.errorCode).toBe('page_tenant_mismatch');
   });
 
   it('returns invalid_payload when newData is not an object', async () => {
