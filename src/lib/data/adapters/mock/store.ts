@@ -5,6 +5,7 @@ import type {
   AgentSettings,
   AgentVoiceConfig,
   AuditLog,
+  KnowledgeBaseDocument,
   AvailabilityRule,
   BookingException,
   Notification,
@@ -94,6 +95,7 @@ type MockRow<K extends TableName> = {
   ai_agents: AIAgent;
   agent_settings: AgentSettings;
   agent_voice_configs: AgentVoiceConfig;
+  knowledge_base_documents: KnowledgeBaseDocument;
 }[K];
 
 const TABLES: TableName[] = [
@@ -126,6 +128,7 @@ const TABLES: TableName[] = [
   'ai_agents',
   'agent_settings',
   'agent_voice_configs',
+  'knowledge_base_documents',
 ];
 
 function emptyStore(): Store {

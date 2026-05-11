@@ -6,7 +6,7 @@ import { AgentSettingsForm } from '@/components/agent/agent-settings-form';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
-import { agentSettingsRepo, aiAgentsRepo } from '@/lib/data';
+import { agentSettingsRepo, aiAgentsRepo, knowledgeBaseRepo } from '@/lib/data';
 import { canViewAgent } from '@/lib/permissions/ai-agent';
 import type { AgentSettings, AgentStatus } from '@/types/database';
 
@@ -155,6 +155,8 @@ async function ActiveAgentView({
   const t = await getTranslations('agent');
   void locale;
   const isVoiceCapable = agent.channel === 'voice' || agent.channel === 'both';
+  const allKnowledgeDocs = await knowledgeBaseRepo.listByAgentId(agent.id);
+  const knowledgeCount = allKnowledgeDocs.length;
   return (
     <section data-testid="agent-active" className="space-y-6">
       <nav className="flex flex-wrap gap-2">
@@ -171,6 +173,21 @@ async function ActiveAgentView({
           {isVoiceCapable
             ? `🎙 ${t('voice.tabLabel')}`
             : `🎙 ${t('voice.tabLabel')} (${t('voice.enterpriseOnly')})`}
+        </Link>
+        <Link
+          href="/account/site/agent/knowledge"
+          data-testid="link-knowledge-base"
+          className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
+        >
+          📚 {t('knowledge.tabLabel')}
+          {knowledgeCount > 0 ? (
+            <span
+              data-testid="knowledge-count-badge"
+              className="bg-muted text-muted-foreground ml-2 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[10px]"
+            >
+              {knowledgeCount}
+            </span>
+          ) : null}
         </Link>
       </nav>
       <AgentSettingsForm

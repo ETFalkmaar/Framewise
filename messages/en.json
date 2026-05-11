@@ -417,6 +417,65 @@
         "saved": "Saved ✓",
         "saveError": "Failed to save"
       }
+    },
+    "knowledge": {
+      "title": "Knowledge base",
+      "subtitle": "What your AI assistant knows about your business. Site content is indexed automatically; add manual Q&A for what your site doesn't say.",
+      "backToAgent": "Back to assistant",
+      "tabLabel": "Knowledge base",
+      "sync": {
+        "button": "Sync site content",
+        "syncing": "Syncing...",
+        "lastSynced": "Last synced",
+        "never": "Never synced",
+        "successWithCounts": "{synced} updated, {removed} removed",
+        "successNoChanges": "Everything is up to date",
+        "error": "Sync failed"
+      },
+      "sections": {
+        "autoSynced": "Auto-synced content",
+        "autoSyncedHint": "Pages, FAQs, and blocks from your website. Edit the source page and resync to make changes.",
+        "manual": "Manual entries",
+        "manualHint": "Custom Q&A, pricing, and contact info that isn't on your site.",
+        "empty": "No items yet.",
+        "addEntry": "+ New entry"
+      },
+      "statuses": {
+        "pending": "Pending",
+        "syncing": "Syncing",
+        "synced": "Synced",
+        "error": "Error"
+      },
+      "types": {
+        "page_content": "Page content",
+        "faq": "FAQ",
+        "manual_entry": "Manual Q&A",
+        "pricing": "Pricing",
+        "contact_info": "Contact info"
+      },
+      "card": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure you want to delete this entry?",
+        "source": "Source",
+        "documents": "{count} {count, plural, =1 {document} other {documents}}"
+      },
+      "form": {
+        "addTitle": "New entry",
+        "editTitle": "Edit entry",
+        "type": "Type",
+        "titleLabel": "Title",
+        "titlePlaceholder": "E.g. Parking at the villa",
+        "content": "Content",
+        "contentPlaceholder": "What should the assistant know about this?",
+        "contentHint": "Between 10 and 2000 characters.",
+        "characters": "{count} characters",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "saveError": "Failed to save",
+        "deleteError": "Failed to delete"
+      }
     }
   },
   "adminBookings": {

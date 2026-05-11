@@ -664,6 +664,51 @@ export interface AgentVoiceConfig {
 }
 
 /**
+ * Knowledge-base document type taxonomy (step 58, fase 15 part 3/9).
+ * Distinguishes auto-synced site content from manual entries.
+ */
+export type KnowledgeDocumentType =
+  | 'page_content'
+  | 'faq'
+  | 'manual_entry'
+  | 'pricing'
+  | 'contact_info';
+
+/** Sync lifecycle as the document moves through ElevenLabs. */
+export type KnowledgeSyncStatus = 'pending' | 'syncing' | 'synced' | 'error';
+
+/**
+ * Knowledge-base document the AI agent uses for retrieval. One row
+ * per source (page content, manual Q&A, pricing, contact). Auto-
+ * synced docs have `created_by_user_id: null` and a `page_id` so the
+ * sync action can de-duplicate by source. Manual entries have a
+ * `created_by_user_id` and no `page_id`.
+ */
+export interface KnowledgeBaseDocument {
+  id: UUID;
+  agent_id: UUID;
+  tenant_id: UUID;
+  /** ElevenLabs side id, set once the doc lands on their KB. */
+  elevenlabs_document_id: string | null;
+  type: KnowledgeDocumentType;
+  title: string;
+  /** Plain text — HTML stripped by the extractor before persisting. */
+  content: string;
+  source_url: string | null;
+  /** FK to `pages` when `type='page_content'`. Null for manual entries. */
+  page_id: UUID | null;
+  /** FK to `blocks` for block-scoped documents. Null otherwise. */
+  block_id: UUID | null;
+  status: KnowledgeSyncStatus;
+  last_synced_at: ISODateTime | null;
+  sync_error: string | null;
+  /** Null = auto-synced from site content. UUID = manual entry. */
+  created_by_user_id: UUID | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+/**
  * Catalog entry returned by the ElevenLabs client / stub list. Not a
  * Database row — sourced from ElevenLabs at request time (or seeded
  * by the stub in dev / CI).
@@ -881,6 +926,11 @@ export type AuditLogAction =
   // Step 57 — voice configuration.
   | 'agent_voice_selected'
   | 'agent_voice_settings_updated'
+  // Step 58 — knowledge base lifecycle.
+  | 'knowledge_base_synced'
+  | 'knowledge_entry_added'
+  | 'knowledge_entry_updated'
+  | 'knowledge_entry_deleted'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'
@@ -944,6 +994,7 @@ export interface Database {
   ai_agents: AIAgent;
   agent_settings: AgentSettings;
   agent_voice_configs: AgentVoiceConfig;
+  knowledge_base_documents: KnowledgeBaseDocument;
 }
 
 export type TableName = keyof Database;

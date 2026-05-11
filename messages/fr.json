@@ -417,6 +417,65 @@
         "saved": "Enregistré ✓",
         "saveError": "Impossible d'enregistrer"
       }
+    },
+    "knowledge": {
+      "title": "Base de connaissances",
+      "subtitle": "Ce que votre assistant IA sait sur votre entreprise. Le contenu du site est indexé automatiquement ; ajoutez des Q&R manuelles pour ce que votre site ne dit pas.",
+      "backToAgent": "Retour à l'assistant",
+      "tabLabel": "Connaissances",
+      "sync": {
+        "button": "Synchroniser le contenu du site",
+        "syncing": "Synchronisation en cours...",
+        "lastSynced": "Dernière synchronisation",
+        "never": "Jamais synchronisé",
+        "successWithCounts": "{synced} mis à jour, {removed} supprimé(s)",
+        "successNoChanges": "Tout est à jour",
+        "error": "Échec de la synchronisation"
+      },
+      "sections": {
+        "autoSynced": "Contenu synchronisé automatiquement",
+        "autoSyncedHint": "Pages, FAQ et blocs de votre site. Modifiez la page source et resynchronisez pour les changements.",
+        "manual": "Entrées manuelles",
+        "manualHint": "Q&R personnalisées, tarifs et coordonnées qui ne figurent pas sur votre site.",
+        "empty": "Aucun élément pour le moment.",
+        "addEntry": "+ Nouvelle entrée"
+      },
+      "statuses": {
+        "pending": "En attente",
+        "syncing": "Synchronisation",
+        "synced": "Synchronisé",
+        "error": "Erreur"
+      },
+      "types": {
+        "page_content": "Contenu de page",
+        "faq": "FAQ",
+        "manual_entry": "Q&R manuelle",
+        "pricing": "Tarifs",
+        "contact_info": "Coordonnées"
+      },
+      "card": {
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "deleteConfirm": "Voulez-vous vraiment supprimer cette entrée ?",
+        "source": "Source",
+        "documents": "{count} {count, plural, =1 {document} other {documents}}"
+      },
+      "form": {
+        "addTitle": "Nouvelle entrée",
+        "editTitle": "Modifier l'entrée",
+        "type": "Type",
+        "titleLabel": "Titre",
+        "titlePlaceholder": "Ex. Parking de la villa",
+        "content": "Contenu",
+        "contentPlaceholder": "Que doit savoir l'assistant à ce sujet ?",
+        "contentHint": "Entre 10 et 2000 caractères.",
+        "characters": "{count} caractères",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "cancel": "Annuler",
+        "saveError": "Impossible d'enregistrer",
+        "deleteError": "Impossible de supprimer"
+      }
     }
   },
   "adminBookings": {
