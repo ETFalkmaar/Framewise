@@ -1,4 +1,5 @@
 import { blocksRepo, pagesRepo, subscriptionsRepo, tenantsRepo } from '@/lib/data';
+import { createPageSnapshot } from '@/lib/editor/snapshot';
 import { canEditBlocks } from '@/lib/permissions';
 
 /**
@@ -63,6 +64,14 @@ export async function reorderBlocksFor(input: ReorderBlocksInput): Promise<Reord
       return { success: false, errorCode: 'unknown_block_id', errorDetail: id };
     }
   }
+
+  // Step 44: snapshot before the reorder so the customer can
+  // restore the previous order from the history page.
+  await createPageSnapshot({
+    pageId: input.pageId,
+    createdByUserId: input.userId,
+    changeSummary: 'blocks_reordered',
+  });
 
   try {
     await blocksRepo.reorder(input.pageId, input.newOrder);

@@ -1783,6 +1783,46 @@ clicking every tab.
 
 Adds 17 tests (translation-status: 17) — total 1198.
 
+### Page history + versioning (step 44 — fase 12 part 6/8)
+
+Every block-content save and reorder now takes a snapshot of
+the page state into `page_versions`. The customer (and super-
+admin) can browse the history, preview a snapshot read-only,
+and restore it with a one-click button — the restore itself
+also snapshots the current state so the action is reversible.
+
+- `page_versions` table gets a real repository
+  (`listByPage` / `countByPage` / `findById` / `create`,
+  newest-first ordering, `limit` option default 50).
+- `src/lib/editor/snapshot.ts` — `createPageSnapshot()` writes
+  the current `blocks` array into the version row, best-effort
+  (logs + swallows on failure so a snapshot error never blocks
+  the customer's actual save). `blocksFromSnapshot()` hydrates
+  the JSONB back into typed Block rows, dropping malformed
+  entries.
+- `src/lib/blocks/restore-version.ts` — pure
+  `restoreVersionFor()`: permission + tenant + version lookups,
+  rollback-snapshot of the current state, then bulk replace
+  blocks in the snapshot's order. Short stable error codes
+  (`tenant_not_found`, `page_not_found`, `page_tenant_mismatch`,
+  `version_not_found`, `version_page_mismatch`, `forbidden`,
+  `repo_error`).
+- `/account/site/pages/[id]/history` lists every snapshot
+  newest-first with timestamp + author + change-summary label.
+  Each row offers View + Restore actions.
+- `/account/site/pages/[id]/history/[versionId]` renders a
+  read-only block layout for the snapshot + the same Restore
+  trigger.
+- Edit page gets a "Geschiedenis (N versies)" deep-link.
+- `saveBlockContentFor` + `reorderBlocksFor` both call
+  `createPageSnapshot()` before mutating, so every save shows
+  up in the history with a stable `block_content_saved` /
+  `blocks_reordered` summary code.
+- Translations under `account.history.*` in NL / FR / EN
+  (incl. change-summary labels mapped from the stable codes).
+
+Adds 18 tests (snapshot: 9, restore-version: 9) — total 1216.
+
 ## Status
 
-In development - Step 43 of 96 (revised plan) — FASE 12 deel 5/8 (translation editor per locale)
+In development - Step 44 of 96 (revised plan) — FASE 12 deel 6/8 (page history + versioning)

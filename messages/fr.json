@@ -36,6 +36,27 @@
     "viewConnections": "Gérer les connexions",
     "viewMedia": "Bibliothèque média",
     "viewEditor": "Modifier les pages",
+    "history": {
+      "title": "Historique des versions",
+      "subtitle": "Consultez les versions précédentes de cette page et restaurez-les si besoin.",
+      "empty": "Aucune version",
+      "emptyHelp": "Les versions sont créées automatiquement lorsque vous modifiez un bloc.",
+      "viewVersion": "Voir",
+      "restoreVersion": "Restaurer",
+      "confirmRestore": "Voulez-vous vraiment restaurer cette version ? La version actuelle sera sauvegardée d'abord pour permettre l'annulation.",
+      "restoring": "Restauration…",
+      "restored": "Restauré",
+      "byUser": "par {user}",
+      "backToHistory": "Retour à l'historique",
+      "backToEdit": "Retour à l'éditeur",
+      "versionPreview": "Version du {date}",
+      "linkLabel": "Historique ({count} versions)",
+      "changeSummary": {
+        "block_content_saved": "Contenu du bloc modifié",
+        "blocks_reordered": "Ordre des blocs modifié",
+        "version_restored": "Version antérieure restaurée"
+      }
+    },
     "siteMedia": {
       "title": "Médias",
       "subtitle": "Gérez les images du site de ce client.",

@@ -36,6 +36,27 @@
     "viewConnections": "Verbindingen beheren",
     "viewMedia": "Mediabibliotheek",
     "viewEditor": "Pagina's bewerken",
+    "history": {
+      "title": "Versiegeschiedenis",
+      "subtitle": "Bekijk eerdere versies van deze pagina en herstel indien nodig.",
+      "empty": "Nog geen versies",
+      "emptyHelp": "Versies worden automatisch aangemaakt wanneer je een blok bewerkt.",
+      "viewVersion": "Bekijk",
+      "restoreVersion": "Herstel",
+      "confirmRestore": "Weet je zeker dat je deze versie wilt herstellen? De huidige versie wordt eerst bewaard zodat je het kunt ongedaan maken.",
+      "restoring": "Bezig met herstellen…",
+      "restored": "Hersteld",
+      "byUser": "door {user}",
+      "backToHistory": "Terug naar geschiedenis",
+      "backToEdit": "Terug naar bewerken",
+      "versionPreview": "Versie van {date}",
+      "linkLabel": "Geschiedenis ({count} versies)",
+      "changeSummary": {
+        "block_content_saved": "Block content bewerkt",
+        "blocks_reordered": "Block volgorde aangepast",
+        "version_restored": "Eerdere versie hersteld"
+      }
+    },
     "siteMedia": {
       "title": "Media",
       "subtitle": "Beheer afbeeldingen voor de site van deze tenant.",
