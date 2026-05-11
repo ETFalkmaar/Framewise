@@ -451,5 +451,61 @@
     "title": "Conditions générales",
     "placeholder_content": "Ceci est un texte provisoire des conditions générales. Le texte complet sera fourni après l'intégration.",
     "placeholder_note": "Les clients reçoivent un modèle de conditions générales définitif à la livraison (arrive à l'étape 93)."
+  },
+  "admin": {
+    "tenants": {
+      "title": "Clients",
+      "newClient": "+ Nouveau client",
+      "search": "Rechercher par nom, slug ou domaine",
+      "empty": "Aucun client trouvé avec ces filtres",
+      "filters": {
+        "status": "Statut",
+        "country": "Pays",
+        "plan": "Forfait",
+        "reset": "Réinitialiser"
+      },
+      "status": {
+        "all": "Tous les statuts",
+        "onboarding": "Intégration",
+        "live": "En ligne",
+        "paused": "Maintenance",
+        "cancelled": "Annulé"
+      },
+      "country": {
+        "all": "Tous les pays",
+        "NL": "Pays-Bas",
+        "CW": "Curaçao"
+      },
+      "plan": {
+        "all": "Tous les forfaits",
+        "basic": "Basic",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      },
+      "columns": {
+        "name": "Nom",
+        "country": "Pays",
+        "plan": "Forfait",
+        "status": "Statut",
+        "progress": "Avancement",
+        "created": "Créé",
+        "actions": "Actions"
+      },
+      "actions": {
+        "openDashboard": "Tableau de bord",
+        "domain": "Domaine",
+        "maintenance": "Maintenance",
+        "setup": "Setup",
+        "publish": "Publier",
+        "unpublish": "Mettre hors ligne"
+      },
+      "stats": {
+        "total": "Total clients",
+        "inOnboarding": "En intégration",
+        "readyToPublish": "Prêts à publier",
+        "live": "En ligne",
+        "paused": "En maintenance"
+      }
+    }
   }
 }
