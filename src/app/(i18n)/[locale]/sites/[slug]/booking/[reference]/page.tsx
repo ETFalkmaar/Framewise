@@ -109,7 +109,7 @@ export default async function CustomerBookingLookupPage({
         rescheduleDenialReason={rescheduleGate.reason as SelfServiceError | undefined}
         rescheduleAvailability={rescheduleAvailability}
         locale={locale}
-        manageHrefFactory={(newRef) => `/sites/${slug}/booking/${newRef}`}
+        manageHrefTemplate={`/sites/${slug}/booking/__REF__`}
         copy={{
           title: t('title'),
           viewReservation: t('viewReservation'),
@@ -154,7 +154,8 @@ export default async function CustomerBookingLookupPage({
             title: t('reschedule.title'),
             selectNewDate: t('reschedule.selectNewDate'),
             selectNewTime: t('reschedule.selectNewTime'),
-            preview: t('reschedule.preview'),
+            // `{oldDate}` etc. filled client-side per render.
+            preview: t.raw('reschedule.preview') as string,
             confirm: t('reschedule.confirm'),
             cancel: t('reschedule.cancelButton'),
             tooClose: t('reschedule.tooClose'),
@@ -163,12 +164,15 @@ export default async function CustomerBookingLookupPage({
           },
           cancelledView: {
             title: t('cancelled.title'),
-            subtitle: t('cancelled.subtitle'),
+            // `{date}` is a templated placeholder filled client-side.
+            // Use t.raw to skip next-intl's auto-formatting which
+            // would error on the missing context variable.
+            subtitle: t.raw('cancelled.subtitle') as string,
             newBooking: t('cancelled.newBooking'),
           },
           pastView: {
             title: t('past.title'),
-            subtitle: t('past.subtitle'),
+            subtitle: t.raw('past.subtitle') as string,
             newBooking: t('past.newBooking'),
           },
           errors: {
@@ -195,7 +199,9 @@ export default async function CustomerBookingLookupPage({
             tShared('weekdayShort.sat'),
           ],
           noSlots: t('reschedule.noSlots'),
-          spotsLeft: t('reschedule.spotsLeft'),
+          // `{count}` is filled per-slot client-side; use raw to
+          // skip formatting and keep the placeholder intact.
+          spotsLeft: t.raw('reschedule.spotsLeft') as string,
           closedLabel: t('reschedule.closed'),
         }}
       />
