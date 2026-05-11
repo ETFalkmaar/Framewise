@@ -33,6 +33,12 @@ const maintenanceMessageSchema = z.partialRecord(localeSchema, z.string().min(1)
 const maintenanceLogoUrlSchema = z.string().url();
 const maintenanceContactEmailSchema = z.string().email().toLowerCase();
 
+// Step 47: publish-request lifecycle fields. All optional on
+// update; the `.strict()` schemas would otherwise reject the
+// patches `requestSitePublish` etc. send.
+const publishRequestStatusSchema = z.enum(['none', 'pending', 'approved', 'rejected']);
+const publishApprovalNotesSchema = z.string().min(1).max(2000);
+
 export const tenantInsertSchema = z
   .object({
     slug: slugSchema,
@@ -75,6 +81,15 @@ export const tenantUpdateSchema = z
     maintenance_message_translations: maintenanceMessageSchema.nullable().optional(),
     maintenance_logo_url: maintenanceLogoUrlSchema.nullable().optional(),
     maintenance_contact_email: maintenanceContactEmailSchema.nullable().optional(),
+    // Step 47 — publish-request lifecycle.
+    publish_request_status: publishRequestStatusSchema.optional(),
+    publish_requested_at: isoDateTimeSchema.nullable().optional(),
+    publish_requested_by_user_id: uuidSchema.nullable().optional(),
+    publish_approval_notes: publishApprovalNotesSchema.nullable().optional(),
+    publish_approved_at: isoDateTimeSchema.nullable().optional(),
+    publish_approved_by_user_id: uuidSchema.nullable().optional(),
+    publish_rejected_at: isoDateTimeSchema.nullable().optional(),
+    publish_rejected_by_user_id: uuidSchema.nullable().optional(),
   })
   .strict();
 

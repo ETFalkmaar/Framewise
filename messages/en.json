@@ -36,6 +36,21 @@
     "viewConnections": "Manage connections",
     "viewMedia": "Media library",
     "viewEditor": "Edit pages",
+    "publish": {
+      "ctaTitle": "🚀 Take site live",
+      "ctaButton": "Submit site",
+      "confirmRequest": "Submit your site for publication? Our team reviews within 24 hours.",
+      "pendingLabel": "⏳ Your site is awaiting approval",
+      "pendingHint": "We'll review within 24 hours. You'll get a notice when it's live.",
+      "cancelButton": "Cancel request",
+      "confirmCancel": "Are you sure you want to cancel this publish request?",
+      "approvedLabel": "✅ Your site is live!",
+      "viewSite": "View your site",
+      "rejectedLabel": "⚠ Your request was rejected",
+      "rejectionNotesLabel": "Reason",
+      "resubmitButton": "Resubmit",
+      "errorGeneric": "Something went wrong, please try again."
+    },
     "history": {
       "title": "Version history",
       "subtitle": "Review previous versions of this page and restore them if needed.",
@@ -594,6 +609,27 @@
     "placeholder_note": "Customers receive a final terms-and-conditions template at delivery (arrives in step 93)."
   },
   "admin": {
+    "publish": {
+      "cardTitle": "🔔 Publish request",
+      "requestedBy": "Requested by {user}",
+      "requestedAt": "on {date}",
+      "previewSite": "View preview",
+      "approveButton": "Approve",
+      "approveModalTitle": "Take site live?",
+      "approveModalBody": "This makes the site publicly accessible immediately. The customer will be notified.",
+      "approveNotesLabel": "Internal note (optional)",
+      "approveSubmit": "Approve and go live",
+      "rejectButton": "Reject",
+      "rejectModalTitle": "Reject request?",
+      "rejectModalBody": "The customer will see this reason.",
+      "rejectNotesLabel": "Reason for rejection",
+      "rejectNotesPlaceholder": "E.g. Logo isn't right, pricing missing, ...",
+      "rejectNotesHint": "At least 10 characters",
+      "rejectNotesShort": "Reason must be at least 10 characters",
+      "rejectSubmit": "Reject with reason",
+      "cancel": "Cancel",
+      "errorGeneric": "Something went wrong, please try again."
+    },
     "tenants": {
       "title": "Customers",
       "newClient": "+ Onboard new customer",

@@ -4,6 +4,7 @@ import { computeChecklistProgress } from '@/lib/checklist';
 import { subscriptionsRepo } from '@/lib/data';
 import { canEditBlocks } from '@/lib/permissions';
 import { LogoutButton } from '@/components/auth/logout-button';
+import { PublishStatusBanner } from '@/components/account/publish-status-banner';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -25,6 +26,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const superAdmin = isUserSuperAdmin(user.id);
   const checklistProgress = activeTenant ? await computeChecklistProgress(activeTenant.id) : null;
   const tSetup = await getTranslations('account.setup');
+  const tPublish = await getTranslations('account.publish');
 
   // Step 39: surface the block-editor entry point only for plans
   // that unlock it (pro + enterprise) — basic customers don't
@@ -55,6 +57,28 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         </div>
         <LogoutButton />
       </header>
+
+      {activeTenant && (
+        <PublishStatusBanner
+          tenant={activeTenant}
+          publicUrl={`/sites/${activeTenant.slug}`}
+          copy={{
+            ctaTitle: tPublish('ctaTitle'),
+            ctaButton: tPublish('ctaButton'),
+            confirmRequest: tPublish('confirmRequest'),
+            pendingLabel: tPublish('pendingLabel'),
+            pendingHint: tPublish('pendingHint'),
+            cancelButton: tPublish('cancelButton'),
+            confirmCancel: tPublish('confirmCancel'),
+            approvedLabel: tPublish('approvedLabel'),
+            viewSite: tPublish('viewSite'),
+            rejectedLabel: tPublish('rejectedLabel'),
+            rejectionNotesLabel: tPublish('rejectionNotesLabel'),
+            resubmitButton: tPublish('resubmitButton'),
+            errorGeneric: tPublish('errorGeneric'),
+          }}
+        />
+      )}
 
       <div className="grid gap-4">
         <Card size="sm" data-testid="account-card-user">

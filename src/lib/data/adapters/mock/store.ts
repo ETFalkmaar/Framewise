@@ -1,6 +1,7 @@
 import type {
   AgentConversation,
   AgentKnowledge,
+  AuditLog,
   Availability,
   Block,
   Booking,
@@ -40,6 +41,7 @@ import tenantCountrySettingsSeed from './seeds/tenant_country_settings.json';
 import tenantChecklistStatusSeed from './seeds/tenant_checklist_status.json';
 import tokenAccessLogSeed from './seeds/token_access_log.json';
 import mediaSeed from './seeds/media.json';
+import auditLogsSeed from './seeds/audit_logs.json';
 
 /**
  * In-memory store for the mock adapter. One Map per table keyed by `id`.
@@ -76,6 +78,7 @@ type MockRow<K extends TableName> = {
   setup_checklist_items: SetupChecklistItem;
   tenant_checklist_status: TenantChecklistStatus;
   tenant_country_settings: TenantCountrySettings;
+  audit_logs: AuditLog;
 }[K];
 
 const TABLES: TableName[] = [
@@ -101,6 +104,7 @@ const TABLES: TableName[] = [
   'setup_checklist_items',
   'tenant_checklist_status',
   'tenant_country_settings',
+  'audit_logs',
 ];
 
 function emptyStore(): Store {
@@ -127,6 +131,7 @@ function loadSeeds(): void {
     ['tenant_checklist_status', tenantChecklistStatusSeed as unknown as TenantChecklistStatus[]],
     ['token_access_log', tokenAccessLogSeed as unknown as TokenAccessLog[]],
     ['media', mediaSeed as unknown as Media[]],
+    ['audit_logs', auditLogsSeed as unknown as AuditLog[]],
   ];
 
   for (const [name, rows] of pairs) {
@@ -139,12 +144,28 @@ function loadSeeds(): void {
       // Step 46: backfill the new `version` field on legacy block
       // seed rows so the optimistic-concurrency check has a
       // starting token (1) for every existing block.
+      // Step 47: backfill the publish-request lifecycle fields on
+      // legacy tenant seeds — every tenant starts in `'none'` so
+      // the resting state matches the type union.
       let normalised: typeof row = row;
       if (name === 'media' && !('deleted_at' in normalised)) {
         normalised = { ...normalised, deleted_at: null } as typeof row;
       }
       if (name === 'blocks' && !('version' in normalised)) {
         normalised = { ...normalised, version: 1 } as typeof row;
+      }
+      if (name === 'tenants' && !('publish_request_status' in normalised)) {
+        normalised = {
+          ...normalised,
+          publish_request_status: 'none',
+          publish_requested_at: null,
+          publish_requested_by_user_id: null,
+          publish_approval_notes: null,
+          publish_approved_at: null,
+          publish_approved_by_user_id: null,
+          publish_rejected_at: null,
+          publish_rejected_by_user_id: null,
+        } as typeof row;
       }
       table.set(normalised.id, normalised);
     }
