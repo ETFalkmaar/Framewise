@@ -254,9 +254,7 @@ export class ElevenLabsClient {
       }
     );
     if (!res.ok) {
-      throw new Error(
-        `ElevenLabs addKnowledgeBaseDocument ${res.status}: ${res.statusText}`
-      );
+      throw new Error(`ElevenLabs addKnowledgeBaseDocument ${res.status}: ${res.statusText}`);
     }
     const data = (await res.json()) as { document_id?: string };
     if (!data.document_id) {
@@ -275,9 +273,7 @@ export class ElevenLabsClient {
       { method: 'DELETE', headers: this.headers() }
     );
     if (!res.ok && res.status !== 404) {
-      throw new Error(
-        `ElevenLabs removeKnowledgeBaseDocument ${res.status}: ${res.statusText}`
-      );
+      throw new Error(`ElevenLabs removeKnowledgeBaseDocument ${res.status}: ${res.statusText}`);
     }
     return { mode: 'live' };
   }

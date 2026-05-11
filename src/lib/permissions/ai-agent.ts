@@ -1,10 +1,6 @@
 import { isUserSuperAdmin } from '@/lib/auth';
 import { canEditPages, canManageTenant } from '@/lib/auth/permissions';
-import type {
-  AgentChannel,
-  SubscriptionPlanCode,
-  Tenant,
-} from '@/types/database';
+import type { AgentChannel, SubscriptionPlanCode, Tenant } from '@/types/database';
 
 /**
  * AI agent permission gates (step 56, fase 15 part 1/9).

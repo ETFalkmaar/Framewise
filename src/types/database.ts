@@ -589,12 +589,7 @@ export interface AgentKnowledge {
 export type AgentChannel = 'text' | 'voice' | 'both';
 
 /** Lifecycle state of the tenant's agent. */
-export type AgentStatus =
-  | 'not_provisioned'
-  | 'provisioning'
-  | 'active'
-  | 'error'
-  | 'disabled';
+export type AgentStatus = 'not_provisioned' | 'provisioning' | 'active' | 'error' | 'disabled';
 
 /** Primary spoken language for the agent. */
 export type AgentLanguage = 'nl' | 'fr' | 'en' | 'es';
