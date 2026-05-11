@@ -54,6 +54,10 @@ export const mockTenantsRepo: TenantsRepository = {
       booking_timezone: null,
       // Step 55 — calendar feed off until the owner generates a token.
       calendar_feed_token: null,
+      // Step 56 — AI agent off by default; super-admin toggles on
+      // after onboarding confirms the Pro/Enterprise plan.
+      ai_agent_enabled: false,
+      ai_agent_id: null,
     };
     table('tenants').set(row.id, row);
     return row;
