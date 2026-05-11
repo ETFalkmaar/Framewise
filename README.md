@@ -1489,6 +1489,60 @@ is "which customer needs attention right now?".
 
 Adds 28 tests (tenant-list: 21, tenant-stats: 7) — total 1029.
 
+### Per-tenant super-admin dashboard (step 36 — fase 11 part 2/4)
+
+The "command centre" for a single customer. `/admin/tenants/[tenantId]`
+replaces the step 35 placeholder with the full work surface the
+super-admin uses to manage one customer end-to-end. Six composable
+sections render side-by-side: a status-aware header, KPI strip,
+audit log, per-connector status, inline publish/unpublish, and a
+preview link.
+
+- `src/lib/admin/audit-log-view.ts` — `listRecentAuditEvents()`.
+  Synthesizes audit events from existing timestamps because the
+  generic `audit_log` table doesn't ship until step 88. Sources:
+  `tenants.created_at` → `tenant_created`, `tenants.updated_at`
+  (when ≠ created) → `site_published` / `tenant_updated`,
+  `tenant_users.invited_at` → `member_invited`,
+  `provider_connections.connected_at` → `connection_added`.
+  Sorted desc by `createdAt`, capped at `limit` (default 20).
+  Same shape as step 88's real audit table, so consumers won't
+  refactor when the data source flips.
+- `src/lib/admin/connection-status.ts` — `getConnectionStatusForTenant()`
+  always returns _every_ provider in the registry so the
+  dashboard surfaces what's missing as well as what's wired.
+  `isConnected` is `true` only for `status === 'connected'`;
+  `expired` / `error` surface via `hasError`.
+  `groupConnectorsByCategory()` buckets by accounting / payments /
+  crm / newsletter / phone and drops empty categories.
+- `src/components/admin/tenant-dashboard/` — six sections:
+  - `<DashboardHeader />` — server component, name + status +
+    country flag + plan badge + days-old; nav strip with open-site,
+    setup, domain, maintenance links.
+  - `<StatsOverview />` — 4-tile KPI strip: setup %, active
+    connectors, days active, can-go-live ✅/❌ (emerald vs amber).
+  - `<AuditLogCard />` — server component with action icons,
+    "X min/u/d ago" formatter, last-20 events, empty-state copy.
+  - `<ConnectionsCard />` — grouped by category, status dot
+    (green / red / grey), per-row Configure link.
+  - `<InlineActions />` — client island, `useTransition`,
+    status-aware: `live` → unpublish with `confirm()`, `cancelled`
+    → read-only banner, `onboarding|paused` → publish (disabled
+    until checklist requirements met). Reuses step 32's
+    `publishSiteAction` / `unpublishSiteAction`.
+  - `<PreviewCard />` — link out to `/sites/{slug}` or the custom
+    domain; no iframe (Vercel COEP blocks cross-origin frames).
+- `/admin/tenants/[tenantId]/page.tsx` — single `Promise.all` for
+  stats + audit events + connectors + subscription. 2-column
+  grid on lg+ (audit + connections left, actions + preview right),
+  collapses to single column on mobile.
+- Translations: `admin.tenantDashboard.*` in NL / FR / EN —
+  full localisation for headers, stats labels, audit action
+  names, connector category labels, action copy, and preview
+  banners.
+
+Adds 19 tests (audit-log-view: 10, connection-status: 9) — total 1048.
+
 ## Status
 
-In development - Step 35 of 96 (revised plan) — FASE 11 deel 1/4 (super-admin tenant overview)
+In development - Step 36 of 96 (revised plan) — FASE 11 deel 2/4 (per-tenant super-admin dashboard)

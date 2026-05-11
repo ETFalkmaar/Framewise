@@ -506,6 +506,70 @@
         "live": "Live",
         "paused": "Onderhoud"
       }
+    },
+    "tenantDashboard": {
+      "openSite": "Open site",
+      "setupChecklist": "Setup checklist",
+      "domain": "Domein",
+      "maintenance": "Onderhoudspagina",
+      "stats": {
+        "checklistProgress": "Setup-voortgang",
+        "activeConnectors": "Actieve connectoren",
+        "daysActive": "Dagen actief",
+        "canGoLive": "Klaar voor publish",
+        "canGoLiveYes": "Alle verplichte items afgerond",
+        "canGoLiveNo": "Verplichte items ontbreken nog"
+      },
+      "auditLog": {
+        "title": "Recente activiteit",
+        "empty": "Nog geen activiteit voor deze klant.",
+        "by": "door",
+        "ago": "geleden"
+      },
+      "auditActions": {
+        "tenant_created": "Tenant aangemaakt",
+        "tenant_updated": "Tenant bijgewerkt",
+        "site_published": "Site live gezet",
+        "site_unpublished": "Site offline gehaald",
+        "connection_added": "Connector toegevoegd",
+        "connection_removed": "Connector verwijderd",
+        "domain_added": "Domein toegevoegd",
+        "domain_verified": "Domein geverifieerd",
+        "checklist_item_completed": "Checklist-item afgerond",
+        "member_invited": "Teamlid uitgenodigd"
+      },
+      "connections": {
+        "title": "Connectoren",
+        "connected": "Verbonden",
+        "notConnected": "Niet verbonden",
+        "error": "Fout",
+        "lastSync": "Laatste sync",
+        "configure": "Configureren"
+      },
+      "categoryLabels": {
+        "accounting": "Boekhouding",
+        "payments": "Betalingen",
+        "crm": "CRM",
+        "newsletter": "Nieuwsbrief",
+        "phone": "Telefonie"
+      },
+      "actions": {
+        "title": "Site-status",
+        "publish": "Publiceer site",
+        "unpublish": "Site offline halen",
+        "publishing": "Bezig met publiceren…",
+        "unpublishing": "Bezig met offline halen…",
+        "blockedHint": "Niet alle verplichte checklist-items zijn afgerond.",
+        "liveLabel": "De site is live en bereikbaar voor bezoekers.",
+        "cancelledLabel": "Deze klant is geannuleerd — geen acties beschikbaar.",
+        "confirmUnpublish": "Weet je zeker dat je de site offline haalt? Bezoekers zien dan de onderhoudspagina."
+      },
+      "preview": {
+        "title": "Site-preview",
+        "openInNewTab": "Open in nieuw tabblad",
+        "maintenanceMode": "De site staat momenteel in onderhoudsmodus.",
+        "cancelled": "Site preview niet beschikbaar — klant is geannuleerd."
+      }
     }
   }
 }
