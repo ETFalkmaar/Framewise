@@ -451,5 +451,61 @@
     "title": "Terms and conditions",
     "placeholder_content": "This is a placeholder for the terms and conditions. The full text will be provided after onboarding.",
     "placeholder_note": "Customers receive a final terms-and-conditions template at delivery (arrives in step 93)."
+  },
+  "admin": {
+    "tenants": {
+      "title": "Customers",
+      "newClient": "+ Onboard new customer",
+      "search": "Search by name, slug or domain",
+      "empty": "No customers found with these filters",
+      "filters": {
+        "status": "Status",
+        "country": "Country",
+        "plan": "Plan",
+        "reset": "Reset filters"
+      },
+      "status": {
+        "all": "All statuses",
+        "onboarding": "Onboarding",
+        "live": "Live",
+        "paused": "Maintenance",
+        "cancelled": "Cancelled"
+      },
+      "country": {
+        "all": "All countries",
+        "NL": "Netherlands",
+        "CW": "Curaçao"
+      },
+      "plan": {
+        "all": "All plans",
+        "basic": "Basic",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      },
+      "columns": {
+        "name": "Name",
+        "country": "Country",
+        "plan": "Plan",
+        "status": "Status",
+        "progress": "Progress",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "actions": {
+        "openDashboard": "Dashboard",
+        "domain": "Domain",
+        "maintenance": "Maintenance",
+        "setup": "Setup",
+        "publish": "Publish",
+        "unpublish": "Take offline"
+      },
+      "stats": {
+        "total": "Total customers",
+        "inOnboarding": "In onboarding",
+        "readyToPublish": "Ready to publish",
+        "live": "Live",
+        "paused": "Maintenance"
+      }
+    }
   }
 }

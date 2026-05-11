@@ -1455,6 +1455,40 @@ gives super-admins a settings form to customise it.
 
 Adds 14 tests (lib/maintenance: 14) — total 1001 🎉
 
+### Super-admin tenant overview (step 35 — fase 11 part 1/4)
+
+JIJ-as-super-admin's starting screen. `/admin/tenants` shows every
+customer tenant in one sortable, filterable, paginated table —
+the place to navigate from when the day's "what's next?" decision
+is "which customer needs attention right now?".
+
+- `src/lib/admin/tenant-list.ts` — `listTenantsForAdmin()`. Pure
+  filter → sort → paginate over `tenantsRepo.list()`, then
+  `Promise.all` over `calculateTenantStats()` to hydrate each
+  surviving row. Filters: `search` (matches name / slug /
+  custom_domain, case-insensitive), `status`, `country`, `plan`.
+  Sort columns: `name`, `created_at`, `status`, `plan`. Default
+  sort: `created_at desc`.
+- `src/lib/admin/tenant-stats.ts` — `calculateTenantStats()`.
+  Returns checklist totals + required-slice + `canGoLive` +
+  active connector count + days old + last activity. Used by
+  both the table rows and the per-tenant dashboard.
+- `src/components/admin/tenants/` — `<StatusBadge />` (reusable),
+  `<TenantStatsCard />` (five top tiles: total, in onboarding,
+  ready-to-publish, live, paused), `<TenantFilters />` (client
+  island, debounced search, URL-mirrored state), `<TenantTable />`
+  (server-rendered, sortable headers, per-row action buttons to
+  /domain and /maintenance).
+- `/admin/tenants/page.tsx` — super-admin gate, query-param
+  parser, full page assembly.
+- `/admin/tenants/[tenantId]/page.tsx` — per-tenant dashboard
+  placeholder. Three info cards (general, setup progress,
+  activity) + shortcut links to the existing tools. Full
+  audit log + connection feed lands in step 36.
+- Translations: `admin.tenants.*` in NL / FR / EN.
+
+Adds 28 tests (tenant-list: 21, tenant-stats: 7) — total 1029.
+
 ## Status
 
-In development - Step 34 of 96 (revised plan) — **FASE 10 COMPLETE** (5/5, onboarding + site-live ready)
+In development - Step 35 of 96 (revised plan) — FASE 11 deel 1/4 (super-admin tenant overview)

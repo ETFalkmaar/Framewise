@@ -451,5 +451,61 @@
     "title": "Algemene voorwaarden",
     "placeholder_content": "Dit is een placeholder voor de algemene voorwaarden. De volledige tekst wordt geleverd na onboarding.",
     "placeholder_note": "Klanten ontvangen een definitief sjabloon voor algemene voorwaarden bij oplevering (komt in stap 93)."
+  },
+  "admin": {
+    "tenants": {
+      "title": "Klanten",
+      "newClient": "+ Nieuwe klant onboarden",
+      "search": "Zoek op naam, slug of domein",
+      "empty": "Geen klanten gevonden met deze filters",
+      "filters": {
+        "status": "Status",
+        "country": "Land",
+        "plan": "Plan",
+        "reset": "Filters wissen"
+      },
+      "status": {
+        "all": "Alle statussen",
+        "onboarding": "Onboarding",
+        "live": "Live",
+        "paused": "Onderhoud",
+        "cancelled": "Geannuleerd"
+      },
+      "country": {
+        "all": "Alle landen",
+        "NL": "Nederland",
+        "CW": "Curaçao"
+      },
+      "plan": {
+        "all": "Alle pakketten",
+        "basic": "Basic",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      },
+      "columns": {
+        "name": "Naam",
+        "country": "Land",
+        "plan": "Plan",
+        "status": "Status",
+        "progress": "Voortgang",
+        "created": "Aangemaakt",
+        "actions": "Acties"
+      },
+      "actions": {
+        "openDashboard": "Dashboard",
+        "domain": "Domein",
+        "maintenance": "Onderhoud",
+        "setup": "Setup",
+        "publish": "Publiceren",
+        "unpublish": "Offline halen"
+      },
+      "stats": {
+        "total": "Totaal klanten",
+        "inOnboarding": "In onboarding",
+        "readyToPublish": "Klaar voor publish",
+        "live": "Live",
+        "paused": "Onderhoud"
+      }
+    }
   }
 }
