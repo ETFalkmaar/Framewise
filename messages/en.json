@@ -114,6 +114,60 @@
       }
     }
   },
+  "publicBooking": {
+    "title": "Reserve a table",
+    "subtitle": "Book online quickly and easily",
+    "step1Title": "Pick a date",
+    "step2Title": "Pick a time",
+    "step3Title": "How many people?",
+    "step4Title": "Your details",
+    "step5Title": "Reservation confirmed",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Confirm reservation",
+    "submitting": "Sending...",
+    "datePicker": {
+      "fullyBooked": "Fully booked",
+      "closed": "Closed",
+      "slotsAvailable": "{count} slots"
+    },
+    "slotPicker": {
+      "noSlots": "No times available on this day",
+      "spotsLeft": "{count} spots left"
+    },
+    "partySize": {
+      "label": "Number of guests",
+      "person": "1 person",
+      "people": "{count} people"
+    },
+    "contactForm": {
+      "name": "First and last name",
+      "namePlaceholder": "E.g. John Smith",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailHint": "We'll send you a confirmation",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "+1 555 ...",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Allergies, occasion, special requests..."
+    },
+    "confirmation": {
+      "headline": "✓ Reservation confirmed",
+      "subheadline": "We've sent a confirmation to your email",
+      "reference": "Reservation code",
+      "dateLabel": "Date",
+      "timeLabel": "Time",
+      "partyLabel": "Guests",
+      "newBooking": "Make another reservation"
+    },
+    "errors": {
+      "validation_failed": "Check your details and try again",
+      "tenant_not_available": "This venue doesn't accept online reservations",
+      "slot_no_longer_available": "This time just got fully booked. Please pick another.",
+      "spam_detected": "Something went wrong. Please try again.",
+      "unknown_error": "Unknown error. Please try again later."
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications",

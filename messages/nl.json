@@ -114,6 +114,60 @@
       }
     }
   },
+  "publicBooking": {
+    "title": "Reserveer een tafel",
+    "subtitle": "Boek snel en eenvoudig online",
+    "step1Title": "Kies een datum",
+    "step2Title": "Kies een tijd",
+    "step3Title": "Hoeveel personen?",
+    "step4Title": "Je gegevens",
+    "step5Title": "Reservering bevestigd",
+    "back": "Terug",
+    "next": "Volgende",
+    "submit": "Reservering bevestigen",
+    "submitting": "Bezig met versturen...",
+    "datePicker": {
+      "fullyBooked": "Volgeboekt",
+      "closed": "Gesloten",
+      "slotsAvailable": "{count} tijden"
+    },
+    "slotPicker": {
+      "noSlots": "Geen beschikbare tijden voor deze dag",
+      "spotsLeft": "{count} plekken vrij"
+    },
+    "partySize": {
+      "label": "Aantal personen",
+      "person": "1 persoon",
+      "people": "{count} personen"
+    },
+    "contactForm": {
+      "name": "Voor- en achternaam",
+      "namePlaceholder": "Bijv. Jan Janssen",
+      "email": "Email",
+      "emailPlaceholder": "je@example.com",
+      "emailHint": "We sturen je een bevestiging",
+      "phone": "Telefoon (optioneel)",
+      "phonePlaceholder": "+31 6 ...",
+      "notes": "Opmerkingen (optioneel)",
+      "notesPlaceholder": "Allergie, gelegenheid, extra wensen..."
+    },
+    "confirmation": {
+      "headline": "✓ Reservering bevestigd",
+      "subheadline": "We hebben een bevestiging gestuurd naar je email",
+      "reference": "Reserveringscode",
+      "dateLabel": "Datum",
+      "timeLabel": "Tijd",
+      "partyLabel": "Personen",
+      "newBooking": "Nog een reservering maken"
+    },
+    "errors": {
+      "validation_failed": "Controleer je gegevens en probeer opnieuw",
+      "tenant_not_available": "Deze locatie accepteert geen online reserveringen",
+      "slot_no_longer_available": "Dit tijdslot is helaas net volgeboekt. Kies een andere tijd.",
+      "spam_detected": "Er ging iets mis. Probeer opnieuw.",
+      "unknown_error": "Onbekende fout. Probeer later opnieuw."
+    }
+  },
   "notifications": {
     "title": "Meldingen",
     "empty": "Geen meldingen",

@@ -94,11 +94,16 @@ export const mockBookingsRepo: BookingsRepository = {
 
   async create(data) {
     const parsed = parseOrThrow(bookingInsertSchema, data, 'Invalid booking input');
-    const availability = await checkBookingAvailability(
-      parsed.tenant_id,
-      parsed.start_date,
-      parsed.end_date
-    );
+    // Step 51 — time-slot bookings have their own capacity check via
+    // the slot generator. The legacy per-night conflict check uses
+    // start_date / end_date overlap, which collapses to a single day
+    // for time-slot bookings and would treat every same-day reservation
+    // as a conflict. Skip it for time_slot bookings; the generator-side
+    // check the caller ran is what enforces capacity instead.
+    const skipNightConflictCheck = data.booking_type === 'time_slot';
+    const availability = skipNightConflictCheck
+      ? { ok: true, conflicts: [], blockedDates: [] }
+      : await checkBookingAvailability(parsed.tenant_id, parsed.start_date, parsed.end_date);
     if (!availability.ok) {
       throw new ValidationError(
         VALIDATION_ERROR_CODES.BOOKING_CONFLICT,

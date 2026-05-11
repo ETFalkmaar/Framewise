@@ -742,6 +742,8 @@ export type AuditLogAction =
   | 'booking_no_show'
   | 'booking_notes_updated'
   | 'tenant_bookings_toggled'
+  // Step 51 — anonymous public booking flow.
+  | 'booking_created'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'
