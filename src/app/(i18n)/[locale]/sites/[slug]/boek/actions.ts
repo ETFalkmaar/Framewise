@@ -148,9 +148,15 @@ export async function createPublicBooking(
       },
     });
 
-    revalidatePath(`/account/bookings`);
-    revalidatePath(`/account/bookings/${startDate}`);
-    revalidatePath(`/sites/${data.tenantSlug}/boek`);
+    // ISR refresh — guarded so vitest runs (no Next.js request scope)
+    // don't trip the static-generation-store invariant.
+    try {
+      revalidatePath(`/account/bookings`);
+      revalidatePath(`/account/bookings/${startDate}`);
+      revalidatePath(`/sites/${data.tenantSlug}/boek`);
+    } catch {
+      /* no-op — running outside a Next.js request scope. */
+    }
 
     return {
       success: true,
