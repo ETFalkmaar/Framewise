@@ -23,7 +23,8 @@ export interface KnowledgeBaseManagerCopy {
     syncing: string;
     lastSynced: string;
     never: string;
-    successWithCounts: (synced: number, removed: number) => string;
+    /** ICU template with {synced} and {removed} placeholders. */
+    successWithCountsTemplate: string;
     successNoChanges: string;
     error: string;
   };
@@ -146,7 +147,9 @@ export function KnowledgeBaseManager({
             >
               {syncState.synced === 0 && syncState.removed === 0
                 ? copy.sync.successNoChanges
-                : copy.sync.successWithCounts(syncState.synced, syncState.removed)}
+                : copy.sync.successWithCountsTemplate
+                    .replace('{synced}', String(syncState.synced))
+                    .replace('{removed}', String(syncState.removed))}
             </p>
           ) : null}
           {syncState.kind === 'error' ? (
