@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { getActiveTenantForUser, requireCurrentUser } from '@/lib/auth';
 import { reorderBlocksFor, type ReorderBlocksErrorCode } from '@/lib/blocks/reorder';
+import { saveBlockContentFor, type SaveBlockErrorCode } from '@/lib/blocks/save-block';
 
 export interface ReorderBlocksInput {
   pageId: string;
@@ -68,6 +69,87 @@ export async function reorderBlocksAction(input: ReorderBlocksInput): Promise<Re
       success: false,
       errorCode: outcome.errorCode,
       error: outcome.errorCode ? ERROR_MESSAGES[outcome.errorCode] : 'Onbekende fout',
+    };
+  }
+
+  revalidatePath(`/account/site/pages/${input.pageId}/edit`);
+  revalidatePath(`/sites/${tenant.slug}`);
+
+  return { success: true };
+}
+
+export interface SaveBlockContentInput {
+  pageId: string;
+  blockId: string;
+  newData: Record<string, unknown>;
+}
+
+export interface SaveBlockContentResult {
+  success: boolean;
+  errorCode?: SaveBlockErrorCode | 'unauthenticated' | 'no_active_tenant';
+  error?: string;
+}
+
+const SAVE_BLOCK_ERROR_MESSAGES: Record<
+  NonNullable<SaveBlockContentResult['errorCode']>,
+  string
+> = {
+  unauthenticated: 'Niet ingelogd',
+  no_active_tenant: 'Geen actieve tenant',
+  tenant_not_found: 'Tenant niet gevonden',
+  block_not_found: 'Block niet gevonden',
+  page_not_found: 'Pagina niet gevonden',
+  page_tenant_mismatch: 'Block hoort niet bij deze tenant',
+  forbidden: 'Geen rechten om dit block te bewerken',
+  invalid_payload: 'Ongeldige invoer',
+  repo_error: 'Opslaan mislukt',
+};
+
+/**
+ * Server-action wrapper around `saveBlockContentFor` (step 41,
+ * fase 12 part 3/8). Customer-facing block-edit forms (text,
+ * hero, image, …) all call this with a `newData` patch. The pure
+ * core handles HTML sanitisation + nested merge so a TipTap save
+ * of `content_translations.nl` doesn't clobber FR/EN siblings.
+ *
+ * Revalidates both the editor route and the public site path so
+ * the live preview picks up the new content on the next request.
+ */
+export async function saveBlockContentAction(
+  input: SaveBlockContentInput
+): Promise<SaveBlockContentResult> {
+  let user;
+  try {
+    user = await requireCurrentUser();
+  } catch {
+    return {
+      success: false,
+      errorCode: 'unauthenticated',
+      error: SAVE_BLOCK_ERROR_MESSAGES.unauthenticated,
+    };
+  }
+
+  const tenant = await getActiveTenantForUser();
+  if (!tenant) {
+    return {
+      success: false,
+      errorCode: 'no_active_tenant',
+      error: SAVE_BLOCK_ERROR_MESSAGES.no_active_tenant,
+    };
+  }
+
+  const outcome = await saveBlockContentFor({
+    userId: user.id,
+    tenantId: tenant.id,
+    blockId: input.blockId,
+    newData: input.newData,
+  });
+
+  if (!outcome.success) {
+    return {
+      success: false,
+      errorCode: outcome.errorCode,
+      error: outcome.errorCode ? SAVE_BLOCK_ERROR_MESSAGES[outcome.errorCode] : 'Onbekende fout',
     };
   }
 

@@ -1685,6 +1685,43 @@ list driven by `@dnd-kit`.
 
 Adds 13 tests (blocks/reorder: 13) — total 1133.
 
+### TipTap rich-text editor for text + hero blocks (step 41 — fase 12 part 3/8)
+
+The "Edit" button on each block in the step-40 sortable list
+now opens a real editor — TipTap-powered rich text for the
+text/hero block types, with the rest of the block types
+rendering a "coming soon" placeholder pointing at later steps.
+
+- `src/lib/editor/sanitize-html.ts` — allow-list HTML sanitiser
+  that strips dangerous tags (`<script>`, `<style>`, `<iframe>`,
+  `<form>`, …) plus event-handler attributes and rewrites
+  `javascript:` / `data:` hrefs to `#`. Defence-in-depth; the
+  production DOMPurify swap lives in step 88.
+- `src/lib/blocks/save-block.ts` — pure `saveBlockContentFor()`
+  use case: tenant + block lookup, permission gate, recursive
+  HTML sanitisation, **nested merge** so a single-locale save
+  (e.g. `content_translations.nl`) doesn't clobber siblings,
+  repo write. Short stable error codes.
+- Server-action wrapper `saveBlockContentAction` in the edit
+  route's `actions.ts` resolves the iron-session user + active
+  tenant and delegates to the core. Revalidates editor +
+  public site path on success.
+- `src/components/editor/tiptap-editor.tsx` — TipTap v3 with
+  StarterKit + Link. Fixed toolbar (bold / italic / H2 / bullet
+  list / link). Link dialog with apply / cancel / remove. All
+  buttons use `data-testid` for Chrome MCP coverage.
+- `src/components/editor/block-edit-modal.tsx` — modal host
+  that dispatches by `block_type`: `TextBlockForm` (TipTap),
+  `HeroBlockForm` (title/subtitle/CTA inputs + overlay select),
+  and a `ComingSoonForm` for image/cta/gallery/faq/pricing/contact.
+- `SortableBlockList` lifts an `editingBlockId` state to host
+  the modal; the per-row "Bewerken" button now opens it instead
+  of rendering disabled.
+- Translations under `account.editor.tiptap.*` and
+  `account.editor.blockForms.*` in NL / FR / EN.
+
+Adds 32 tests (sanitize-html: 19, blocks/save-block: 13) — total 1165.
+
 ## Status
 
-In development - Step 40 of 96 (revised plan) — FASE 12 deel 2/8 (drag & drop block reordering)
+In development - Step 41 of 96 (revised plan) — FASE 12 deel 3/8 (TipTap rich-text editor)

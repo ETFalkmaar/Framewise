@@ -20,9 +20,12 @@ import { CSS } from '@dnd-kit/utilities';
 import { useState, useTransition } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Block, BlockType } from '@/types/database';
+import type { Block, BlockType, LocaleCode } from '@/types/database';
 
 import { reorderBlocksAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
+
+import { BlockEditModal } from './block-edit-modal';
+import type { BlockEditModalProps } from './block-edit-modal';
 
 const BLOCK_ICON: Record<BlockType, string> = {
   hero: '🦸',
@@ -48,7 +51,9 @@ export interface SortableBlockListProps {
   pageId: string;
   blocks: Block[];
   canEdit: boolean;
+  locale: LocaleCode;
   copy: SortableBlockListCopy;
+  modalCopy: BlockEditModalProps['copy'];
 }
 
 /**
@@ -64,11 +69,17 @@ export function SortableBlockList({
   pageId,
   blocks: initial,
   canEdit,
+  locale,
   copy,
+  modalCopy,
 }: SortableBlockListProps) {
   const [blocks, setBlocks] = useState<Block[]>(initial);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
+  const editingBlock = editingBlockId
+    ? (blocks.find((b) => b.id === editingBlockId) ?? null)
+    : null;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -120,11 +131,28 @@ export function SortableBlockList({
         <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
           <ol className="grid gap-3">
             {blocks.map((block) => (
-              <SortableBlockItem key={block.id} block={block} canEdit={canEdit} copy={copy} />
+              <SortableBlockItem
+                key={block.id}
+                block={block}
+                canEdit={canEdit}
+                copy={copy}
+                onEdit={() => setEditingBlockId(block.id)}
+              />
             ))}
           </ol>
         </SortableContext>
       </DndContext>
+
+      {editingBlock && (
+        <BlockEditModal
+          block={editingBlock}
+          pageId={pageId}
+          locale={locale}
+          open
+          onClose={() => setEditingBlockId(null)}
+          copy={modalCopy}
+        />
+      )}
     </div>
   );
 }
@@ -133,10 +161,12 @@ function SortableBlockItem({
   block,
   canEdit,
   copy,
+  onEdit,
 }: {
   block: Block;
   canEdit: boolean;
   copy: SortableBlockListCopy;
+  onEdit: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
@@ -179,9 +209,8 @@ function SortableBlockItem({
           <button
             type="button"
             data-testid={`block-edit-trigger-${block.id}`}
-            disabled
-            title={copy.blockEditComingSoon}
-            className="ring-border bg-muted/40 text-muted-foreground inline-flex cursor-not-allowed items-center gap-1 rounded-md px-3 py-1.5 font-mono text-xs ring-1"
+            onClick={onEdit}
+            className="ring-border bg-background hover:bg-muted inline-flex items-center gap-1 rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
           >
             {copy.editBlock}
           </button>
