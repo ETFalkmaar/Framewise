@@ -36,6 +36,16 @@
     "viewConnections": "Gérer les connexions",
     "viewMedia": "Bibliothèque média",
     "viewEditor": "Modifier les pages",
+    "siteMedia": {
+      "title": "Médias",
+      "subtitle": "Gérez les images du site de ce client.",
+      "backToAccount": "Retour au compte",
+      "empty": "Aucun média — téléversez votre première image.",
+      "upload": "Téléverser",
+      "uploading": "Téléversement…",
+      "delete": "Supprimer",
+      "confirmDelete": "Voulez-vous vraiment supprimer cette image ?"
+    },
     "editor": {
       "title": "Pages",
       "subtitle": "Gérez les pages de {tenant}.",
@@ -79,7 +89,21 @@
         "heroCtaUrl": "URL du bouton",
         "heroOverlay": "Superposition",
         "heroOverlayLight": "Claire",
-        "heroOverlayDark": "Sombre"
+        "heroOverlayDark": "Sombre",
+        "imageSelect": "Sélectionner une image",
+        "imageChange": "Changer l'image",
+        "imageNone": "Aucune image sélectionnée",
+        "imageAlt": "Texte alternatif (accessibilité)",
+        "imageCaption": "Légende"
+      },
+      "imagePicker": {
+        "title": "Sélectionner une image",
+        "tabExisting": "Existant",
+        "tabUpload": "Nouveau",
+        "empty": "Aucun média pour l'instant",
+        "cancel": "Annuler",
+        "upload": "Téléverser",
+        "uploading": "Téléversement…"
       },
       "status": {
         "draft": "Brouillon",

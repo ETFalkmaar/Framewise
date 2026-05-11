@@ -1722,6 +1722,34 @@ rendering a "coming soon" placeholder pointing at later steps.
 
 Adds 32 tests (sanitize-html: 19, blocks/save-block: 13) — total 1165.
 
+### Media library + image picker (step 42 — fase 12 part 4/8)
+
+Customers can upload images to their tenant's library and reuse
+them inside `image` and `hero` blocks. Vercel Blob in production
+(step 13's storage adapter), mock storage in dev.
+
+- `Media.deleted_at` (new column) lets us soft-delete instead
+  of orphaning image blocks that still reference the URL.
+  `MediaRepository.softDelete` + `listByTenant({ includeDeleted })`
+  honour the flag.
+- `src/lib/media/library.ts` — pure use cases
+  (`uploadMediaFor`, `softDeleteMediaFor`) with permission gate
+  (`canEditBlocks`), `StorageError` → short stable code mapping,
+  tenant-mismatch protection on delete.
+- `/account/site/media` — grid view (4 cols desktop, 2 mobile)
+  with `<UploadButton />` (hidden `input[type=file]` + styled
+  trigger) and a `<DeleteButton />` per row (`window.confirm` —
+  styled dialog lands in step 88).
+- `<ImagePicker />` — modal with two tabs (existing / upload).
+  Newly uploaded items append to local state so the user can
+  pick them immediately without a full page revalidation.
+- Image-block-form + hero-block-form now both use
+  `<ImagePreviewAndPicker />` to attach images.
+- Translations under `account.siteMedia.*`, `account.editor.imagePicker.*`,
+  and new `account.editor.blockForms.image*` keys in NL / FR / EN.
+
+Adds 16 tests (media/library: 16) — total 1181.
+
 ## Status
 
-In development - Step 41 of 96 (revised plan) — FASE 12 deel 3/8 (TipTap rich-text editor)
+In development - Step 42 of 96 (revised plan) — FASE 12 deel 4/8 (media library + image picker)

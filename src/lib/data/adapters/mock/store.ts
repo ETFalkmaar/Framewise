@@ -133,7 +133,14 @@ function loadSeeds(): void {
     const table = store[name] as Map<string, { id: string }>;
     table.clear();
     for (const row of rows) {
-      table.set(row.id, row);
+      // Step 42: backfill the new `deleted_at` field on legacy
+      // seed rows so soft-delete filtering doesn't accidentally
+      // hide every seeded media item.
+      const normalised =
+        name === 'media' && !('deleted_at' in row)
+          ? { ...row, deleted_at: null }
+          : row;
+      table.set(normalised.id, normalised);
     }
   }
 }

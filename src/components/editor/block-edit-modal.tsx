@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useTransition } from 'react';
 
-import type { Block, BlockType, LocaleCode } from '@/types/database';
+import type { Block, BlockType, LocaleCode, Media } from '@/types/database';
 
 import { saveBlockContentAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
 
+import { ImagePicker } from './image-picker';
 import { TipTapEditor } from './tiptap-editor';
 
 interface BlockEditModalCopy {
@@ -36,6 +37,20 @@ interface BlockEditModalCopy {
     heroOverlay: string;
     heroOverlayLight: string;
     heroOverlayDark: string;
+    imageSelect: string;
+    imageChange: string;
+    imageNone: string;
+    imageAlt: string;
+    imageCaption: string;
+  };
+  imagePicker: {
+    title: string;
+    tabExisting: string;
+    tabUpload: string;
+    empty: string;
+    cancel: string;
+    upload: string;
+    uploading: string;
   };
 }
 
@@ -43,6 +58,7 @@ export interface BlockEditModalProps {
   block: Block;
   pageId: string;
   locale: LocaleCode;
+  mediaLibrary: Media[];
   open: boolean;
   onClose: () => void;
   copy: BlockEditModalCopy;
@@ -63,6 +79,7 @@ export function BlockEditModal({
   block,
   pageId,
   locale,
+  mediaLibrary,
   open,
   onClose,
   copy,
@@ -107,6 +124,7 @@ export function BlockEditModal({
           block={block}
           pageId={pageId}
           locale={locale}
+          mediaLibrary={mediaLibrary}
           onClose={onClose}
           copy={copy}
         />
@@ -119,12 +137,14 @@ function BlockEditForm({
   block,
   pageId,
   locale,
+  mediaLibrary,
   onClose,
   copy,
 }: {
   block: Block;
   pageId: string;
   locale: LocaleCode;
+  mediaLibrary: Media[];
   onClose: () => void;
   copy: BlockEditModalCopy;
 }) {
@@ -145,6 +165,18 @@ function BlockEditForm({
           block={block}
           pageId={pageId}
           locale={locale}
+          mediaLibrary={mediaLibrary}
+          onClose={onClose}
+          copy={copy}
+        />
+      );
+    case 'image':
+      return (
+        <ImageBlockForm
+          block={block}
+          pageId={pageId}
+          locale={locale}
+          mediaLibrary={mediaLibrary}
           onClose={onClose}
           copy={copy}
         />
@@ -160,6 +192,10 @@ interface FormProps {
   locale: LocaleCode;
   onClose: () => void;
   copy: BlockEditModalCopy;
+}
+
+interface FormWithMediaProps extends FormProps {
+  mediaLibrary: Media[];
 }
 
 function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
@@ -209,7 +245,7 @@ function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
   );
 }
 
-function HeroBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
+function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: FormWithMediaProps) {
   const initial = block.data as Record<string, unknown>;
   const headlineTranslations =
     (initial.headline_translations as Record<string, string> | undefined) ?? {};
@@ -223,11 +259,14 @@ function HeroBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
   const [ctaText, setCtaText] = useState<string>(ctaTextTranslations[locale] ?? '');
   const [ctaLink, setCtaLink] = useState<string>((initial.cta_link as string) ?? '');
   const [overlay, setOverlay] = useState<string>((initial.background_overlay as string) ?? 'dark');
+  const [imageUrl, setImageUrl] = useState<string>((initial.image_url as string) ?? '');
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const { pending, error, saved, save } = useSaveBlock();
 
   return (
     <div data-testid="hero-block-form" className="space-y-4">
+      <ImagePreviewAndPicker imageUrl={imageUrl} onPick={() => setPickerOpen(true)} copy={copy} />
       <TextInput
         id="hero-title"
         label={`${copy.blockForms.heroTitle} (${locale.toUpperCase()})`}
@@ -282,6 +321,7 @@ function HeroBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
                 cta_text_translations: { ...ctaTextTranslations, [locale]: ctaText },
                 cta_link: ctaLink,
                 background_overlay: overlay,
+                image_url: imageUrl,
               },
             },
             onClose
@@ -289,6 +329,17 @@ function HeroBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
         }
         copy={copy}
       />
+      {pickerOpen && (
+        <ImagePicker
+          initial={mediaLibrary}
+          onClose={() => setPickerOpen(false)}
+          onSelect={(url) => {
+            setImageUrl(url);
+            setPickerOpen(false);
+          }}
+          copy={copy.imagePicker}
+        />
+      )}
     </div>
   );
 }
@@ -300,6 +351,119 @@ function ComingSoonForm({ blockType, copy }: { blockType: BlockType; copy: Block
       className="text-muted-foreground border-border bg-muted/40 rounded-md border-2 border-dashed p-8 text-center text-sm"
     >
       {copy.comingSoon}
+    </div>
+  );
+}
+
+function ImageBlockForm({
+  block,
+  pageId,
+  locale,
+  mediaLibrary,
+  onClose,
+  copy,
+}: FormWithMediaProps) {
+  const initial = block.data as Record<string, unknown>;
+  const altTranslations = (initial.alt_translations as Record<string, string> | undefined) ?? {};
+  const captionTranslations =
+    (initial.caption_translations as Record<string, string> | undefined) ?? {};
+
+  const [imageUrl, setImageUrl] = useState<string>((initial.image_url as string) ?? '');
+  const [altText, setAltText] = useState<string>(altTranslations[locale] ?? '');
+  const [caption, setCaption] = useState<string>(captionTranslations[locale] ?? '');
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const { pending, error, saved, save } = useSaveBlock();
+
+  return (
+    <div data-testid="image-block-form" className="space-y-4">
+      <ImagePreviewAndPicker imageUrl={imageUrl} onPick={() => setPickerOpen(true)} copy={copy} />
+      <TextInput
+        id="image-alt"
+        label={`${copy.blockForms.imageAlt} (${locale.toUpperCase()})`}
+        value={altText}
+        onChange={setAltText}
+      />
+      <TextInput
+        id="image-caption"
+        label={`${copy.blockForms.imageCaption} (${locale.toUpperCase()})`}
+        value={caption}
+        onChange={setCaption}
+      />
+
+      <FormFooter
+        pending={pending}
+        error={error}
+        saved={saved}
+        onCancel={onClose}
+        onSave={() =>
+          save(
+            {
+              pageId,
+              blockId: block.id,
+              newData: {
+                image_url: imageUrl,
+                alt_translations: { ...altTranslations, [locale]: altText },
+                caption_translations: { ...captionTranslations, [locale]: caption },
+              },
+            },
+            onClose
+          )
+        }
+        copy={copy}
+      />
+
+      {pickerOpen && (
+        <ImagePicker
+          initial={mediaLibrary}
+          onClose={() => setPickerOpen(false)}
+          onSelect={(url, alt) => {
+            setImageUrl(url);
+            if (alt && !altText) setAltText(alt);
+            setPickerOpen(false);
+          }}
+          copy={copy.imagePicker}
+        />
+      )}
+    </div>
+  );
+}
+
+function ImagePreviewAndPicker({
+  imageUrl,
+  onPick,
+  copy,
+}: {
+  imageUrl: string;
+  onPick: () => void;
+  copy: BlockEditModalCopy;
+}) {
+  return (
+    <div className="space-y-2">
+      {imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={imageUrl}
+          alt=""
+          data-testid="image-preview"
+          className="max-h-48 w-full rounded-md object-cover"
+        />
+      ) : (
+        <div
+          data-testid="image-preview-empty"
+          className="border-border bg-muted/40 text-muted-foreground rounded-md border-2 border-dashed p-6 text-center text-xs"
+        >
+          {copy.blockForms.imageNone}
+        </div>
+      )}
+      <button
+        type="button"
+        data-testid="image-picker-trigger"
+        onClick={onPick}
+        className="ring-border bg-background hover:bg-muted inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1"
+      >
+        🖼 {imageUrl ? copy.blockForms.imageChange : copy.blockForms.imageSelect}
+      </button>
     </div>
   );
 }

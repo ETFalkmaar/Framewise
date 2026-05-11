@@ -36,6 +36,16 @@
     "viewConnections": "Verbindingen beheren",
     "viewMedia": "Mediabibliotheek",
     "viewEditor": "Pagina's bewerken",
+    "siteMedia": {
+      "title": "Media",
+      "subtitle": "Beheer afbeeldingen voor de site van deze tenant.",
+      "backToAccount": "Terug naar account",
+      "empty": "Nog geen media — upload je eerste afbeelding.",
+      "upload": "Upload nieuw",
+      "uploading": "Bezig met uploaden…",
+      "delete": "Verwijderen",
+      "confirmDelete": "Weet je zeker dat je deze afbeelding wilt verwijderen?"
+    },
     "editor": {
       "title": "Pagina's",
       "subtitle": "Beheer de pagina's van {tenant}.",
@@ -79,7 +89,21 @@
         "heroCtaUrl": "Knop URL",
         "heroOverlay": "Overlay",
         "heroOverlayLight": "Licht",
-        "heroOverlayDark": "Donker"
+        "heroOverlayDark": "Donker",
+        "imageSelect": "Selecteer afbeelding",
+        "imageChange": "Andere afbeelding kiezen",
+        "imageNone": "Nog geen afbeelding geselecteerd",
+        "imageAlt": "Alt-tekst (toegankelijkheid)",
+        "imageCaption": "Onderschrift"
+      },
+      "imagePicker": {
+        "title": "Selecteer afbeelding",
+        "tabExisting": "Bestaand",
+        "tabUpload": "Upload nieuw",
+        "empty": "Nog geen media",
+        "cancel": "Annuleren",
+        "upload": "Upload nieuw",
+        "uploading": "Bezig met uploaden…"
       },
       "status": {
         "draft": "Concept",

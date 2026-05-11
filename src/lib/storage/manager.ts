@@ -84,6 +84,7 @@ export async function uploadMedia(input: UploadMediaInput): Promise<{
     width: input.width ?? null,
     height: input.height ?? null,
     uploaded_by_user_id: input.uploadedByUserId,
+    deleted_at: null,
   });
 
   return { media, upload, provider: provider.name };

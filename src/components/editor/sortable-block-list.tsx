@@ -20,7 +20,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useState, useTransition } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Block, BlockType, LocaleCode } from '@/types/database';
+import type { Block, BlockType, LocaleCode, Media } from '@/types/database';
 
 import { reorderBlocksAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
 
@@ -52,6 +52,7 @@ export interface SortableBlockListProps {
   blocks: Block[];
   canEdit: boolean;
   locale: LocaleCode;
+  mediaLibrary: Media[];
   copy: SortableBlockListCopy;
   modalCopy: BlockEditModalProps['copy'];
 }
@@ -70,6 +71,7 @@ export function SortableBlockList({
   blocks: initial,
   canEdit,
   locale,
+  mediaLibrary,
   copy,
   modalCopy,
 }: SortableBlockListProps) {
@@ -148,6 +150,7 @@ export function SortableBlockList({
           block={editingBlock}
           pageId={pageId}
           locale={locale}
+          mediaLibrary={mediaLibrary}
           open
           onClose={() => setEditingBlockId(null)}
           copy={modalCopy}
