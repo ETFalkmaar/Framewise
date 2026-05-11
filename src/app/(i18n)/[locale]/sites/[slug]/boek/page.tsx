@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { getPublicAvailabilityForRange } from '@/lib/bookings/public-availability';
 import { getCurrentTenant } from '@/lib/tenant';
+import { PublicBookingForm } from '@/components/bookings/public-booking-form';
 
 /**
  * Public booking page (step 51, fase 14 part 3/7) at
@@ -46,23 +48,94 @@ export default async function PublicBookingPage({
     to: toIso(horizon),
   });
 
-  // CP1 placeholder render — replaced by the multi-step form
-  // component in CP3 when the i18n keys land.
+  const t = await getTranslations('publicBooking');
+  const tShared = await getTranslations('bookings');
+
   return (
     <main
       data-testid="public-booking-page"
-      className="bg-background text-foreground mx-auto flex min-h-screen max-w-2xl flex-col px-6 py-12"
+      className="bg-background text-foreground mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-12"
     >
       <header className="mb-8">
-        <h1 className="text-display-md font-bold tracking-tight">Reserveer een tafel</h1>
-        <p className="text-muted-foreground mt-2 text-sm">{tenant.name}</p>
+        <Link
+          href={`/sites/${slug}`}
+          data-testid="back-to-site"
+          className="text-muted-foreground font-mono text-xs hover:underline"
+        >
+          ← {tenant.name}
+        </Link>
+        <h1 className="text-display-md mt-2 font-bold tracking-tight">{t('title')}</h1>
+        <p className="text-muted-foreground mt-2 text-sm">{t('subtitle')}</p>
       </header>
-      <pre
-        data-testid="public-booking-cp1-payload"
-        className="bg-muted/40 overflow-x-auto rounded-md p-4 font-mono text-xs"
-      >
-        {JSON.stringify({ slug, availability }, null, 2)}
-      </pre>
+
+      <PublicBookingForm
+        tenantSlug={slug}
+        availability={availability}
+        locale={locale}
+        copy={{
+          title: t('title'),
+          subtitle: t('subtitle'),
+          step1Title: t('step1Title'),
+          step2Title: t('step2Title'),
+          step3Title: t('step3Title'),
+          step4Title: t('step4Title'),
+          step5Title: t('step5Title'),
+          back: t('back'),
+          next: t('next'),
+          submit: t('submit'),
+          submitting: t('submitting'),
+          datePicker: {
+            fullyBooked: t('datePicker.fullyBooked'),
+            closed: t('datePicker.closed'),
+            slotsAvailable: t('datePicker.slotsAvailable'),
+          },
+          slotPicker: {
+            noSlots: t('slotPicker.noSlots'),
+            spotsLeft: t('slotPicker.spotsLeft'),
+          },
+          partySize: {
+            label: t('partySize.label'),
+            person: t('partySize.person'),
+            people: t('partySize.people'),
+          },
+          contactForm: {
+            name: t('contactForm.name'),
+            namePlaceholder: t('contactForm.namePlaceholder'),
+            email: t('contactForm.email'),
+            emailPlaceholder: t('contactForm.emailPlaceholder'),
+            emailHint: t('contactForm.emailHint'),
+            phone: t('contactForm.phone'),
+            phonePlaceholder: t('contactForm.phonePlaceholder'),
+            notes: t('contactForm.notes'),
+            notesPlaceholder: t('contactForm.notesPlaceholder'),
+          },
+          confirmation: {
+            headline: t('confirmation.headline'),
+            subheadline: t('confirmation.subheadline'),
+            reference: t('confirmation.reference'),
+            dateLabel: t('confirmation.dateLabel'),
+            timeLabel: t('confirmation.timeLabel'),
+            partyLabel: t('confirmation.partyLabel'),
+            newBooking: t('confirmation.newBooking'),
+          },
+          errors: {
+            validation_failed: t('errors.validation_failed'),
+            tenant_not_available: t('errors.tenant_not_available'),
+            slot_no_longer_available: t('errors.slot_no_longer_available'),
+            spam_detected: t('errors.spam_detected'),
+            unknown_error: t('errors.unknown_error'),
+          },
+          weekdayShort: [
+            tShared('weekdayShort.sun'),
+            tShared('weekdayShort.mon'),
+            tShared('weekdayShort.tue'),
+            tShared('weekdayShort.wed'),
+            tShared('weekdayShort.thu'),
+            tShared('weekdayShort.fri'),
+            tShared('weekdayShort.sat'),
+          ],
+        }}
+      />
     </main>
   );
 }

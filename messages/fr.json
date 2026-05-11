@@ -114,6 +114,60 @@
       }
     }
   },
+  "publicBooking": {
+    "title": "Réserver une table",
+    "subtitle": "Réservez en ligne rapidement et facilement",
+    "step1Title": "Choisissez une date",
+    "step2Title": "Choisissez une heure",
+    "step3Title": "Combien de personnes ?",
+    "step4Title": "Vos coordonnées",
+    "step5Title": "Réservation confirmée",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Confirmer la réservation",
+    "submitting": "Envoi en cours...",
+    "datePicker": {
+      "fullyBooked": "Complet",
+      "closed": "Fermé",
+      "slotsAvailable": "{count} créneaux"
+    },
+    "slotPicker": {
+      "noSlots": "Aucun créneau disponible ce jour-là",
+      "spotsLeft": "{count} places libres"
+    },
+    "partySize": {
+      "label": "Nombre de personnes",
+      "person": "1 personne",
+      "people": "{count} personnes"
+    },
+    "contactForm": {
+      "name": "Nom et prénom",
+      "namePlaceholder": "Ex. Jean Dupont",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
+      "emailHint": "Nous vous enverrons une confirmation",
+      "phone": "Téléphone (facultatif)",
+      "phonePlaceholder": "+33 6 ...",
+      "notes": "Remarques (facultatif)",
+      "notesPlaceholder": "Allergie, occasion, demandes particulières..."
+    },
+    "confirmation": {
+      "headline": "✓ Réservation confirmée",
+      "subheadline": "Nous avons envoyé une confirmation à votre adresse e-mail",
+      "reference": "Code de réservation",
+      "dateLabel": "Date",
+      "timeLabel": "Heure",
+      "partyLabel": "Personnes",
+      "newBooking": "Faire une autre réservation"
+    },
+    "errors": {
+      "validation_failed": "Vérifiez vos informations et réessayez",
+      "tenant_not_available": "Cet établissement n'accepte pas les réservations en ligne",
+      "slot_no_longer_available": "Ce créneau vient malheureusement d'être pris. Choisissez une autre heure.",
+      "spam_detected": "Une erreur est survenue. Réessayez.",
+      "unknown_error": "Erreur inconnue. Réessayez plus tard."
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "Aucune notification",

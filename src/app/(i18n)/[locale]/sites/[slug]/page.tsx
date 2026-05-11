@@ -9,6 +9,7 @@ import { canEditBlocks } from '@/lib/permissions';
 import { getCurrentTenant } from '@/lib/tenant';
 import { resolvePage, resolvePreviewPage } from '@/lib/public-site/resolve-page';
 import { type Locale } from '@/i18n/routing';
+import { Link as I18nLink } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { PublicLayout } from '@/components/public-site/public-layout';
 import { PublicPageRenderer } from '@/components/public-site/public-page-renderer';
@@ -119,8 +120,34 @@ export default async function TenantSitePage({
       ) : (
         <AdminPreviewBanner tenantName={tenant.name} slug={slug} />
       )}
+      {tenant.bookings_enabled ? <ReservationCta slug={slug} /> : null}
       <PublicPageRenderer resolved={resolved} />
     </PublicLayout>
+  );
+}
+
+/**
+ * Sticky "Reserveren" call-to-action shown on every public tenant
+ * page when `bookings_enabled`. Step 51 — placed above the renderer
+ * so it shows even on tenants without a header block. A later block
+ * type (fase 17) will replace this with an inline CTA the tenant
+ * can drop anywhere on the page.
+ */
+function ReservationCta({ slug }: { slug: string }): React.JSX.Element {
+  return (
+    <div
+      data-testid="public-reserve-cta"
+      className="bg-primary text-primary-foreground sticky top-0 z-40 flex items-center justify-center gap-3 px-4 py-2 text-sm shadow-sm"
+    >
+      <span className="font-medium">Online reservering beschikbaar</span>
+      <I18nLink
+        href={`/sites/${slug}/boek`}
+        data-testid="public-reserve-link"
+        className="bg-background text-foreground hover:bg-muted rounded-md px-3 py-1 font-mono text-xs"
+      >
+        Reserveren →
+      </I18nLink>
+    </div>
   );
 }
 

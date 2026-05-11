@@ -2,12 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import '@/lib/data';
 
-import {
-  availabilityRulesRepo,
-  bookingExceptionsRepo,
-  bookingsRepo,
-  resetStore,
-} from '@/lib/data';
+import { availabilityRulesRepo, bookingExceptionsRepo, bookingsRepo, resetStore } from '@/lib/data';
 import {
   getPublicAvailabilityForRange,
   getSlotsForPublicDate,
