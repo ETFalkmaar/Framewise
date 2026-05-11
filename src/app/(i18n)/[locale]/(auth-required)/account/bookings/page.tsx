@@ -86,13 +86,22 @@ export default async function AccountBookingsPage({
         <div className="mt-2 flex flex-wrap items-baseline justify-between gap-3">
           <h1 className="text-display-md font-bold tracking-tight">{t('title')}</h1>
           {canManage ? (
-            <Link
-              href="/account/bookings/availability"
-              data-testid="manage-availability-link"
-              className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
-            >
-              {t('manageAvailability')}
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/account/bookings/availability"
+                data-testid="manage-availability-link"
+                className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
+              >
+                {t('manageAvailability')}
+              </Link>
+              <Link
+                href="/account/bookings/calendar"
+                data-testid="calendar-feed-link"
+                className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
+              >
+                {t('calendar.managementLink')}
+              </Link>
+            </div>
           ) : null}
         </div>
         <p className="text-muted-foreground mt-2 text-sm">{t('calendar')}</p>

@@ -97,6 +97,14 @@ export interface Tenant {
    * Example: `'Europe/Amsterdam'`, `'America/Curacao'`.
    */
   booking_timezone: string | null;
+  /**
+   * Calendar-feed subscription token (step 55, fase 14 finale).
+   * Random 32-char token the tenant owner generates from
+   * `/account/bookings/calendar`. Embedded in the feed URL so
+   * subscribers can rotate / revoke without re-issuing accounts.
+   * `null` until the owner enables the feed.
+   */
+  calendar_feed_token: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -748,6 +756,10 @@ export type AuditLogAction =
   | 'booking_email_verified'
   | 'booking_cancelled_by_customer'
   | 'booking_rescheduled_by_customer'
+  // Step 55 — calendar feed lifecycle.
+  | 'calendar_feed_token_generated'
+  | 'calendar_feed_token_rotated'
+  | 'calendar_feed_token_revoked'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'

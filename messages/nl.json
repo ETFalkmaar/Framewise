@@ -46,6 +46,28 @@
       "internalNotes": "Interne notities"
     },
     "manageAvailability": "Beschikbaarheid beheren",
+    "calendar": {
+      "managementLink": "Calendar feed",
+      "title": "Calendar feed",
+      "subtitle": "Subscribe op je reserveringen vanuit Google, Apple of Outlook Calendar.",
+      "backToBookings": "Terug naar boekingen",
+      "noToken": "Genereer een feed URL om je reserveringen automatisch te synchroniseren met je agenda.",
+      "generateButton": "Genereer feed URL",
+      "feedUrlLabel": "Calendar feed URL",
+      "copyButton": "Kopieer URL",
+      "copied": "Gekopieerd!",
+      "instructions": {
+        "title": "Hoe gebruik ik deze URL?",
+        "google": "Google Calendar: 'Andere agenda's' → 'Toevoegen via URL' → plak deze URL.",
+        "apple": "Apple Calendar: Bestand → Nieuwe Calendar-abonnement → plak deze URL.",
+        "outlook": "Outlook: Bestand → Account-instellingen → Internet Calendars → Nieuw → plak deze URL."
+      },
+      "rotate": "Token vernieuwen",
+      "rotateConfirm": "Bestaande subscribers verliezen toegang en je moet de nieuwe URL opnieuw delen. Doorgaan?",
+      "revoke": "Token uitschakelen",
+      "revokeConfirm": "De calendar feed wordt uitgeschakeld. Doorgaan?",
+      "errorGeneric": "Er ging iets mis, probeer het opnieuw."
+    },
     "availability": {
       "title": "Beschikbaarheid",
       "subtitle": "Beheer wanneer en hoeveel boekingen je aanneemt.",
@@ -239,6 +261,13 @@
         "slotNotAvailable": "Dit tijdslot is helaas niet meer beschikbaar",
         "validationFailed": "Controleer je gegevens",
         "unknown": "Onbekende fout. Probeer later opnieuw."
+      },
+      "addToCalendar": {
+        "title": "Toevoegen aan agenda",
+        "apple": "Apple Calendar",
+        "google": "Google Calendar",
+        "outlook": "Outlook",
+        "other": "Andere agenda (.ics)"
       }
     }
   },

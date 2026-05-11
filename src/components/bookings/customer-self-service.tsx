@@ -73,6 +73,14 @@ export interface SelfServiceCopy {
   noSlots: string;
   spotsLeft: string;
   closedLabel: string;
+  /** Step 55 — "Add to calendar" copy block. */
+  addToCalendar: {
+    title: string;
+    apple: string;
+    google: string;
+    outlook: string;
+    other: string;
+  };
 }
 
 export interface CustomerSelfServiceProps {
@@ -297,7 +305,56 @@ function ActiveBookingView(props: CustomerSelfServiceProps): React.ReactElement 
           }}
         />
       ) : null}
+
+      <AddToCalendarSection {...props} />
     </div>
+  );
+}
+
+function AddToCalendarSection({ booking, copy }: CustomerSelfServiceProps): React.ReactElement {
+  const icsUrl = `/api/bookings/${booking.reference_code}/calendar.ics?email=${encodeURIComponent(booking.customer_email)}`;
+  return (
+    <section
+      data-testid="add-to-calendar"
+      className="border-border bg-muted/10 mt-4 rounded-md border p-4"
+    >
+      <h3 className="text-sm font-semibold">{copy.addToCalendar.title}</h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <a
+          href={icsUrl}
+          data-testid="ics-apple"
+          download
+          className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1"
+        >
+          {copy.addToCalendar.apple}
+        </a>
+        <a
+          href={icsUrl}
+          data-testid="ics-google"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1"
+        >
+          {copy.addToCalendar.google}
+        </a>
+        <a
+          href={icsUrl}
+          data-testid="ics-outlook"
+          download
+          className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1"
+        >
+          {copy.addToCalendar.outlook}
+        </a>
+        <a
+          href={icsUrl}
+          data-testid="ics-other"
+          download
+          className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1"
+        >
+          {copy.addToCalendar.other}
+        </a>
+      </div>
+    </section>
   );
 }
 

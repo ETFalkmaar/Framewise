@@ -23,6 +23,7 @@ type TenantCreateInput = Omit<
   | 'publish_rejected_by_user_id'
   | 'bookings_enabled'
   | 'booking_timezone'
+  | 'calendar_feed_token'
 >;
 
 export interface TenantsRepository {

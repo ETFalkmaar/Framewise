@@ -194,6 +194,15 @@ function loadSeeds(): void {
           booking_timezone: isVilla ? 'America/Curacao' : null,
         } as typeof row;
       }
+      // Step 55 — backfill the new calendar-feed token field on
+      // every tenant row. Always `null` until the tenant owner
+      // explicitly generates one from the admin UI.
+      if (name === 'tenants' && !('calendar_feed_token' in normalised)) {
+        normalised = {
+          ...normalised,
+          calendar_feed_token: null,
+        } as typeof row;
+      }
       // Step 49 — extend legacy bookings (villa-nights model) with
       // the new time-slot fields so the new repo + UI can read every
       // booking uniformly. `booking_type` defaults to `'all_day'`

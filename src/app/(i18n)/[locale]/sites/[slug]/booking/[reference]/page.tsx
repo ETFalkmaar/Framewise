@@ -203,6 +203,13 @@ export default async function CustomerBookingLookupPage({
           // skip formatting and keep the placeholder intact.
           spotsLeft: t.raw('reschedule.spotsLeft') as string,
           closedLabel: t('reschedule.closed'),
+          addToCalendar: {
+            title: t('addToCalendar.title'),
+            apple: t('addToCalendar.apple'),
+            google: t('addToCalendar.google'),
+            outlook: t('addToCalendar.outlook'),
+            other: t('addToCalendar.other'),
+          },
         }}
       />
     </main>
