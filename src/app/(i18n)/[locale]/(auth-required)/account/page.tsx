@@ -30,6 +30,11 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const tSetup = await getTranslations('account.setup');
   const tPublish = await getTranslations('account.publish');
   const tGoLive = await getTranslations('goLive');
+  const tBookings = await getTranslations('bookings');
+
+  // Step 49 — show the bookings shortcut when the tenant has the
+  // feature flag flipped on (Enterprise + super-admin opt-in).
+  const bookingsVisible = activeTenant?.bookings_enabled === true;
 
   // Step 48 — celebration mode: tenant live AND unread publish_approved
   // notification. The dismiss action marks the notification read so the
@@ -223,6 +228,15 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
             className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
           >
             → {t('viewEditor')}
+          </Link>
+        )}
+        {bookingsVisible && (
+          <Link
+            href="/account/bookings"
+            data-testid="link-bookings"
+            className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+          >
+            → {tBookings('title')}
           </Link>
         )}
         {superAdmin && (

@@ -1,4 +1,51 @@
 {
+  "bookings": {
+    "title": "Réservations",
+    "calendar": "Calendrier — toutes les réservations d'un coup d'œil",
+    "backToAccount": "Retour au compte",
+    "backToCalendar": "Retour au calendrier",
+    "previousMonth": "Précédent",
+    "nextMonth": "Suivant",
+    "today": "Aujourd'hui",
+    "bookingsCount": "{count} réservations",
+    "bookingCount_one": "1 réservation",
+    "noBookingsThisMonth": "Aucune réservation ce mois-ci",
+    "noBookingsOnDay": "Aucune réservation ce jour",
+    "featureDisabled": "Le module de réservation n'est pas activé pour votre site.",
+    "enterpriseOnly": "Les réservations sont uniquement disponibles pour les clients Enterprise.",
+    "weekdayShort": {
+      "sun": "Dim",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu",
+      "fri": "Ven",
+      "sat": "Sam"
+    },
+    "statuses": {
+      "pending": "En attente",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "completed": "Terminé",
+      "no_show": "Non présenté"
+    },
+    "actions": {
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "cancelConfirm": "Êtes-vous sûr de vouloir annuler cette réservation ?",
+      "cancelReason": "Motif (facultatif)",
+      "markNoShow": "Non présenté",
+      "markNoShowConfirm": "Marquer comme non présenté ?",
+      "errorGeneric": "Une erreur s'est produite, veuillez réessayer."
+    },
+    "card": {
+      "partySize": "{count} personnes",
+      "partySize_one": "1 personne",
+      "referenceCode": "Référence : {code}",
+      "customerNotes": "Notes du client",
+      "internalNotes": "Notes internes"
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "Aucune notification",

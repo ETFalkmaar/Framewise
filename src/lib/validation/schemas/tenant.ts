@@ -90,6 +90,9 @@ export const tenantUpdateSchema = z
     publish_approved_by_user_id: uuidSchema.nullable().optional(),
     publish_rejected_at: isoDateTimeSchema.nullable().optional(),
     publish_rejected_by_user_id: uuidSchema.nullable().optional(),
+    // Step 49 — booking module flags.
+    bookings_enabled: z.boolean().optional(),
+    booking_timezone: z.string().min(1).max(64).nullable().optional(),
   })
   .strict();
 

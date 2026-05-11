@@ -1,4 +1,51 @@
 {
+  "bookings": {
+    "title": "Bookings",
+    "calendar": "Calendar — all reservations at a glance",
+    "backToAccount": "Back to account",
+    "backToCalendar": "Back to calendar",
+    "previousMonth": "Previous",
+    "nextMonth": "Next",
+    "today": "Today",
+    "bookingsCount": "{count} bookings",
+    "bookingCount_one": "1 booking",
+    "noBookingsThisMonth": "No bookings this month",
+    "noBookingsOnDay": "No bookings on this day",
+    "featureDisabled": "The booking module isn't enabled for your site.",
+    "enterpriseOnly": "Bookings are available to Enterprise customers only.",
+    "weekdayShort": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "no_show": "No-show"
+    },
+    "actions": {
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "cancelConfirm": "Are you sure you want to cancel this booking?",
+      "cancelReason": "Reason (optional)",
+      "markNoShow": "No-show",
+      "markNoShowConfirm": "Mark as no-show?",
+      "errorGeneric": "Something went wrong, please try again."
+    },
+    "card": {
+      "partySize": "{count} people",
+      "partySize_one": "1 person",
+      "referenceCode": "Reference: {code}",
+      "customerNotes": "Customer notes",
+      "internalNotes": "Internal notes"
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications",

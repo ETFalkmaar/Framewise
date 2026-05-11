@@ -172,6 +172,53 @@ function loadSeeds(): void {
           publish_rejected_by_user_id: null,
         } as typeof row;
       }
+      // Step 49 — booking flags on tenants. Demo Villa Curaçao
+      // (slug `demo-villa`) is the Enterprise showcase, so it ships
+      // `bookings_enabled: true`. Every other seed tenant defaults
+      // to `false` and a `null` timezone.
+      if (name === 'tenants' && !('bookings_enabled' in normalised)) {
+        const isVilla = (normalised as { slug?: string }).slug === 'demo-villa';
+        normalised = {
+          ...normalised,
+          bookings_enabled: isVilla,
+          booking_timezone: isVilla ? 'America/Curacao' : null,
+        } as typeof row;
+      }
+      // Step 49 — extend legacy bookings (villa-nights model) with
+      // the new time-slot fields so the new repo + UI can read every
+      // booking uniformly. `booking_type` defaults to `'all_day'`
+      // for legacy rows; `start_time` / `end_time` derive from the
+      // existing dates at midnight UTC.
+      if (name === 'bookings' && !('booking_type' in normalised)) {
+        const legacy = normalised as unknown as {
+          start_date: string;
+          end_date: string;
+          persons: number;
+          guest_name: string;
+          guest_email: string;
+          guest_phone: string | null;
+          status: string;
+          created_at: string;
+        };
+        const refYear = legacy.created_at?.slice(0, 4) ?? '2026';
+        const refSuffix = (normalised.id as string).slice(-4).toUpperCase();
+        normalised = {
+          ...normalised,
+          booking_type: 'all_day',
+          start_time: `${legacy.start_date}T00:00:00.000Z`,
+          end_time: `${legacy.end_date}T00:00:00.000Z`,
+          party_size: legacy.persons,
+          customer_name: legacy.guest_name,
+          customer_email: legacy.guest_email,
+          customer_phone: legacy.guest_phone,
+          internal_notes: null,
+          reference_code: `BK-${refYear}-${refSuffix}`,
+          confirmed_at: legacy.status === 'confirmed' ? legacy.created_at : null,
+          cancelled_at: legacy.status === 'cancelled' ? legacy.created_at : null,
+          cancellation_reason: null,
+          no_show_at: null,
+        } as typeof row;
+      }
       table.set(normalised.id, normalised);
     }
   }

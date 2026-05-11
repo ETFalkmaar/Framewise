@@ -1,4 +1,51 @@
 {
+  "bookings": {
+    "title": "Boekingen",
+    "calendar": "Kalender — alle boekingen in een oogopslag",
+    "backToAccount": "Terug naar account",
+    "backToCalendar": "Terug naar kalender",
+    "previousMonth": "Vorige",
+    "nextMonth": "Volgende",
+    "today": "Vandaag",
+    "bookingsCount": "{count} boekingen",
+    "bookingCount_one": "1 boeking",
+    "noBookingsThisMonth": "Geen boekingen deze maand",
+    "noBookingsOnDay": "Geen boekingen op deze dag",
+    "featureDisabled": "De boekingsmodule is niet ingeschakeld voor jouw site.",
+    "enterpriseOnly": "Boekingen zijn alleen beschikbaar voor Enterprise klanten.",
+    "weekdayShort": {
+      "sun": "Zo",
+      "mon": "Ma",
+      "tue": "Di",
+      "wed": "Wo",
+      "thu": "Do",
+      "fri": "Vr",
+      "sat": "Za"
+    },
+    "statuses": {
+      "pending": "In afwachting",
+      "confirmed": "Bevestigd",
+      "cancelled": "Geannuleerd",
+      "completed": "Voltooid",
+      "no_show": "Niet verschenen"
+    },
+    "actions": {
+      "confirm": "Bevestigen",
+      "cancel": "Annuleren",
+      "cancelConfirm": "Weet je zeker dat je deze boeking wilt annuleren?",
+      "cancelReason": "Reden (optioneel)",
+      "markNoShow": "Niet verschenen",
+      "markNoShowConfirm": "Markeer als niet verschenen?",
+      "errorGeneric": "Er ging iets mis, probeer het opnieuw."
+    },
+    "card": {
+      "partySize": "{count} personen",
+      "partySize_one": "1 persoon",
+      "referenceCode": "Referentie: {code}",
+      "customerNotes": "Klant notities",
+      "internalNotes": "Interne notities"
+    }
+  },
   "notifications": {
     "title": "Meldingen",
     "empty": "Geen meldingen",

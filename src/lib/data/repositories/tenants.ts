@@ -21,6 +21,8 @@ type TenantCreateInput = Omit<
   | 'publish_approved_by_user_id'
   | 'publish_rejected_at'
   | 'publish_rejected_by_user_id'
+  | 'bookings_enabled'
+  | 'booking_timezone'
 >;
 
 export interface TenantsRepository {
