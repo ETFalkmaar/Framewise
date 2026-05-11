@@ -3,10 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import '@/lib/data';
 
 import { bookingsRepo, resetStore } from '@/lib/data';
-import {
-  getCrossTenantBookingKPIs,
-  listCrossTenantBookings,
-} from '@/lib/bookings/admin-kpi';
+import { getCrossTenantBookingKPIs, listCrossTenantBookings } from '@/lib/bookings/admin-kpi';
 import {
   createPublicBooking,
   fetchPublicSlots,
@@ -224,9 +221,9 @@ describe('admin booking KPIs (step 53)', () => {
       });
       const result = await listCrossTenantBookings();
       for (let i = 1; i < result.rows.length; i++) {
-        expect(
-          result.rows[i - 1].booking.start_time >= result.rows[i].booking.start_time
-        ).toBe(true);
+        expect(result.rows[i - 1].booking.start_time >= result.rows[i].booking.start_time).toBe(
+          true
+        );
       }
     });
 
