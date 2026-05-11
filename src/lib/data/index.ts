@@ -13,6 +13,7 @@ import { mockAgentConversationsRepo } from './adapters/mock/agent-conversations'
 import { mockAgentKnowledgeRepo } from './adapters/mock/agent-knowledge';
 import { mockAgentSettingsRepo } from './adapters/mock/agent-settings';
 import { mockAgentVoiceConfigsRepo } from './adapters/mock/agent-voice-configs';
+import { mockKnowledgeBaseRepo } from './adapters/mock/knowledge-base';
 import { mockAuditLogsRepo } from './adapters/mock/audit-logs';
 import { mockAvailabilityRulesRepo } from './adapters/mock/availability-rules';
 import { mockBlocksRepo } from './adapters/mock/blocks';
@@ -43,6 +44,10 @@ import {
   agentVoiceConfigsRepo,
   setAgentVoiceConfigsRepo,
 } from './repositories/agent-voice-configs';
+import {
+  knowledgeBaseRepo,
+  setKnowledgeBaseRepo,
+} from './repositories/knowledge-base';
 import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
 import { availabilityRulesRepo, setAvailabilityRulesRepo } from './repositories/availability-rules';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';
@@ -71,6 +76,7 @@ setAgentConversationsRepo(mockAgentConversationsRepo);
 setAgentKnowledgeRepo(mockAgentKnowledgeRepo);
 setAgentSettingsRepo(mockAgentSettingsRepo);
 setAgentVoiceConfigsRepo(mockAgentVoiceConfigsRepo);
+setKnowledgeBaseRepo(mockKnowledgeBaseRepo);
 setAuditLogsRepo(mockAuditLogsRepo);
 setAvailabilityRulesRepo(mockAvailabilityRulesRepo);
 setBlocksRepo(mockBlocksRepo);
@@ -97,6 +103,7 @@ export {
   agentSettingsRepo,
   agentVoiceConfigsRepo,
   auditLogsRepo,
+  knowledgeBaseRepo,
   availabilityRulesRepo,
   blocksRepo,
   bookingExceptionsRepo,
