@@ -36,6 +36,16 @@
     "viewConnections": "Manage connections",
     "viewMedia": "Media library",
     "viewEditor": "Edit pages",
+    "siteMedia": {
+      "title": "Media",
+      "subtitle": "Manage images for this tenant's site.",
+      "backToAccount": "Back to account",
+      "empty": "No media yet — upload your first image.",
+      "upload": "Upload new",
+      "uploading": "Uploading…",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this image?"
+    },
     "editor": {
       "title": "Pages",
       "subtitle": "Manage the pages of {tenant}.",
@@ -79,7 +89,21 @@
         "heroCtaUrl": "Button URL",
         "heroOverlay": "Overlay",
         "heroOverlayLight": "Light",
-        "heroOverlayDark": "Dark"
+        "heroOverlayDark": "Dark",
+        "imageSelect": "Select image",
+        "imageChange": "Change image",
+        "imageNone": "No image selected yet",
+        "imageAlt": "Alt text (accessibility)",
+        "imageCaption": "Caption"
+      },
+      "imagePicker": {
+        "title": "Select image",
+        "tabExisting": "Existing",
+        "tabUpload": "Upload new",
+        "empty": "No media yet",
+        "cancel": "Cancel",
+        "upload": "Upload new",
+        "uploading": "Uploading…"
       },
       "status": {
         "draft": "Draft",

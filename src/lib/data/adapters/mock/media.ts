@@ -13,9 +13,11 @@ export const mockMediaRepo: MediaRepository = {
     return table('media').get(id) ?? null;
   },
 
-  async listByTenant(tenantId) {
+  async listByTenant(tenantId, options) {
+    const includeDeleted = options?.includeDeleted ?? false;
     return Array.from(table('media').values())
       .filter((m) => m.tenant_id === tenantId)
+      .filter((m) => includeDeleted || m.deleted_at === null)
       .sort((a, b) => b.created_at.localeCompare(a.created_at));
   },
 
@@ -33,6 +35,7 @@ export const mockMediaRepo: MediaRepository = {
       height: parsed.height,
       id: generateId(),
       created_at: getTimestamp(),
+      deleted_at: null,
     };
     table('media').set(row.id, row);
     return row;
@@ -44,5 +47,17 @@ export const mockMediaRepo: MediaRepository = {
         field: 'id',
       });
     }
+  },
+
+  async softDelete(id) {
+    const existing = table('media').get(id);
+    if (!existing) {
+      throw new ValidationError(VALIDATION_ERROR_CODES.NOT_FOUND, `media: ${id} not found`, {
+        field: 'id',
+      });
+    }
+    const updated: Media = { ...existing, deleted_at: getTimestamp() };
+    table('media').set(id, updated);
+    return updated;
   },
 };

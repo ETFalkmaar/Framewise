@@ -290,6 +290,13 @@ export interface Media {
   height: number | null;
   uploaded_by_user_id: UUID;
   created_at: ISODateTime;
+  /**
+   * Soft-delete marker (step 42). `null` when the media is active;
+   * a timestamp when the user (or the system) trashed it. Listing
+   * helpers default to filtering these out — pass `{ includeDeleted:
+   * true }` to surface them again.
+   */
+  deleted_at: ISODateTime | null;
 }
 
 // ────────────────────────────────────────────────────────────────────────────

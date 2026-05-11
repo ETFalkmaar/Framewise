@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableBlockList } from '@/components/editor/sortable-block-list';
 import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
-import { blocksRepo, pagesRepo, subscriptionsRepo } from '@/lib/data';
+import { blocksRepo, mediaRepo, pagesRepo, subscriptionsRepo } from '@/lib/data';
 import { canAddRemoveBlocks, canEditBlocks } from '@/lib/permissions';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
@@ -47,7 +47,10 @@ export default async function EditPagePage({
 
   const allowAddRemove = await canAddRemoveBlocks(user.id, tenant, plan?.code ?? null);
 
-  const blocks = await blocksRepo.findByPageId(pageId);
+  const [blocks, mediaLibrary] = await Promise.all([
+    blocksRepo.findByPageId(pageId),
+    mediaRepo.listByTenant(tenant.id),
+  ]);
   blocks.sort((a, b) => a.order_index - b.order_index);
 
   const t = await getTranslations('account.editor');
@@ -121,6 +124,7 @@ export default async function EditPagePage({
           blocks={blocks}
           canEdit
           locale={locale}
+          mediaLibrary={mediaLibrary}
           copy={{
             blockType: blockTypeLabels,
             editBlock: t('editBlock'),
@@ -157,6 +161,20 @@ export default async function EditPagePage({
               heroOverlay: t('blockForms.heroOverlay'),
               heroOverlayLight: t('blockForms.heroOverlayLight'),
               heroOverlayDark: t('blockForms.heroOverlayDark'),
+              imageSelect: t('blockForms.imageSelect'),
+              imageChange: t('blockForms.imageChange'),
+              imageNone: t('blockForms.imageNone'),
+              imageAlt: t('blockForms.imageAlt'),
+              imageCaption: t('blockForms.imageCaption'),
+            },
+            imagePicker: {
+              title: t('imagePicker.title'),
+              tabExisting: t('imagePicker.tabExisting'),
+              tabUpload: t('imagePicker.tabUpload'),
+              empty: t('imagePicker.empty'),
+              cancel: t('imagePicker.cancel'),
+              upload: t('imagePicker.upload'),
+              uploading: t('imagePicker.uploading'),
             },
           }}
         />
