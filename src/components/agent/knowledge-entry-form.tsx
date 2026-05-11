@@ -17,7 +17,8 @@ export interface KnowledgeEntryFormCopy {
   content: string;
   contentPlaceholder: string;
   contentHint: string;
-  characters: (n: number) => string;
+  /** ICU template with {count} placeholder, e.g. "{count} tekens". */
+  charactersTemplate: string;
   save: string;
   saving: string;
   cancel: string;
@@ -180,7 +181,7 @@ export function KnowledgeEntryForm({
               <div className="text-muted-foreground mt-1 flex items-center justify-between text-xs">
                 <span>{copy.contentHint}</span>
                 <span data-testid="knowledge-entry-char-count">
-                  {copy.characters(trimmedContent.length)}
+                  {copy.charactersTemplate.replace('{count}', String(trimmedContent.length))}
                 </span>
               </div>
             </label>

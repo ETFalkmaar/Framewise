@@ -107,8 +107,7 @@ export default async function KnowledgeBasePage({
             syncing: t('sync.syncing'),
             lastSynced: t('sync.lastSynced'),
             never: t('sync.never'),
-            successWithCounts: (synced, removed) =>
-              t('sync.successWithCounts', { synced, removed }),
+            successWithCountsTemplate: t.raw('sync.successWithCounts') as string,
             successNoChanges: t('sync.successNoChanges'),
             error: t('sync.error'),
           },
@@ -137,7 +136,7 @@ export default async function KnowledgeBasePage({
             content: t('form.content'),
             contentPlaceholder: t('form.contentPlaceholder'),
             contentHint: t('form.contentHint'),
-            characters: (count) => t('form.characters', { count }),
+            charactersTemplate: t.raw('form.characters') as string,
             save: t('form.save'),
             saving: t('form.saving'),
             cancel: t('form.cancel'),
