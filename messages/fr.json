@@ -202,6 +202,44 @@
     "dismiss": "Retour au tableau de bord",
     "noCustomDomain": "💡 Astuce : rendez votre site encore plus professionnel avec un domaine personnalisé"
   },
+  "adminBookings": {
+    "title": "Tableau de bord des réservations",
+    "subtitle": "Réservations multi-locataires pour super-admins.",
+    "backToAdmin": "Retour à l'admin",
+    "kpi": {
+      "today": "Aujourd'hui",
+      "thisWeek": "Cette semaine",
+      "thisMonth": "Ce mois",
+      "pendingAction": "En attente d'action"
+    },
+    "perTenant": {
+      "title": "Par locataire",
+      "empty": "Aucun locataire avec bookings_enabled trouvé.",
+      "count": "{count} réservations"
+    },
+    "status": {
+      "pending": "En attente",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "completed": "Terminé",
+      "no_show": "Non présenté"
+    },
+    "table": {
+      "title": "Réservations récentes",
+      "empty": "Aucune réservation trouvée pour ces filtres.",
+      "columns": {
+        "tenant": "Locataire",
+        "reference": "Code",
+        "start": "Début",
+        "guest": "Client",
+        "party": "Personnes",
+        "status": "Statut"
+      },
+      "prev": "Précédent",
+      "next": "Suivant",
+      "pageOf": "Page {page} sur {total}"
+    }
+  },
   "adminEmailLog": {
     "title": "Journal e-mails",
     "subtitle": "Tous les événements email-stub pour {tenant} (super-admin uniquement).",

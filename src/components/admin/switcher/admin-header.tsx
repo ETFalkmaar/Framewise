@@ -54,9 +54,18 @@ export function AdminHeader({
       data-testid="admin-header"
       className="border-border/40 bg-background/95 sticky top-0 z-30 flex items-center justify-between gap-3 border-b px-6 py-3 backdrop-blur"
     >
-      <Link href="/admin/tenants" className="font-mono text-xs tracking-wide uppercase">
-        <span className="text-muted-foreground">Framewise</span> · {copy.brand}
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link href="/admin/tenants" className="font-mono text-xs tracking-wide uppercase">
+          <span className="text-muted-foreground">Framewise</span> · {copy.brand}
+        </Link>
+        <Link
+          href="/admin/bookings"
+          data-testid="admin-nav-bookings"
+          className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-wide uppercase"
+        >
+          Bookings
+        </Link>
+      </div>
       <div className="flex items-center gap-2">
         <GlobalSearchBar copy={copy.search} />
         <NotificationBell

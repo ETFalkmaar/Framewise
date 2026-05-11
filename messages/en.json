@@ -202,6 +202,44 @@
     "dismiss": "Back to dashboard",
     "noCustomDomain": "💡 Tip: make your site even more professional with a custom domain"
   },
+  "adminBookings": {
+    "title": "Booking dashboard",
+    "subtitle": "Cross-tenant bookings for super-admins.",
+    "backToAdmin": "Back to admin",
+    "kpi": {
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "pendingAction": "Awaiting action"
+    },
+    "perTenant": {
+      "title": "Per tenant",
+      "empty": "No tenants with bookings_enabled found.",
+      "count": "{count} bookings"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "no_show": "No show"
+    },
+    "table": {
+      "title": "Recent bookings",
+      "empty": "No bookings found for these filters.",
+      "columns": {
+        "tenant": "Tenant",
+        "reference": "Code",
+        "start": "Start",
+        "guest": "Guest",
+        "party": "Guests",
+        "status": "Status"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {total}"
+    }
+  },
   "adminEmailLog": {
     "title": "Email log",
     "subtitle": "All email-stub events for {tenant} (super-admin only).",
