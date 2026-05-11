@@ -432,6 +432,64 @@ export interface Availability {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// 15b. availability_rules + booking_exceptions (step 50, fase 14 part 2/7)
+// ────────────────────────────────────────────────────────────────────────────
+
+/** 0 = Sunday, 6 = Saturday — matches the `Date.prototype.getUTCDay` return. */
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+/**
+ * Recurring weekly availability rule (step 50). A tenant defines
+ * one or more rules per day-of-week — e.g. lunch service 12:00-14:30
+ * + diner service 18:00-22:00 — and the slot generator turns each
+ * active rule into reservable time-slots for any future date.
+ *
+ * `start_time` / `end_time` use `HH:mm` 24-hour format (`"12:00"`,
+ * `"22:30"`). Times are interpreted in the tenant's
+ * `booking_timezone` at slot-generation time, not stored zoned here.
+ */
+export interface AvailabilityRule {
+  id: UUID;
+  tenant_id: UUID;
+  name: string;
+  is_active: boolean;
+  day_of_week: DayOfWeek;
+  start_time: string; // HH:mm
+  end_time: string; // HH:mm
+  slot_duration_minutes: number;
+  max_party_size: number;
+  max_concurrent_bookings: number;
+  /** Cleaning / turnover time between slots; 0 packs slots back-to-back. */
+  buffer_minutes: number;
+  /** Effective window — `null` on both ends means "always active". */
+  effective_from: ISODate | null;
+  effective_until: ISODate | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+/**
+ * Per-date override on top of the weekly rules (step 50). Closures
+ * for public holidays / private events, or simply different hours
+ * for a one-off occasion (Christmas Eve early dinner, etc.).
+ *
+ * `date` is a YYYY-MM-DD string scoped to the tenant's timezone.
+ * `is_closed: true` → slot generator returns `[]` for that date,
+ * regardless of the day's rules. `is_closed: false` with custom
+ * times overrides every rule's window with the same custom window.
+ */
+export interface BookingException {
+  id: UUID;
+  tenant_id: UUID;
+  date: ISODate;
+  reason: string;
+  is_closed: boolean;
+  custom_start_time: string | null; // HH:mm or null when is_closed
+  custom_end_time: string | null;
+  created_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // 16. booking_settings
 // ────────────────────────────────────────────────────────────────────────────
 export interface CancellationPolicy {
@@ -683,7 +741,14 @@ export type AuditLogAction =
   | 'booking_cancelled'
   | 'booking_no_show'
   | 'booking_notes_updated'
-  | 'tenant_bookings_toggled';
+  | 'tenant_bookings_toggled'
+  // Step 50 — availability rules + exceptions.
+  | 'availability_rule_created'
+  | 'availability_rule_updated'
+  | 'availability_rule_deleted'
+  | 'availability_rule_toggled'
+  | 'booking_exception_created'
+  | 'booking_exception_deleted';
 
 /**
  * Tenant-scoped audit-log entry (step 47). Records meaningful
@@ -735,6 +800,8 @@ export interface Database {
   tenant_country_settings: TenantCountrySettings;
   audit_logs: AuditLog;
   notifications: Notification;
+  availability_rules: AvailabilityRule;
+  booking_exceptions: BookingException;
 }
 
 export type TableName = keyof Database;

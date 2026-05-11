@@ -2,6 +2,8 @@ import type {
   AgentConversation,
   AgentKnowledge,
   AuditLog,
+  AvailabilityRule,
+  BookingException,
   Notification,
   Availability,
   Block,
@@ -44,6 +46,8 @@ import tokenAccessLogSeed from './seeds/token_access_log.json';
 import mediaSeed from './seeds/media.json';
 import auditLogsSeed from './seeds/audit_logs.json';
 import notificationsSeed from './seeds/notifications.json';
+import availabilityRulesSeed from './seeds/availability_rules.json';
+import bookingExceptionsSeed from './seeds/booking_exceptions.json';
 
 /**
  * In-memory store for the mock adapter. One Map per table keyed by `id`.
@@ -82,6 +86,8 @@ type MockRow<K extends TableName> = {
   tenant_country_settings: TenantCountrySettings;
   audit_logs: AuditLog;
   notifications: Notification;
+  availability_rules: AvailabilityRule;
+  booking_exceptions: BookingException;
 }[K];
 
 const TABLES: TableName[] = [
@@ -109,6 +115,8 @@ const TABLES: TableName[] = [
   'tenant_country_settings',
   'audit_logs',
   'notifications',
+  'availability_rules',
+  'booking_exceptions',
 ];
 
 function emptyStore(): Store {
@@ -137,6 +145,8 @@ function loadSeeds(): void {
     ['media', mediaSeed as unknown as Media[]],
     ['audit_logs', auditLogsSeed as unknown as AuditLog[]],
     ['notifications', notificationsSeed as unknown as Notification[]],
+    ['availability_rules', availabilityRulesSeed as unknown as AvailabilityRule[]],
+    ['booking_exceptions', bookingExceptionsSeed as unknown as BookingException[]],
   ];
 
   for (const [name, rows] of pairs) {
