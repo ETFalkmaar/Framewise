@@ -148,6 +148,16 @@
         "faq": "FAQ",
         "pricing": "Tarifs",
         "contact": "Contact"
+      },
+      "preview": {
+        "title": "Aperçu",
+        "loading": "Chargement…",
+        "deviceDesktopAria": "Vue bureau",
+        "deviceMobileAria": "Vue mobile",
+        "togglePreviewShow": "Afficher l'aperçu",
+        "togglePreviewHide": "Masquer l'aperçu",
+        "errorTitle": "Échec de la mise à jour de l'aperçu",
+        "draftWaiting": "Les modifications seront bientôt visibles…"
       }
     },
     "media": {

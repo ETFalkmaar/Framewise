@@ -148,6 +148,16 @@
         "faq": "FAQ",
         "pricing": "Prijzen",
         "contact": "Contact"
+      },
+      "preview": {
+        "title": "Voorvertoning",
+        "loading": "Bezig met laden…",
+        "deviceDesktopAria": "Desktop weergave",
+        "deviceMobileAria": "Mobiele weergave",
+        "togglePreviewShow": "Toon voorvertoning",
+        "togglePreviewHide": "Verberg voorvertoning",
+        "errorTitle": "Voorvertoning bijwerken mislukt",
+        "draftWaiting": "Wijzigingen worden binnenkort getoond…"
       }
     },
     "media": {

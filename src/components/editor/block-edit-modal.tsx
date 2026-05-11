@@ -67,6 +67,14 @@ export interface BlockEditModalProps {
   open: boolean;
   onClose: () => void;
   copy: BlockEditModalCopy;
+  /**
+   * Step 45 — called optimistically with the new block `data` the
+   * moment the user clicks Save (before the server action returns).
+   * Lets the parent (SortableBlockList) refresh its local block list
+   * so the preview iframe reloads with the new content immediately.
+   * Optional — not all callers (history preview, tests) wire it up.
+   */
+  onLocalSave?: (blockId: string, newData: Record<string, unknown>) => void;
 }
 
 /**
@@ -88,6 +96,7 @@ export function BlockEditModal({
   open,
   onClose,
   copy,
+  onLocalSave,
 }: BlockEditModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -132,6 +141,7 @@ export function BlockEditModal({
           mediaLibrary={mediaLibrary}
           onClose={onClose}
           copy={copy}
+          onLocalSave={onLocalSave}
         />
       </div>
     </div>
@@ -145,6 +155,7 @@ function BlockEditForm({
   mediaLibrary,
   onClose,
   copy,
+  onLocalSave,
 }: {
   block: Block;
   pageId: string;
@@ -152,6 +163,7 @@ function BlockEditForm({
   mediaLibrary: Media[];
   onClose: () => void;
   copy: BlockEditModalCopy;
+  onLocalSave?: (blockId: string, newData: Record<string, unknown>) => void;
 }) {
   switch (block.block_type) {
     case 'text':
@@ -162,6 +174,7 @@ function BlockEditForm({
           locale={locale}
           onClose={onClose}
           copy={copy}
+          onLocalSave={onLocalSave}
         />
       );
     case 'hero':
@@ -173,6 +186,7 @@ function BlockEditForm({
           mediaLibrary={mediaLibrary}
           onClose={onClose}
           copy={copy}
+          onLocalSave={onLocalSave}
         />
       );
     case 'image':
@@ -184,6 +198,7 @@ function BlockEditForm({
           mediaLibrary={mediaLibrary}
           onClose={onClose}
           copy={copy}
+          onLocalSave={onLocalSave}
         />
       );
     default:
@@ -197,13 +212,14 @@ interface FormProps {
   locale: LocaleCode;
   onClose: () => void;
   copy: BlockEditModalCopy;
+  onLocalSave?: (blockId: string, newData: Record<string, unknown>) => void;
 }
 
 interface FormWithMediaProps extends FormProps {
   mediaLibrary: Media[];
 }
 
-function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
+function TextBlockForm({ block, pageId, locale, onClose, copy, onLocalSave }: FormProps) {
   const initialTranslations =
     (block.data.content_translations as Record<string, string> | undefined) ?? {};
 
@@ -241,25 +257,28 @@ function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
         error={error}
         saved={saved}
         onCancel={onClose}
-        onSave={() =>
-          save(
-            {
-              pageId,
-              blockId: block.id,
-              newData: {
-                content_translations: { ...initialTranslations, ...contentTranslations },
-              },
-            },
-            onClose
-          )
-        }
+        onSave={() => {
+          const newData = {
+            content_translations: { ...initialTranslations, ...contentTranslations },
+          };
+          onLocalSave?.(block.id, newData);
+          save({ pageId, blockId: block.id, newData }, onClose);
+        }}
         copy={copy}
       />
     </div>
   );
 }
 
-function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: FormWithMediaProps) {
+function HeroBlockForm({
+  block,
+  pageId,
+  locale,
+  mediaLibrary,
+  onClose,
+  copy,
+  onLocalSave,
+}: FormWithMediaProps) {
   const initial = block.data as Record<string, unknown>;
   const headlineTranslations =
     (initial.headline_translations as Record<string, string> | undefined) ?? {};
@@ -379,23 +398,18 @@ function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: F
         error={error}
         saved={saved}
         onCancel={onClose}
-        onSave={() =>
-          save(
-            {
-              pageId,
-              blockId: block.id,
-              newData: {
-                headline_translations: { ...headlineTranslations, ...headlines },
-                subheadline_translations: { ...subheadlineTranslations, ...subheadlines },
-                cta_text_translations: { ...ctaTextTranslations, ...ctaTexts },
-                cta_link: ctaLink,
-                background_overlay: overlay,
-                image_url: imageUrl,
-              },
-            },
-            onClose
-          )
-        }
+        onSave={() => {
+          const newData = {
+            headline_translations: { ...headlineTranslations, ...headlines },
+            subheadline_translations: { ...subheadlineTranslations, ...subheadlines },
+            cta_text_translations: { ...ctaTextTranslations, ...ctaTexts },
+            cta_link: ctaLink,
+            background_overlay: overlay,
+            image_url: imageUrl,
+          };
+          onLocalSave?.(block.id, newData);
+          save({ pageId, blockId: block.id, newData }, onClose);
+        }}
         copy={copy}
       />
       {pickerOpen && (
@@ -431,6 +445,7 @@ function ImageBlockForm({
   mediaLibrary,
   onClose,
   copy,
+  onLocalSave,
 }: FormWithMediaProps) {
   const initial = block.data as Record<string, unknown>;
   const altTranslations = (initial.alt_translations as Record<string, string> | undefined) ?? {};
@@ -501,20 +516,15 @@ function ImageBlockForm({
         error={error}
         saved={saved}
         onCancel={onClose}
-        onSave={() =>
-          save(
-            {
-              pageId,
-              blockId: block.id,
-              newData: {
-                image_url: imageUrl,
-                alt_translations: { ...altTranslations, ...altTexts },
-                caption_translations: { ...captionTranslations, ...captions },
-              },
-            },
-            onClose
-          )
-        }
+        onSave={() => {
+          const newData = {
+            image_url: imageUrl,
+            alt_translations: { ...altTranslations, ...altTexts },
+            caption_translations: { ...captionTranslations, ...captions },
+          };
+          onLocalSave?.(block.id, newData);
+          save({ pageId, blockId: block.id, newData }, onClose);
+        }}
         copy={copy}
       />
 
