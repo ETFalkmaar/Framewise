@@ -1,23 +1,32 @@
 import { notFound, redirect } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatusBadge } from '@/components/admin/tenants/status-badge';
-import { calculateTenantStats } from '@/lib/admin';
+import { AuditLogCard } from '@/components/admin/tenant-dashboard/audit-log-card';
+import { ConnectionsCard } from '@/components/admin/tenant-dashboard/connections-card';
+import { DashboardHeader } from '@/components/admin/tenant-dashboard/dashboard-header';
+import { InlineActions } from '@/components/admin/tenant-dashboard/inline-actions';
+import { PreviewCard } from '@/components/admin/tenant-dashboard/preview-card';
+import { StatsOverview } from '@/components/admin/tenant-dashboard/stats-overview';
+import {
+  calculateTenantStats,
+  currentServerEpochMs,
+  getConnectionStatusForTenant,
+  listRecentAuditEvents,
+  type AuditAction,
+} from '@/lib/admin';
 import { getCurrentUser, isUserSuperAdmin } from '@/lib/auth';
-import { tenantsRepo } from '@/lib/data';
-import { Link } from '@/i18n/navigation';
+import { subscriptionsRepo, tenantsRepo } from '@/lib/data';
 import type { Locale } from '@/i18n/routing';
-import type { TenantStatus } from '@/types/database';
+import type { ConnectionCategory, TenantStatus } from '@/types/database';
 
 /**
- * Per-tenant dashboard for the super-admin. Step 35 ships this
- * as a placeholder — basic info card, current status, quick
- * stats, and shortcut links to the existing per-tenant tools
- * (onboarding wizard, domain wizard, maintenance settings). The
- * full audit-log + connection feed + activity timeline lands in
- * step 36.
+ * Per-tenant super-admin dashboard (step 36, fase 11).
+ *
+ * Fetches stats + recent activity + per-provider status in
+ * parallel so the page renders in a single round-trip on the
+ * mock adapter. Layout is a 2-column grid on lg+: audit log +
+ * connections on the left, inline actions + preview on the
+ * right. Mobile collapses to a single column.
  */
 export default async function AdminTenantDashboardPage({
   params,
@@ -34,135 +43,135 @@ export default async function AdminTenantDashboardPage({
   const tenant = await tenantsRepo.findById(tenantId);
   if (!tenant) notFound();
 
-  const stats = await calculateTenantStats(tenant.id);
+  const [stats, auditEvents, connectors, subscription] = await Promise.all([
+    calculateTenantStats(tenant.id),
+    listRecentAuditEvents({ tenantId: tenant.id, limit: 20 }),
+    getConnectionStatusForTenant(tenant.id),
+    subscriptionsRepo.findByTenant(tenant.id),
+  ]);
+
+  const plan = subscription ? await subscriptionsRepo.findPlanById(subscription.plan_id) : null;
+  const renderedAtMs = currentServerEpochMs();
+
+  const tStatus = await getTranslations('admin.tenants.status');
+  const t = await getTranslations('admin.tenantDashboard');
+  const tAuditActions = await getTranslations('admin.tenantDashboard.auditActions');
+  const tCategory = await getTranslations('admin.tenantDashboard.categoryLabels');
+
   const statusLabels: Record<TenantStatus, string> = {
-    onboarding: 'Onboarding',
-    live: 'Live',
-    paused: 'Onderhoud',
-    cancelled: 'Geannuleerd',
+    onboarding: tStatus('onboarding'),
+    live: tStatus('live'),
+    paused: tStatus('paused'),
+    cancelled: tStatus('cancelled'),
+  };
+
+  const auditActionLabels: Record<AuditAction, string> = {
+    tenant_created: tAuditActions('tenant_created'),
+    tenant_updated: tAuditActions('tenant_updated'),
+    site_published: tAuditActions('site_published'),
+    site_unpublished: tAuditActions('site_unpublished'),
+    connection_added: tAuditActions('connection_added'),
+    connection_removed: tAuditActions('connection_removed'),
+    domain_added: tAuditActions('domain_added'),
+    domain_verified: tAuditActions('domain_verified'),
+    checklist_item_completed: tAuditActions('checklist_item_completed'),
+    member_invited: tAuditActions('member_invited'),
+  };
+
+  const categoryLabels: Record<ConnectionCategory, string> = {
+    accounting: tCategory('accounting'),
+    payments: tCategory('payments'),
+    crm: tCategory('crm'),
+    newsletter: tCategory('newsletter'),
+    phone: tCategory('phone'),
   };
 
   return (
     <main
-      data-testid="admin-tenant-dashboard"
-      className="bg-background text-foreground mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-12"
+      data-testid="tenant-dashboard"
+      className="bg-background text-foreground mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-12"
     >
-      <header className="mb-8">
-        <p className="text-muted-foreground font-mono text-xs tracking-wide uppercase">
-          Super-admin · /admin/tenants/{tenant.id.slice(0, 8)}…
-        </p>
-        <div className="mt-1 flex flex-wrap items-center gap-3">
-          <h1 className="text-display-md font-bold tracking-tight">{tenant.name}</h1>
-          <StatusBadge status={tenant.status} label={statusLabels[tenant.status]} />
-          <Badge variant="outline" className="font-mono text-[10px] uppercase">
-            {tenant.country}
-          </Badge>
+      <DashboardHeader
+        tenant={tenant}
+        planCode={plan?.code ?? null}
+        daysOld={stats?.daysOld ?? 0}
+        copy={{
+          statusLabels,
+          openSite: t('openSite'),
+          setupChecklist: t('setupChecklist'),
+          domain: t('domain'),
+          maintenance: t('maintenance'),
+        }}
+      />
+
+      <StatsOverview
+        stats={stats}
+        copy={{
+          checklistProgress: t('stats.checklistProgress'),
+          activeConnectors: t('stats.activeConnectors'),
+          daysActive: t('stats.daysActive'),
+          canGoLive: t('stats.canGoLive'),
+          canGoLiveYes: t('stats.canGoLiveYes'),
+          canGoLiveNo: t('stats.canGoLiveNo'),
+        }}
+      />
+
+      <div className="mt-2 grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <AuditLogCard
+            events={auditEvents}
+            now={renderedAtMs}
+            copy={{
+              title: t('auditLog.title'),
+              empty: t('auditLog.empty'),
+              by: t('auditLog.by'),
+              ago: t('auditLog.ago'),
+              actionLabels: auditActionLabels,
+            }}
+          />
+
+          <ConnectionsCard
+            connectors={connectors}
+            copy={{
+              title: t('connections.title'),
+              connected: t('connections.connected'),
+              notConnected: t('connections.notConnected'),
+              error: t('connections.error'),
+              lastSync: t('connections.lastSync'),
+              configure: t('connections.configure'),
+              categoryLabels,
+            }}
+          />
         </div>
-        <p className="text-muted-foreground mt-2 text-sm">
-          Volledige dashboard met audit log + connection feed komt in stap 36.
-        </p>
-      </header>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card size="sm" data-testid="tenant-overview-card">
-          <CardHeader>
-            <CardTitle className="text-sm">Algemeen</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-xs">
-            <Row label="Slug" value={tenant.slug} />
-            <Row label="Custom domain" value={tenant.custom_domain ?? '—'} />
-            <Row label="Standaardtaal" value={tenant.default_locale} />
-            <Row label="VAT/CRIB" value={tenant.vat_number ?? tenant.crib_number ?? '—'} />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <InlineActions
+            tenantStatus={tenant.status}
+            canPublish={stats?.canGoLive ?? false}
+            copy={{
+              title: t('actions.title'),
+              publishCta: t('actions.publish'),
+              unpublishCta: t('actions.unpublish'),
+              publishing: t('actions.publishing'),
+              unpublishing: t('actions.unpublishing'),
+              blockedHint: t('actions.blockedHint'),
+              liveLabel: t('actions.liveLabel'),
+              cancelledLabel: t('actions.cancelledLabel'),
+              confirmUnpublish: t('actions.confirmUnpublish'),
+            }}
+          />
 
-        <Card size="sm" data-testid="tenant-checklist-card">
-          <CardHeader>
-            <CardTitle className="text-sm">Setup-voortgang</CardTitle>
-            <CardDescription className="text-xs">
-              {stats?.checklistCompleted ?? 0} van {stats?.checklistTotal ?? 0} items afgerond
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-xs">
-            <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
-              <div
-                className={
-                  (stats?.checklistPercentage ?? 0) === 100
-                    ? 'h-full bg-emerald-500'
-                    : 'bg-primary h-full'
-                }
-                style={{ width: `${stats?.checklistPercentage ?? 0}%` }}
-              />
-            </div>
-            <p className="text-muted-foreground font-mono">
-              Verplicht: {stats?.checklistRequiredCompleted ?? 0}/
-              {stats?.checklistRequiredTotal ?? 0} ·{' '}
-              {stats?.canGoLive ? '✓ klaar voor publish' : '⚠ vereist nog acties'}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card size="sm" data-testid="tenant-activity-card">
-          <CardHeader>
-            <CardTitle className="text-sm">Activiteit</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-xs">
-            <Row label="Aangemaakt" value={tenant.created_at.slice(0, 10)} />
-            <Row label="Laatste update" value={tenant.updated_at.slice(0, 10)} />
-            <Row label="Dagen actief" value={String(stats?.daysOld ?? 0)} />
-            <Row label="Actieve connectoren" value={String(stats?.activeConnectorCount ?? 0)} />
-          </CardContent>
-        </Card>
+          <PreviewCard
+            tenant={tenant}
+            copy={{
+              title: t('preview.title'),
+              openInNewTab: t('preview.openInNewTab'),
+              maintenanceMode: t('preview.maintenanceMode'),
+              cancelled: t('preview.cancelled'),
+            }}
+          />
+        </div>
       </div>
-
-      <section className="mt-8">
-        <h2 className="text-base font-semibold tracking-tight">Snelkoppelingen</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <DashboardLink href={`/admin/tenants/${tenant.id}/domain`} testId="link-domain">
-            🌐 Domein
-          </DashboardLink>
-          <DashboardLink href={`/admin/tenants/${tenant.id}/maintenance`} testId="link-maintenance">
-            🛠️ Onderhoudspagina
-          </DashboardLink>
-          <DashboardLink href={`/account/setup`} testId="link-setup">
-            ✅ Setup checklist
-          </DashboardLink>
-          <DashboardLink href={`/admin/tenants`} testId="link-back">
-            ← Terug naar overzicht
-          </DashboardLink>
-        </div>
-      </section>
     </main>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline gap-2 font-mono">
-      <span className="text-muted-foreground w-24 shrink-0 text-[10px] tracking-wide uppercase">
-        {label}
-      </span>
-      <span className="break-all">{value}</span>
-    </div>
-  );
-}
-
-function DashboardLink({
-  href,
-  testId,
-  children,
-}: {
-  href: string;
-  testId: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      data-testid={testId}
-      className="ring-border bg-background hover:bg-muted inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
-    >
-      {children}
-    </Link>
   );
 }

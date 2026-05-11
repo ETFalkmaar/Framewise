@@ -506,6 +506,70 @@
         "live": "En ligne",
         "paused": "En maintenance"
       }
+    },
+    "tenantDashboard": {
+      "openSite": "Ouvrir le site",
+      "setupChecklist": "Liste de configuration",
+      "domain": "Domaine",
+      "maintenance": "Page de maintenance",
+      "stats": {
+        "checklistProgress": "Avancement configuration",
+        "activeConnectors": "Connecteurs actifs",
+        "daysActive": "Jours actifs",
+        "canGoLive": "Prêt à publier",
+        "canGoLiveYes": "Tous les éléments requis sont complétés",
+        "canGoLiveNo": "Des éléments requis manquent encore"
+      },
+      "auditLog": {
+        "title": "Activité récente",
+        "empty": "Aucune activité pour ce client.",
+        "by": "par",
+        "ago": "il y a"
+      },
+      "auditActions": {
+        "tenant_created": "Client créé",
+        "tenant_updated": "Client mis à jour",
+        "site_published": "Site publié",
+        "site_unpublished": "Site mis hors ligne",
+        "connection_added": "Connecteur ajouté",
+        "connection_removed": "Connecteur supprimé",
+        "domain_added": "Domaine ajouté",
+        "domain_verified": "Domaine vérifié",
+        "checklist_item_completed": "Élément de liste terminé",
+        "member_invited": "Membre invité"
+      },
+      "connections": {
+        "title": "Connecteurs",
+        "connected": "Connecté",
+        "notConnected": "Non connecté",
+        "error": "Erreur",
+        "lastSync": "Dernière sync",
+        "configure": "Configurer"
+      },
+      "categoryLabels": {
+        "accounting": "Comptabilité",
+        "payments": "Paiements",
+        "crm": "CRM",
+        "newsletter": "Newsletter",
+        "phone": "Téléphonie"
+      },
+      "actions": {
+        "title": "Statut du site",
+        "publish": "Publier le site",
+        "unpublish": "Mettre le site hors ligne",
+        "publishing": "Publication en cours…",
+        "unpublishing": "Mise hors ligne en cours…",
+        "blockedHint": "Tous les éléments requis ne sont pas complétés.",
+        "liveLabel": "Le site est en ligne et accessible aux visiteurs.",
+        "cancelledLabel": "Ce client est annulé — aucune action disponible.",
+        "confirmUnpublish": "Voulez-vous vraiment mettre le site hors ligne ? Les visiteurs verront la page de maintenance."
+      },
+      "preview": {
+        "title": "Aperçu du site",
+        "openInNewTab": "Ouvrir dans un nouvel onglet",
+        "maintenanceMode": "Le site est actuellement en mode maintenance.",
+        "cancelled": "Aperçu indisponible — le client est annulé."
+      }
     }
   }
 }

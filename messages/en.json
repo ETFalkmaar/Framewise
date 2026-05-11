@@ -506,6 +506,70 @@
         "live": "Live",
         "paused": "Maintenance"
       }
+    },
+    "tenantDashboard": {
+      "openSite": "Open site",
+      "setupChecklist": "Setup checklist",
+      "domain": "Domain",
+      "maintenance": "Maintenance page",
+      "stats": {
+        "checklistProgress": "Setup progress",
+        "activeConnectors": "Active connectors",
+        "daysActive": "Days active",
+        "canGoLive": "Ready to publish",
+        "canGoLiveYes": "All required items completed",
+        "canGoLiveNo": "Required items still missing"
+      },
+      "auditLog": {
+        "title": "Recent activity",
+        "empty": "No activity yet for this customer.",
+        "by": "by",
+        "ago": "ago"
+      },
+      "auditActions": {
+        "tenant_created": "Tenant created",
+        "tenant_updated": "Tenant updated",
+        "site_published": "Site published",
+        "site_unpublished": "Site taken offline",
+        "connection_added": "Connector added",
+        "connection_removed": "Connector removed",
+        "domain_added": "Domain added",
+        "domain_verified": "Domain verified",
+        "checklist_item_completed": "Checklist item completed",
+        "member_invited": "Team member invited"
+      },
+      "connections": {
+        "title": "Connectors",
+        "connected": "Connected",
+        "notConnected": "Not connected",
+        "error": "Error",
+        "lastSync": "Last sync",
+        "configure": "Configure"
+      },
+      "categoryLabels": {
+        "accounting": "Accounting",
+        "payments": "Payments",
+        "crm": "CRM",
+        "newsletter": "Newsletter",
+        "phone": "Telephony"
+      },
+      "actions": {
+        "title": "Site status",
+        "publish": "Publish site",
+        "unpublish": "Take site offline",
+        "publishing": "Publishing…",
+        "unpublishing": "Taking offline…",
+        "blockedHint": "Not all required checklist items are completed.",
+        "liveLabel": "The site is live and reachable for visitors.",
+        "cancelledLabel": "This customer is cancelled — no actions available.",
+        "confirmUnpublish": "Are you sure you want to take the site offline? Visitors will see the maintenance page."
+      },
+      "preview": {
+        "title": "Site preview",
+        "openInNewTab": "Open in new tab",
+        "maintenanceMode": "The site is currently in maintenance mode.",
+        "cancelled": "Site preview not available — customer is cancelled."
+      }
     }
   }
 }
