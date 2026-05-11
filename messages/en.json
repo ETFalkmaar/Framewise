@@ -524,7 +524,8 @@
         "title": "Recent activity",
         "empty": "No activity yet for this customer.",
         "by": "by",
-        "ago": "ago"
+        "ago": "ago",
+        "viewAll": "View all"
       },
       "auditActions": {
         "tenant_created": "Tenant created",
@@ -569,6 +570,37 @@
         "openInNewTab": "Open in new tab",
         "maintenanceMode": "The site is currently in maintenance mode.",
         "cancelled": "Site preview not available — customer is cancelled."
+      }
+    },
+    "auditLogPage": {
+      "title": "Audit log",
+      "backToDashboard": "Back to dashboard",
+      "exportCsv": "Export to CSV",
+      "exporting": "Exporting…",
+      "exportError": "Export failed.",
+      "detailsToggle": "Details",
+      "detailsCollapse": "Collapse",
+      "empty": "No events match these filters.",
+      "showingResults": "{shown} of {total} events",
+      "pagination": "Page {page} of {totalPages} · {totalCount} total",
+      "prev": "Previous",
+      "next": "Next",
+      "filters": {
+        "title": "Filters",
+        "dateFrom": "From",
+        "dateTo": "To",
+        "actionTypes": "Action type",
+        "performedBy": "Performed by",
+        "search": "Search details",
+        "reset": "Reset filters",
+        "allActions": "All actions",
+        "allUsers": "All users"
+      },
+      "columns": {
+        "timestamp": "Timestamp",
+        "action": "Action",
+        "performedBy": "Performed by",
+        "details": "Details"
       }
     }
   }

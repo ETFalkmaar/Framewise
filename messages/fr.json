@@ -524,7 +524,8 @@
         "title": "Activité récente",
         "empty": "Aucune activité pour ce client.",
         "by": "par",
-        "ago": "il y a"
+        "ago": "il y a",
+        "viewAll": "Tout voir"
       },
       "auditActions": {
         "tenant_created": "Client créé",
@@ -569,6 +570,37 @@
         "openInNewTab": "Ouvrir dans un nouvel onglet",
         "maintenanceMode": "Le site est actuellement en mode maintenance.",
         "cancelled": "Aperçu indisponible — le client est annulé."
+      }
+    },
+    "auditLogPage": {
+      "title": "Journal d'audit",
+      "backToDashboard": "Retour au tableau de bord",
+      "exportCsv": "Exporter en CSV",
+      "exporting": "Export en cours…",
+      "exportError": "Échec de l'export.",
+      "detailsToggle": "Détails",
+      "detailsCollapse": "Replier",
+      "empty": "Aucun événement ne correspond à ces filtres.",
+      "showingResults": "{shown} sur {total} événements",
+      "pagination": "Page {page} sur {totalPages} · {totalCount} au total",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "filters": {
+        "title": "Filtres",
+        "dateFrom": "Du",
+        "dateTo": "Au",
+        "actionTypes": "Type d'action",
+        "performedBy": "Effectué par",
+        "search": "Rechercher dans les détails",
+        "reset": "Réinitialiser",
+        "allActions": "Toutes les actions",
+        "allUsers": "Tous les utilisateurs"
+      },
+      "columns": {
+        "timestamp": "Horodatage",
+        "action": "Action",
+        "performedBy": "Effectué par",
+        "details": "Détails"
       }
     }
   }

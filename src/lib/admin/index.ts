@@ -17,6 +17,15 @@ export {
 } from './audit-log-view';
 
 export {
+  DEFAULT_AUDIT_PAGE_SIZE,
+  listFilteredAuditEvents,
+  type AuditLogFilters,
+  type AuditLogResult,
+} from './audit-log-filters';
+
+export { buildAuditLogCsv, getCsvFilename, CSV_BOM } from './audit-log-export';
+
+export {
   getConnectionStatusForTenant,
   groupConnectorsByCategory,
   type ConnectorWithStatus,
