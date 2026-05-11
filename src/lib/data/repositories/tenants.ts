@@ -24,6 +24,8 @@ type TenantCreateInput = Omit<
   | 'bookings_enabled'
   | 'booking_timezone'
   | 'calendar_feed_token'
+  | 'ai_agent_enabled'
+  | 'ai_agent_id'
 >;
 
 export interface TenantsRepository {

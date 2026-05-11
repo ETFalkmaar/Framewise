@@ -95,6 +95,9 @@ export const tenantUpdateSchema = z
     booking_timezone: z.string().min(1).max(64).nullable().optional(),
     // Step 55 — calendar-feed subscription token.
     calendar_feed_token: z.string().min(16).max(128).nullable().optional(),
+    // Step 56 — AI agent feature flag + linked agent id.
+    ai_agent_enabled: z.boolean().optional(),
+    ai_agent_id: uuidSchema.nullable().optional(),
   })
   .strict();
 

@@ -105,6 +105,19 @@ export interface Tenant {
    * `null` until the owner enables the feed.
    */
   calendar_feed_token: string | null;
+  /**
+   * AI agent feature flag (step 56, fase 15 part 1/9). Pro tenants
+   * get text chat; Enterprise tenants get voice + text. Super-admin
+   * toggles this after onboarding confirms the paid plan. Default
+   * `false` keeps the agent routes 404 for legacy seeds.
+   */
+  ai_agent_enabled: boolean;
+  /**
+   * FK to the `ai_agents` row for this tenant once provisioned.
+   * Stays `null` until the tenant owner clicks "Activate assistant"
+   * on `/account/site/agent`.
+   */
+  ai_agent_id: UUID | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -569,6 +582,56 @@ export interface AgentKnowledge {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// 18b. ai_agents + agent_settings (step 56, fase 15 part 1/9)
+// ────────────────────────────────────────────────────────────────────────────
+
+/** Which channels the agent is provisioned for. */
+export type AgentChannel = 'text' | 'voice' | 'both';
+
+/** Lifecycle state of the tenant's agent. */
+export type AgentStatus = 'not_provisioned' | 'provisioning' | 'active' | 'error' | 'disabled';
+
+/** Primary spoken language for the agent. */
+export type AgentLanguage = 'nl' | 'fr' | 'en' | 'es';
+
+/**
+ * Per-tenant AI agent record. One agent per tenant. `elevenlabs_agent_id`
+ * stays `null` until provisioning succeeds; the rest of the row exists
+ * even in the `not_provisioned` state so the UI can render defaults.
+ */
+export interface AIAgent {
+  id: UUID;
+  tenant_id: UUID;
+  /** ID returned by ElevenLabs (or a `stub-agent-*` value in stub mode). */
+  elevenlabs_agent_id: string | null;
+  name: string;
+  channel: AgentChannel;
+  language: AgentLanguage;
+  status: AgentStatus;
+  /** Last failure surfaced from ElevenLabs / our wrapper. */
+  last_error: string | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+  provisioned_at: ISODateTime | null;
+}
+
+/** Persona + behaviour settings stored alongside the agent. */
+export interface AgentSettings {
+  agent_id: UUID;
+  greeting_message: string;
+  /** Free-form short label — UI exposes a dropdown of presets. */
+  personality: string;
+  /** Hard cap on agent response length (chars). */
+  max_response_length: number;
+  forbidden_topics: string[];
+  can_take_bookings: boolean;
+  can_share_pricing: boolean;
+  can_provide_contact: boolean;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // 19. provider_connections
 // ────────────────────────────────────────────────────────────────────────────
 export type ConnectionCategory = 'accounting' | 'payments' | 'phone' | 'crm' | 'newsletter';
@@ -760,6 +823,11 @@ export type AuditLogAction =
   | 'calendar_feed_token_generated'
   | 'calendar_feed_token_rotated'
   | 'calendar_feed_token_revoked'
+  // Step 56 — AI agent provisioning.
+  | 'ai_agent_provisioned'
+  | 'ai_agent_deprovisioned'
+  | 'ai_agent_settings_updated'
+  | 'ai_agent_error'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'
@@ -820,6 +888,8 @@ export interface Database {
   notifications: Notification;
   availability_rules: AvailabilityRule;
   booking_exceptions: BookingException;
+  ai_agents: AIAgent;
+  agent_settings: AgentSettings;
 }
 
 export type TableName = keyof Database;

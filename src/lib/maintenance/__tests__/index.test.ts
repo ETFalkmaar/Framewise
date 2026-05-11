@@ -38,6 +38,8 @@ function makeTenant(overrides: Partial<Tenant>): Tenant {
     bookings_enabled: false,
     booking_timezone: null,
     calendar_feed_token: null,
+    ai_agent_enabled: false,
+    ai_agent_id: null,
     created_at: '2026-01-01T00:00:00.000Z',
     updated_at: '2026-01-01T00:00:00.000Z',
     ...overrides,

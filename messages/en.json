@@ -305,6 +305,86 @@
     "dismiss": "Back to dashboard",
     "noCustomDomain": "💡 Tip: make your site even more professional with a custom domain"
   },
+  "agent": {
+    "title": "AI Assistant",
+    "subtitle": "Your virtual employee — available 24/7 for your customers.",
+    "backToAccount": "Back to account",
+    "status": {
+      "notProvisioned": "Not yet activated",
+      "provisioning": "Activating",
+      "active": "Active",
+      "error": "Error",
+      "disabled": "Disabled"
+    },
+    "provision": {
+      "title": "Activate your AI assistant",
+      "subtitle": "Give visitors 24/7 answers — bookings, opening hours, pricing, and more.",
+      "features": [
+        "Answers customer questions via chat",
+        "Can take reservations on request",
+        "Speaks Dutch, French, English and Spanish",
+        "Learns from your website content"
+      ],
+      "button": "Activate assistant",
+      "provisioning": "Activating..."
+    },
+    "provisioning": {
+      "title": "Setting up your assistant...",
+      "subtitle": "Refresh this page in a few seconds to check the status."
+    },
+    "errorState": {
+      "title": "Activation failed",
+      "unknown": "Unknown error.",
+      "retryHint": "Click 'Retry' below to activate again."
+    },
+    "settings": {
+      "name": "Name",
+      "namePlaceholder": "E.g. Villa Curaçao Assistant",
+      "channel": "Channel",
+      "channelText": "Text chat",
+      "channelVoice": "Voice",
+      "channelBoth": "Text + voice",
+      "channelLockedToText": "Upgrade to Enterprise for voice.",
+      "language": "Primary language",
+      "greeting": "Greeting",
+      "greetingPlaceholder": "Hi! I'm the assistant for...",
+      "personality": "Personality",
+      "personalityProfessional": "Professional and warm",
+      "personalityCasual": "Casual and friendly",
+      "personalityFormal": "Formal and business-like",
+      "actions": "What can the assistant do?",
+      "actionTakeBookings": "Take reservations",
+      "actionSharePricing": "Share pricing",
+      "actionProvideContact": "Share contact details",
+      "forbiddenTopics": "Forbidden topics",
+      "forbiddenTopicsHint": "Topics the assistant must not discuss.",
+      "forbiddenTopicsPlaceholder": "E.g. competitor names",
+      "forbiddenAdd": "Add",
+      "forbiddenRemove": "Remove",
+      "save": "Save settings",
+      "saving": "Saving...",
+      "saved": "Saved ✓",
+      "saveError": "Failed to save"
+    },
+    "actions": {
+      "testAgent": "Test your assistant",
+      "deactivate": "Deactivate",
+      "deactivateConfirm": "Are you sure you want to disable the assistant?",
+      "retry": "Retry"
+    },
+    "errors": {
+      "feature_not_enabled": "AI Assistant is not enabled for this tenant.",
+      "provisioning_failed": "Activation failed. Please try again.",
+      "forbidden": "You don't have permission."
+    },
+    "manageLink": "Manage your AI assistant",
+    "adminToggle": {
+      "title": "AI Assistant",
+      "enabledLabel": "AI Assistant enabled",
+      "channelLabel": "Channel",
+      "basicPlanWarning": "AI Assistant requires a Pro or Enterprise plan."
+    }
+  },
   "adminBookings": {
     "title": "Booking dashboard",
     "subtitle": "Cross-tenant bookings for super-admins.",

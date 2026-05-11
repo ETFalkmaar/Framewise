@@ -1,6 +1,8 @@
 import type {
+  AIAgent,
   AgentConversation,
   AgentKnowledge,
+  AgentSettings,
   AuditLog,
   AvailabilityRule,
   BookingException,
@@ -88,6 +90,8 @@ type MockRow<K extends TableName> = {
   notifications: Notification;
   availability_rules: AvailabilityRule;
   booking_exceptions: BookingException;
+  ai_agents: AIAgent;
+  agent_settings: AgentSettings;
 }[K];
 
 const TABLES: TableName[] = [
@@ -117,6 +121,8 @@ const TABLES: TableName[] = [
   'notifications',
   'availability_rules',
   'booking_exceptions',
+  'ai_agents',
+  'agent_settings',
 ];
 
 function emptyStore(): Store {
@@ -201,6 +207,21 @@ function loadSeeds(): void {
         normalised = {
           ...normalised,
           calendar_feed_token: null,
+        } as typeof row;
+      }
+      // Step 56 — backfill AI-agent feature flag + linked agent id.
+      // Demo seeds: both Pro + Enterprise tenants get the feature on
+      // so the provision/configure flows are demoable. Villa starts
+      // un-provisioned (showcases the activation flow); restaurant
+      // starts pre-provisioned with a stub-agent id (showcases the
+      // configured state).
+      if (name === 'tenants' && !('ai_agent_enabled' in normalised)) {
+        const slug = (normalised as { slug?: string }).slug;
+        const isDemo = slug === 'demo-villa' || slug === 'demo-restaurant';
+        normalised = {
+          ...normalised,
+          ai_agent_enabled: isDemo,
+          ai_agent_id: null,
         } as typeof row;
       }
       // Step 49 — extend legacy bookings (villa-nights model) with

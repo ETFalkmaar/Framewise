@@ -305,6 +305,86 @@
     "dismiss": "Naar dashboard",
     "noCustomDomain": "💡 Tip: maak je site nog professioneler met een eigen domein"
   },
+  "agent": {
+    "title": "AI Assistent",
+    "subtitle": "Je virtuele medewerker — 24/7 beschikbaar voor klanten.",
+    "backToAccount": "Terug naar account",
+    "status": {
+      "notProvisioned": "Nog niet geactiveerd",
+      "provisioning": "Bezig met activeren",
+      "active": "Actief",
+      "error": "Fout",
+      "disabled": "Uitgeschakeld"
+    },
+    "provision": {
+      "title": "Activeer je AI assistent",
+      "subtitle": "Geef bezoekers 24/7 antwoord op vragen — boekingen, openingstijden, prijzen en meer.",
+      "features": [
+        "Antwoordt op klantvragen via chat",
+        "Kan reserveringen aannemen indien gewenst",
+        "Spreekt Nederlands, Frans, Engels en Spaans",
+        "Leert van je website content"
+      ],
+      "button": "Activeer assistent",
+      "provisioning": "Bezig met activeren..."
+    },
+    "provisioning": {
+      "title": "We zijn je assistent aan het instellen...",
+      "subtitle": "Vernieuw deze pagina over een paar seconden om de status te checken."
+    },
+    "errorState": {
+      "title": "Activeren mislukt",
+      "unknown": "Onbekende fout.",
+      "retryHint": "Klik 'Opnieuw proberen' onderaan om opnieuw te activeren."
+    },
+    "settings": {
+      "name": "Naam",
+      "namePlaceholder": "Bijv. Villa Curaçao Assistant",
+      "channel": "Kanaal",
+      "channelText": "Tekst chat",
+      "channelVoice": "Voice",
+      "channelBoth": "Tekst + voice",
+      "channelLockedToText": "Voor voice upgrade naar Enterprise.",
+      "language": "Hoofdtaal",
+      "greeting": "Begroeting",
+      "greetingPlaceholder": "Hallo! Ik ben de assistent van...",
+      "personality": "Persoonlijkheid",
+      "personalityProfessional": "Professioneel en warm",
+      "personalityCasual": "Casual en vriendelijk",
+      "personalityFormal": "Formeel en zakelijk",
+      "actions": "Wat mag de assistent doen?",
+      "actionTakeBookings": "Reserveringen aannemen",
+      "actionSharePricing": "Prijzen delen",
+      "actionProvideContact": "Contactgegevens delen",
+      "forbiddenTopics": "Verboden onderwerpen",
+      "forbiddenTopicsHint": "Onderwerpen waar de assistent niet over mag praten.",
+      "forbiddenTopicsPlaceholder": "Bijv. concurrent-namen",
+      "forbiddenAdd": "Voeg toe",
+      "forbiddenRemove": "Verwijderen",
+      "save": "Instellingen opslaan",
+      "saving": "Bezig met opslaan...",
+      "saved": "Opgeslagen ✓",
+      "saveError": "Kon niet opslaan"
+    },
+    "actions": {
+      "testAgent": "Test je assistent",
+      "deactivate": "Deactiveer",
+      "deactivateConfirm": "Weet je zeker dat je de assistent wilt uitschakelen?",
+      "retry": "Opnieuw proberen"
+    },
+    "errors": {
+      "feature_not_enabled": "AI Assistent is niet ingeschakeld voor deze tenant.",
+      "provisioning_failed": "Activeren mislukt. Probeer het opnieuw.",
+      "forbidden": "Je hebt geen toestemming."
+    },
+    "manageLink": "Beheer je AI assistent",
+    "adminToggle": {
+      "title": "AI Assistent",
+      "enabledLabel": "AI Assistent ingeschakeld",
+      "channelLabel": "Kanaal",
+      "basicPlanWarning": "AI Assistent vereist een Pro of Enterprise plan."
+    }
+  },
   "adminBookings": {
     "title": "Booking dashboard",
     "subtitle": "Cross-tenant boekingen voor super-admins.",

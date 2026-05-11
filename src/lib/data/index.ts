@@ -8,8 +8,10 @@
  * Step 119: replaced by the Supabase adapter, no API change.
  */
 
+import { mockAIAgentsRepo } from './adapters/mock/ai-agents';
 import { mockAgentConversationsRepo } from './adapters/mock/agent-conversations';
 import { mockAgentKnowledgeRepo } from './adapters/mock/agent-knowledge';
+import { mockAgentSettingsRepo } from './adapters/mock/agent-settings';
 import { mockAuditLogsRepo } from './adapters/mock/audit-logs';
 import { mockAvailabilityRulesRepo } from './adapters/mock/availability-rules';
 import { mockBlocksRepo } from './adapters/mock/blocks';
@@ -29,11 +31,13 @@ import { mockTokenAccessLogRepo } from './adapters/mock/token-access-log';
 import { mockTranslationsRepo } from './adapters/mock/translations';
 import { mockUsersRepo } from './adapters/mock/users';
 
+import { aiAgentsRepo, setAIAgentsRepo } from './repositories/ai-agents';
 import {
   agentConversationsRepo,
   setAgentConversationsRepo,
 } from './repositories/agent-conversations';
 import { agentKnowledgeRepo, setAgentKnowledgeRepo } from './repositories/agent-knowledge';
+import { agentSettingsRepo, setAgentSettingsRepo } from './repositories/agent-settings';
 import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
 import { availabilityRulesRepo, setAvailabilityRulesRepo } from './repositories/availability-rules';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';
@@ -57,8 +61,10 @@ import { setTranslationsRepo, translationsRepo } from './repositories/translatio
 import { setUsersRepo, usersRepo } from './repositories/users';
 
 // Wire mock implementations once at module load.
+setAIAgentsRepo(mockAIAgentsRepo);
 setAgentConversationsRepo(mockAgentConversationsRepo);
 setAgentKnowledgeRepo(mockAgentKnowledgeRepo);
+setAgentSettingsRepo(mockAgentSettingsRepo);
 setAuditLogsRepo(mockAuditLogsRepo);
 setAvailabilityRulesRepo(mockAvailabilityRulesRepo);
 setBlocksRepo(mockBlocksRepo);
@@ -79,8 +85,10 @@ setTranslationsRepo(mockTranslationsRepo);
 setUsersRepo(mockUsersRepo);
 
 export {
+  aiAgentsRepo,
   agentConversationsRepo,
   agentKnowledgeRepo,
+  agentSettingsRepo,
   auditLogsRepo,
   availabilityRulesRepo,
   blocksRepo,

@@ -305,6 +305,86 @@
     "dismiss": "Retour au tableau de bord",
     "noCustomDomain": "💡 Astuce : rendez votre site encore plus professionnel avec un domaine personnalisé"
   },
+  "agent": {
+    "title": "Assistant IA",
+    "subtitle": "Votre collaborateur virtuel — disponible 24/7 pour vos clients.",
+    "backToAccount": "Retour au compte",
+    "status": {
+      "notProvisioned": "Pas encore activé",
+      "provisioning": "Activation en cours",
+      "active": "Actif",
+      "error": "Erreur",
+      "disabled": "Désactivé"
+    },
+    "provision": {
+      "title": "Activez votre assistant IA",
+      "subtitle": "Donnez à vos visiteurs des réponses 24/7 — réservations, horaires, tarifs, et plus.",
+      "features": [
+        "Répond aux questions des clients via chat",
+        "Peut prendre des réservations sur demande",
+        "Parle néerlandais, français, anglais et espagnol",
+        "Apprend du contenu de votre site"
+      ],
+      "button": "Activer l'assistant",
+      "provisioning": "Activation en cours..."
+    },
+    "provisioning": {
+      "title": "Configuration de votre assistant en cours...",
+      "subtitle": "Actualisez cette page dans quelques secondes pour vérifier le statut."
+    },
+    "errorState": {
+      "title": "Échec de l'activation",
+      "unknown": "Erreur inconnue.",
+      "retryHint": "Cliquez sur 'Réessayer' ci-dessous pour relancer l'activation."
+    },
+    "settings": {
+      "name": "Nom",
+      "namePlaceholder": "Ex. Villa Curaçao Assistant",
+      "channel": "Canal",
+      "channelText": "Chat texte",
+      "channelVoice": "Voix",
+      "channelBoth": "Texte + voix",
+      "channelLockedToText": "Passez en Enterprise pour la voix.",
+      "language": "Langue principale",
+      "greeting": "Accueil",
+      "greetingPlaceholder": "Bonjour ! Je suis l'assistant de...",
+      "personality": "Personnalité",
+      "personalityProfessional": "Professionnel et chaleureux",
+      "personalityCasual": "Décontracté et amical",
+      "personalityFormal": "Formel et professionnel",
+      "actions": "Que peut faire l'assistant ?",
+      "actionTakeBookings": "Prendre des réservations",
+      "actionSharePricing": "Partager les tarifs",
+      "actionProvideContact": "Partager les coordonnées",
+      "forbiddenTopics": "Sujets interdits",
+      "forbiddenTopicsHint": "Sujets que l'assistant ne doit pas aborder.",
+      "forbiddenTopicsPlaceholder": "Ex. noms de concurrents",
+      "forbiddenAdd": "Ajouter",
+      "forbiddenRemove": "Supprimer",
+      "save": "Enregistrer les paramètres",
+      "saving": "Enregistrement...",
+      "saved": "Enregistré ✓",
+      "saveError": "Impossible d'enregistrer"
+    },
+    "actions": {
+      "testAgent": "Tester l'assistant",
+      "deactivate": "Désactiver",
+      "deactivateConfirm": "Êtes-vous sûr de vouloir désactiver l'assistant ?",
+      "retry": "Réessayer"
+    },
+    "errors": {
+      "feature_not_enabled": "L'assistant IA n'est pas activé pour ce locataire.",
+      "provisioning_failed": "Échec de l'activation. Réessayez.",
+      "forbidden": "Vous n'avez pas la permission."
+    },
+    "manageLink": "Gérer votre assistant IA",
+    "adminToggle": {
+      "title": "Assistant IA",
+      "enabledLabel": "Assistant IA activé",
+      "channelLabel": "Canal",
+      "basicPlanWarning": "L'assistant IA nécessite un plan Pro ou Enterprise."
+    }
+  },
   "adminBookings": {
     "title": "Tableau de bord des réservations",
     "subtitle": "Réservations multi-locataires pour super-admins.",
