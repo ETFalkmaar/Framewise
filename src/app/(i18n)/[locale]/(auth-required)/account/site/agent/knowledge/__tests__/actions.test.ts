@@ -97,7 +97,7 @@ describe('knowledge base server actions (step 58)', () => {
       expect(audits.some((a) => a.action === 'knowledge_base_synced')).toBe(true);
     });
 
-    it("returns feature_not_enabled when tenant.ai_agent_enabled is off", async () => {
+    it('returns feature_not_enabled when tenant.ai_agent_enabled is off', async () => {
       await ensureAgent();
       await tenantsRepo.update(VILLA_TENANT_ID, { ai_agent_enabled: false });
       const r = await syncKnowledgeBase();

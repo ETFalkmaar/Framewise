@@ -1,10 +1,5 @@
 import { blocksRepo, pagesRepo } from '@/lib/data';
-import type {
-  AgentLanguage,
-  Block,
-  KnowledgeBaseDocument,
-  Page,
-} from '@/types/database';
+import type { AgentLanguage, Block, KnowledgeBaseDocument, Page } from '@/types/database';
 
 /**
  * Knowledge-base content extractor (step 58, fase 15 part 3/9).
@@ -96,10 +91,7 @@ export function stripHtml(html: string): string {
  * primary locale, then nl, then en, then anything else. Returns ''
  * when the map is empty.
  */
-function pickTranslation(
-  map: TranslationMap | undefined,
-  primary: AgentLanguage
-): string {
+function pickTranslation(map: TranslationMap | undefined, primary: AgentLanguage): string {
   if (!map) return '';
   if (map[primary]) return map[primary]!;
   if (map.nl) return map.nl;
@@ -141,53 +133,44 @@ export function extractFromPageBlocks(
           d.subtitle ||
           pickTranslation(d.subtitle_translations, primaryLocale) ||
           pickTranslation(d.subheadline_translations, primaryLocale);
-        const desc =
-          d.description ||
-          pickTranslation(d.description_translations, primaryLocale);
+        const desc = d.description || pickTranslation(d.description_translations, primaryLocale);
         if (headline) parts.push(headline);
         if (sub) parts.push(sub);
         if (desc) parts.push(stripHtml(desc));
         break;
       }
       case 'text': {
-        const body =
-          d.content || pickTranslation(d.content_translations, primaryLocale);
+        const body = d.content || pickTranslation(d.content_translations, primaryLocale);
         if (body) parts.push(stripHtml(body));
         break;
       }
       case 'cta': {
         // CTAs are nav, not knowledge — but the headline often
         // contains a useful "Ready to book?" signal worth indexing.
-        const headline =
-          pickTranslation(d.headline_translations, primaryLocale) || d.title;
+        const headline = pickTranslation(d.headline_translations, primaryLocale) || d.title;
         if (headline) parts.push(headline);
         break;
       }
       case 'faq': {
         const items = d.items ?? [];
         for (const item of items) {
-          const q =
-            item.question || pickTranslation(item.question_translations, primaryLocale);
-          const a =
-            item.answer || pickTranslation(item.answer_translations, primaryLocale);
+          const q = item.question || pickTranslation(item.question_translations, primaryLocale);
+          const a = item.answer || pickTranslation(item.answer_translations, primaryLocale);
           if (q) parts.push(`Vraag: ${q}`);
           if (a) parts.push(`Antwoord: ${stripHtml(a)}`);
         }
         break;
       }
       case 'pricing': {
-        const intro =
-          pickTranslation(d.headline_translations, primaryLocale) || d.title;
+        const intro = pickTranslation(d.headline_translations, primaryLocale) || d.title;
         if (intro) parts.push(intro);
         const sub = pickTranslation(d.subheadline_translations, primaryLocale);
         if (sub) parts.push(sub);
         const plans = d.plans ?? [];
         for (const plan of plans) {
-          const name =
-            plan.name || pickTranslation(plan.name_translations, primaryLocale);
+          const name = plan.name || pickTranslation(plan.name_translations, primaryLocale);
           const desc =
-            plan.description ||
-            pickTranslation(plan.description_translations, primaryLocale);
+            plan.description || pickTranslation(plan.description_translations, primaryLocale);
           const planParts: string[] = [];
           if (name) planParts.push(name);
           if (plan.price) planParts.push(plan.price);

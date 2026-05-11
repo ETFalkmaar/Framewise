@@ -107,10 +107,7 @@ export async function syncKnowledgeBase(): Promise<KnowledgeActionResult> {
         // effort) and re-create.
         if (elevenlabsId && c.agent.elevenlabs_agent_id) {
           try {
-            await client.removeKnowledgeBaseDocument(
-              c.agent.elevenlabs_agent_id,
-              elevenlabsId
-            );
+            await client.removeKnowledgeBaseDocument(c.agent.elevenlabs_agent_id, elevenlabsId);
           } catch {
             /* tolerate ElevenLabs hiccups */
           }
@@ -353,9 +350,7 @@ export async function updateManualKnowledgeEntry(
   return { success: true, entryId: doc.id };
 }
 
-export async function deleteKnowledgeEntry(input: {
-  id: string;
-}): Promise<KnowledgeActionResult> {
+export async function deleteKnowledgeEntry(input: { id: string }): Promise<KnowledgeActionResult> {
   if (!input?.id) return { success: false, error: 'validation_failed' };
 
   const c = await knowledgeContext();

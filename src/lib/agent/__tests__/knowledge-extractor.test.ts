@@ -87,9 +87,7 @@ describe('extractFromPageBlocks (step 58)', () => {
         },
       }),
     ];
-    expect(extractFromPageBlocks(blocks, 'nl')).toBe(
-      'Onze villa biedt 4 slaapkamers en zeezicht.'
-    );
+    expect(extractFromPageBlocks(blocks, 'nl')).toBe('Onze villa biedt 4 slaapkamers en zeezicht.');
   });
 
   it('formats FAQ items as Vraag / Antwoord pairs', () => {
@@ -121,10 +119,7 @@ describe('extractFromPageBlocks (step 58)', () => {
           {
             name_translations: { nl: 'Off-Season' },
             price: '€1.500/week',
-            features_translations: [
-              { nl: 'Tot 8 personen' },
-              { nl: 'Schoonmaak inbegrepen' },
-            ],
+            features_translations: [{ nl: 'Tot 8 personen' }, { nl: 'Schoonmaak inbegrepen' }],
           },
         ],
       }),
@@ -166,11 +161,7 @@ describe('extractFromPageBlocks (step 58)', () => {
 
   it('respects order_index even when blocks arrive out of order', () => {
     const blocks = [
-      block(
-        'text',
-        { content_translations: { nl: 'Tweede paragraaf.' } },
-        1
-      ),
+      block('text', { content_translations: { nl: 'Tweede paragraaf.' } }, 1),
       block('hero', { headline_translations: { nl: 'Eerste kop' } }, 0),
     ];
     const out = extractFromPageBlocks(blocks, 'nl');
@@ -192,7 +183,7 @@ describe('pageDocumentTitle (step 58)', () => {
     published_at: '2026-01-01T00:00:00.000Z',
   };
 
-  it("returns the SEO meta title for the primary locale", () => {
+  it('returns the SEO meta title for the primary locale', () => {
     const page: Page = {
       ...basePage,
       seo_meta: {
@@ -250,7 +241,7 @@ describe('buildKnowledgeBaseSnapshot (step 58)', () => {
     expect(docs.find((d) => d.page_id === homePage!.id)).toBeUndefined();
   });
 
-  it("skips pages whose blocks produce no textual content", async () => {
+  it('skips pages whose blocks produce no textual content', async () => {
     // Stand up a fresh page with only an image block and verify it's
     // not in the snapshot.
     const page = await pagesRepo.create({
