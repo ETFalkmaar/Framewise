@@ -1823,6 +1823,46 @@ also snapshots the current state so the action is reversible.
 
 Adds 18 tests (snapshot: 9, restore-version: 9) — total 1216.
 
+### Live preview (step 45 — fase 12 part 7/8)
+
+Wraps the block editor in a split-view layout: the existing
+SortableBlockList on the left, an iframe on the right that
+re-renders the page live whenever the customer edits a block.
+
+- `src/lib/editor/preview-cookie.ts` — set / get / clear a
+  per-page draft cookie (`framewise_preview_<pageId>`, 1-hour TTL,
+  sameSite=lax). Defensive JSON parse drops malformed values.
+- `src/app/.../edit/preview-actions.ts` — `updatePreviewDraft` +
+  `clearPreviewDraftAction` server actions, gated by auth +
+  page-belongs-to-tenant + `canEditBlocks`. Anonymous visitors
+  can't seed previews; cross-tenant draft injection is blocked.
+- `src/lib/public-site/block-mapper.ts` — `toContentBlock`
+  extracted from `resolve-page.ts` so the preview resolver reuses
+  the exact same `Block → ContentBlock` normalisation as the
+  public renderer.
+- `resolvePreviewPage` — adds the preview entry-point: drops the
+  `status='published'` gate (so draft pages render in the iframe)
+  and substitutes cookie-supplied draft blocks for persisted ones.
+- `sites/[slug]/page.tsx` + `[...rest]/page.tsx` — detect
+  `?preview=true&pageId=X`, require authenticated editor on the
+  tenant, switch to `resolvePreviewPage`. Anonymous visitors still
+  see published-only output — no draft data leak. Adds a
+  `PreviewModeBanner` for in-iframe context.
+- `PreviewIframe` client component — 500ms-debounced cookie push,
+  `v=` counter bump for forced reload, desktop / mobile (375px)
+  device toggle, loading + error states.
+- `EditPageLayout` client wrapper — owns `showPreview` toggle +
+  `draftBlocks` state shared between SortableBlockList and the
+  iframe. Server `edit/page.tsx` renders the header + block-count
+  section as JSX nodes and passes them down so the i18n strings
+  stay on the server.
+- `SortableBlockList.onBlocksChange` + `BlockEditModal.onLocalSave`
+  bubble local optimistic state up to the parent so the iframe
+  reloads with new content before the server action returns.
+- Translations under `account.editor.preview.*` in NL / FR / EN.
+
+Adds 17 tests (preview-cookie: 9, resolvePreviewPage: 8) — total 1233.
+
 ## Status
 
-In development - Step 44 of 96 (revised plan) — FASE 12 deel 6/8 (page history + versioning)
+In development - Step 45 of 96 (revised plan) — FASE 12 deel 7/8 (live preview)

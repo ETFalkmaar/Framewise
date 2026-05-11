@@ -186,6 +186,16 @@ export function SortableBlockList({
           open
           onClose={() => setEditingBlockId(null)}
           copy={modalCopy}
+          onLocalSave={(blockId, newData) => {
+            // Step 45 — optimistic merge so the live-preview iframe
+            // reloads with the new content before the server action
+            // returns. `newData` overwrites the same top-level keys
+            // saveBlockContentFor would touch, so the local view
+            // mirrors what'll soon land in the DB.
+            applyBlocks(
+              blocks.map((b) => (b.id === blockId ? { ...b, data: { ...b.data, ...newData } } : b))
+            );
+          }}
         />
       )}
     </div>

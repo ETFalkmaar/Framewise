@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code — local-only runtime + permission overrides
+.claude/settings.local.json
+.claude/worktrees/
+.claude/*.lock

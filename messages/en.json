@@ -148,6 +148,16 @@
         "faq": "FAQ",
         "pricing": "Pricing",
         "contact": "Contact"
+      },
+      "preview": {
+        "title": "Preview",
+        "loading": "Loading…",
+        "deviceDesktopAria": "Desktop view",
+        "deviceMobileAria": "Mobile view",
+        "togglePreviewShow": "Show preview",
+        "togglePreviewHide": "Hide preview",
+        "errorTitle": "Preview update failed",
+        "draftWaiting": "Changes will appear shortly…"
       }
     },
     "media": {
