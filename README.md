@@ -1579,6 +1579,48 @@ has been live for a while.
 
 Adds 29 tests (audit-log-filters: 18, audit-log-export: 11) — total 1077.
 
+### Admin tenant switcher + Cmd+K global search (step 38 — fase 11 COMPLETE)
+
+Final piece of the super-admin command surface: a persistent
+header that follows the super-admin into every `/admin/*` route,
+with two power-user controls baked in.
+
+- `src/lib/admin/global-search.ts` — `globalSearch(query)`
+  scores tenants / sites / connections in-memory (mock-adapter
+  has no FTS yet) and returns the top 20 by score-then-title.
+  Scoring is 1.00 / 0.85 / 0.50 / 0 for exact / starts-with /
+  contains / nothing. `connection` results are de-ranked 10 %
+  vs. tenant hits because a connection match usually means the
+  user wants the _tenant_, not the connector.
+- `src/lib/admin/recent-tenants.ts` — cookie-backed LRU (max 5,
+  30-day TTL) of tenant IDs the super-admin has actually
+  visited. Helpers: `parseRecentTenantsCookie`,
+  `updateRecentTenants` (move-to-front + cap),
+  `serializeRecentTenants`, `hydrateRecentTenants` (drops
+  unknown ids while preserving order).
+- `src/lib/hooks/use-keyboard-shortcut.ts` — `useKeyboardShortcut(key, fn, { meta })`
+  binds Cmd+K (macOS) / Ctrl+K (Win/Linux) without conflating
+  with native browser shortcuts. Skips key events that
+  originate inside `input` / `textarea` / `contenteditable`.
+- `src/components/admin/switcher/` — `<TenantSwitcher />`
+  (dropdown with debounced filter + "Recent bezocht" section),
+  `<GlobalSearchBar />` (Cmd+K modal, grouped results, server
+  action backed), `<AdminHeader />` (server shell that wraps
+  both), `<TenantVisitRecorder />` (tiny client island the
+  per-tenant dashboard renders so the LRU cookie reflects what
+  the super-admin actually viewed).
+- `src/app/(i18n)/[locale]/(auth-required)/admin/layout.tsx`
+  — new server layout: super-admin gate (redirect non-admins
+  to `/account`), reads the LRU cookie, hydrates tenants,
+  renders the header above every child route. The
+  per-route gates stay in place for defence-in-depth.
+- `actions.ts` exposes `recordTenantVisitAction` (sets the
+  cookie) and `globalSearchAction` (debounced server search).
+- Translations: `admin.switcher.*` + `admin.search.*` in
+  NL / FR / EN.
+
+Adds 30 tests (global-search: 13, recent-tenants: 17) — total 1107.
+
 ## Status
 
-In development - Step 37 of 96 (revised plan) — FASE 11 deel 3/4 (audit log full viewer)
+In development - Step 38 of 96 (revised plan) — **FASE 11 COMPLEET** (admin paneel fundering)

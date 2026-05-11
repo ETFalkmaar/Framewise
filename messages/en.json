@@ -572,6 +572,24 @@
         "cancelled": "Site preview not available — customer is cancelled."
       }
     },
+    "switcher": {
+      "selectClient": "Select customer",
+      "searchPlaceholder": "Search customer…",
+      "recent": "Recently visited",
+      "allTenants": "All customers",
+      "noResults": "No customers found"
+    },
+    "search": {
+      "trigger": "Search…",
+      "shortcut": "Ctrl+K",
+      "placeholder": "Search customers, sites, connectors…",
+      "noResults": "No results",
+      "categories": {
+        "tenant": "Customers",
+        "site": "Sites",
+        "connection": "Connectors"
+      }
+    },
     "auditLogPage": {
       "title": "Audit log",
       "backToDashboard": "Back to dashboard",

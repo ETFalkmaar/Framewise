@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { TenantVisitRecorder } from '@/components/admin/switcher/tenant-visit-recorder';
 import { AuditLogCard } from '@/components/admin/tenant-dashboard/audit-log-card';
 import { ConnectionsCard } from '@/components/admin/tenant-dashboard/connections-card';
 import { DashboardHeader } from '@/components/admin/tenant-dashboard/dashboard-header';
@@ -91,6 +92,7 @@ export default async function AdminTenantDashboardPage({
       data-testid="tenant-dashboard"
       className="bg-background text-foreground mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-12"
     >
+      <TenantVisitRecorder tenantId={tenant.id} />
       <DashboardHeader
         tenant={tenant}
         planCode={plan?.code ?? null}
