@@ -71,7 +71,10 @@ export default async function TenantEmailLogPage({
           {t('empty')}
         </p>
       ) : (
-        <table className="border-border w-full border-collapse border text-sm" data-testid="email-log-table">
+        <table
+          className="border-border w-full border-collapse border text-sm"
+          data-testid="email-log-table"
+        >
           <thead className="bg-muted/40">
             <tr>
               <th className="border-border border-b p-2 text-left font-mono text-xs uppercase">
@@ -122,10 +125,7 @@ function EmailRow({ event, locale }: { event: AuditLog; locale: string }): React
   );
 
   return (
-    <tr
-      data-testid={`email-row-${event.id}`}
-      className="border-border hover:bg-muted/30 border-b"
-    >
+    <tr data-testid={`email-row-${event.id}`} className="border-border hover:bg-muted/30 border-b">
       <td className="border-border border-r p-2 font-mono text-xs">{when}</td>
       <td className="border-border border-r p-2 text-xs">{meta.to ?? '—'}</td>
       <td className="border-border border-r p-2 text-xs">{meta.subject ?? '—'}</td>
