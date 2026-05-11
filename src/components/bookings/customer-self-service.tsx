@@ -183,9 +183,7 @@ function BookingDetailView(props: CustomerSelfServiceProps): React.ReactElement 
   const status = props.booking.status;
   // Capture "now" lazily at first render so the purity lint passes —
   // we don't need this to tick during the session.
-  const [isPast] = useState(
-    () => new Date(props.booking.start_time).getTime() < Date.now()
-  );
+  const [isPast] = useState(() => new Date(props.booking.start_time).getTime() < Date.now());
 
   if (status === 'cancelled') {
     return <CancelledView {...props} />;
