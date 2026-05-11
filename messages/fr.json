@@ -158,6 +158,22 @@
         "togglePreviewHide": "Masquer l'aperçu",
         "errorTitle": "Échec de la mise à jour de l'aperçu",
         "draftWaiting": "Les modifications seront bientôt visibles…"
+      },
+      "saveStatus": {
+        "saving": "Enregistrement…",
+        "savedRecently": "✓ Enregistré",
+        "savedAt": "Enregistré à {time}",
+        "conflict": "⚠ Conflit",
+        "error": "⚠ Échec de l'enregistrement"
+      },
+      "conflict": {
+        "title": "Conflit détecté",
+        "description": "Quelqu'un d'autre a aussi modifié ce bloc. Que voulez-vous faire ?",
+        "theirVersion": "Leur version",
+        "yourChanges": "Vos modifications",
+        "savedAt": "Enregistré à {time}",
+        "keepTheirs": "Garder leur version",
+        "overwriteWithMine": "Écraser avec mes modifications"
       }
     },
     "media": {

@@ -158,6 +158,22 @@
         "togglePreviewHide": "Hide preview",
         "errorTitle": "Preview update failed",
         "draftWaiting": "Changes will appear shortly…"
+      },
+      "saveStatus": {
+        "saving": "Saving…",
+        "savedRecently": "✓ Saved",
+        "savedAt": "Saved at {time}",
+        "conflict": "⚠ Conflict",
+        "error": "⚠ Save failed"
+      },
+      "conflict": {
+        "title": "Conflict detected",
+        "description": "Someone else also edited this block. What would you like to do?",
+        "theirVersion": "Their version",
+        "yourChanges": "Your changes",
+        "savedAt": "Saved at {time}",
+        "keepTheirs": "Keep their version",
+        "overwriteWithMine": "Overwrite with mine"
       }
     },
     "media": {

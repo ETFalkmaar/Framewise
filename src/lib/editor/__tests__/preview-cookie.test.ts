@@ -60,6 +60,7 @@ function makeBlock(id: string, page_id: string, data: Record<string, unknown> = 
     data,
     created_at: '2026-01-01T00:00:00.000Z',
     updated_at: '2026-01-01T00:00:00.000Z',
+    version: 1,
   };
 }
 

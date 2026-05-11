@@ -8,6 +8,9 @@ export const mockBlocksRepo: BlocksRepository = {
       .filter((b) => b.page_id === pageId)
       .sort((a, b) => a.order_index - b.order_index);
   },
+  async findById(id) {
+    return table('blocks').get(id) ?? null;
+  },
   async create(data) {
     const now = getTimestamp();
     const row: Block = {
@@ -15,6 +18,7 @@ export const mockBlocksRepo: BlocksRepository = {
       id: generateId(),
       created_at: now,
       updated_at: now,
+      version: 1,
     };
     table('blocks').set(row.id, row);
     return row;
@@ -22,7 +26,19 @@ export const mockBlocksRepo: BlocksRepository = {
   async update(id, data) {
     const existing = table('blocks').get(id);
     if (!existing) throw new Error(`blocks: ${id} not found`);
-    const updated: Block = { ...existing, ...data, id, updated_at: getTimestamp() };
+    // Step 46 — auto-increment version on every update so the
+    // optimistic-concurrency check in `saveBlockContentFor` has a
+    // monotonically growing token. Caller can NOT override version
+    // via the `data` patch; we always read existing + 1.
+    const { version: _ignored, ...rest } = data;
+    void _ignored;
+    const updated: Block = {
+      ...existing,
+      ...rest,
+      id,
+      updated_at: getTimestamp(),
+      version: existing.version + 1,
+    };
     table('blocks').set(id, updated);
     return updated;
   },
@@ -36,7 +52,12 @@ export const mockBlocksRepo: BlocksRepository = {
       if (!existing || existing.page_id !== pageId) {
         throw new Error(`blocks: ${id} not on page ${pageId}`);
       }
-      table('blocks').set(id, { ...existing, order_index: index, updated_at: now });
+      table('blocks').set(id, {
+        ...existing,
+        order_index: index,
+        updated_at: now,
+        version: existing.version + 1,
+      });
     });
     return this.findByPageId(pageId);
   },

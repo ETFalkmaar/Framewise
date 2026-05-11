@@ -1863,6 +1863,52 @@ re-renders the page live whenever the customer edits a block.
 
 Adds 17 tests (preview-cookie: 9, resolvePreviewPage: 8) — total 1233.
 
+### Auto-save + conflict resolution (step 46 — fase 12 part 8/8 — FINALE)
+
+Closes the block editor. Block saves now carry an
+`expectedVersion` token so two editors can't silently overwrite
+each other; mismatches return a conflict response that the UI
+turns into a side-by-side dialog with "keep theirs" and
+"overwrite mine" actions.
+
+- `Block.version` (schema) — optimistic-concurrency counter,
+  starts at 1, increments on every `update`/`reorder`. Mock
+  adapter backfills `version: 1` on legacy seed rows (same
+  pattern as the step-42 `deleted_at` backfill).
+- `blocksRepo.findById` (NEW) — direct id lookup, used by
+  `saveBlockContentFor` to fetch the version before deciding
+  whether the save conflicts. Replaces the step-41 tenant-scoped
+  scan helper.
+- `saveBlockContentFor` (extended) — accepts optional
+  `expectedVersion`. Mismatch returns `{ success: false,
+conflict: true, currentBlock }` without touching the DB.
+  Omitting the field skips the check (the "force overwrite"
+  escape hatch). Successful saves return `newVersion` so the
+  client can pin it for the next round.
+- `src/lib/hooks/use-auto-save.ts` — generic debounced auto-save
+  hook with `idle → saving → saved (2s) → idle` status state,
+  `'conflict'` and `'error'` sticky states, `manualSave()` to
+  bypass the debounce, and `resetStatus()` for post-resolution
+  cleanup. Default debounce 30s per spec.
+- `src/components/editor/save-status-indicator.tsx` — tiny
+  inline pill with `saving / saved / saved-at-HH:MM / conflict /
+error` labels, `aria-live="polite"`.
+- `src/components/editor/conflict-dialog.tsx` — modal showing
+  server-side block + local form-state side by side, with
+  `data-testid="conflict-reload"` and
+  `data-testid="conflict-overwrite"` buttons.
+- `useSaveBlock` (block-edit-modal) — now exposes
+  `conflictWith` + `expectedVersion` + `dismissConflict` so the
+  Text / Hero / Image forms render the ConflictDialog when the
+  server reports a mismatch. "Keep theirs" closes the modal so
+  the revalidate pulls in the server version; "Overwrite mine"
+  re-fires the save without `expectedVersion`.
+- Translations under `account.editor.saveStatus.*` and
+  `account.editor.conflict.*` in NL / FR / EN.
+
+Adds 12 tests (save-block-conflict: 6, blocks-version: 6) —
+total 1245.
+
 ## Status
 
-In development - Step 45 of 96 (revised plan) — FASE 12 deel 7/8 (live preview)
+In development - Step 46 of 96 (revised plan) — FASE 12 COMPLEET (8/8)!
