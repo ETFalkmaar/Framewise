@@ -1,6 +1,7 @@
+import { NotificationBell, type NotificationBellCopy } from '@/components/admin/notification-bell';
 import { Link } from '@/i18n/navigation';
 import type { SearchResultType } from '@/lib/admin';
-import type { Tenant } from '@/types/database';
+import type { Notification, Tenant } from '@/types/database';
 
 import { GlobalSearchBar } from './global-search-bar';
 import { TenantSwitcher } from './tenant-switcher';
@@ -21,12 +22,16 @@ interface HeaderCopy {
     noResults: string;
     categories: Record<SearchResultType, string>;
   };
+  notifications: NotificationBellCopy;
 }
 
 export interface AdminHeaderProps {
   currentTenantId: string | null;
   recentTenants: Tenant[];
   allTenants: Tenant[];
+  /** Step 48 — pre-loaded by the admin layout for the bell dropdown. */
+  unreadNotifications: number;
+  recentNotifications: Notification[];
   copy: HeaderCopy;
 }
 
@@ -40,6 +45,8 @@ export function AdminHeader({
   currentTenantId,
   recentTenants,
   allTenants,
+  unreadNotifications,
+  recentNotifications,
   copy,
 }: AdminHeaderProps) {
   return (
@@ -52,6 +59,11 @@ export function AdminHeader({
       </Link>
       <div className="flex items-center gap-2">
         <GlobalSearchBar copy={copy.search} />
+        <NotificationBell
+          unreadCount={unreadNotifications}
+          recent={recentNotifications}
+          copy={copy.notifications}
+        />
         <TenantSwitcher
           currentTenantId={currentTenantId}
           recentTenants={recentTenants}

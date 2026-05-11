@@ -10,7 +10,7 @@ import {
   type SearchResultType,
 } from '@/lib/admin';
 import { getCurrentUser, isUserSuperAdmin } from '@/lib/auth';
-import { tenantsRepo } from '@/lib/data';
+import { notificationsRepo, tenantsRepo } from '@/lib/data';
 
 /**
  * Persistent super-admin shell (step 38, fase 11 part 4/4).
@@ -29,14 +29,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const cookieStore = await cookies();
   const recentIds = parseRecentTenantsCookie(cookieStore.get(RECENT_TENANTS_COOKIE)?.value);
 
-  const [recentTenants, allTenants] = await Promise.all([
-    hydrateRecentTenants(recentIds),
-    tenantsRepo.list(),
-  ]);
+  const [recentTenants, allTenants, unreadNotifications, recentNotifications] =
+    await Promise.all([
+      hydrateRecentTenants(recentIds),
+      tenantsRepo.list(),
+      notificationsRepo.countUnreadByUser(user.id),
+      notificationsRepo.listByUser(user.id, { limit: 10 }),
+    ]);
 
   const tSwitcher = await getTranslations('admin.switcher');
   const tSearch = await getTranslations('admin.search');
   const tSearchCategories = await getTranslations('admin.search.categories');
+  const tNotif = await getTranslations('notifications');
+  const tNotifTime = await getTranslations('notifications.relativeTime');
 
   const categories: Record<SearchResultType, string> = {
     tenant: tSearchCategories('tenant'),
@@ -50,6 +55,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         currentTenantId={null}
         recentTenants={recentTenants}
         allTenants={allTenants}
+        unreadNotifications={unreadNotifications}
+        recentNotifications={recentNotifications}
         copy={{
           brand: 'Super-admin',
           switcher: {
@@ -65,6 +72,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             placeholder: tSearch('placeholder'),
             noResults: tSearch('noResults'),
             categories,
+          },
+          notifications: {
+            buttonAria: tNotif('title'),
+            empty: tNotif('empty'),
+            markAllRead: tNotif('markAllRead'),
+            viewAll: tNotif('viewAll'),
+            openAction: tNotif('openAction'),
+            unreadAria: tNotif('unreadCount'),
+            relativeTime: {
+              justNow: tNotifTime('justNow'),
+              minutesAgo: tNotifTime('minutesAgo'),
+              hoursAgo: tNotifTime('hoursAgo'),
+              daysAgo: tNotifTime('daysAgo'),
+            },
           },
         }}
       />
