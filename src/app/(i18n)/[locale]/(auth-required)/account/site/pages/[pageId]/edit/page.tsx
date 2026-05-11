@@ -132,7 +132,8 @@ export default async function EditPagePage({
             dragHandle: t('dragHandle'),
             reordering: t('reordering'),
             reorderError: t('reorderError'),
-            missingCount: (n: number) => t('missingCount', { count: n }),
+            missingCountSingular: t('missingCountSingular'),
+            missingCountPlural: t('missingCountPlural'),
           }}
           modalCopy={{
             title: t('editBlock'),

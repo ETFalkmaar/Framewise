@@ -111,7 +111,8 @@
         "en": "EN"
       },
       "missingTranslation": "Traduction manquante",
-      "missingCount": "{count, plural, =1 {# traduction manquante} other {# traductions manquantes}}",
+      "missingCountSingular": "{count} traduction manquante",
+      "missingCountPlural": "{count} traductions manquantes",
       "status": {
         "draft": "Brouillon",
         "published": "Publié",
