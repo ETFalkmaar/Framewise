@@ -20,6 +20,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useState, useTransition } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { countMissingTranslations } from '@/lib/editor/translation-status';
 import type { Block, BlockType, LocaleCode, Media } from '@/types/database';
 
 import { reorderBlocksAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
@@ -45,6 +46,7 @@ interface SortableBlockListCopy {
   dragHandle: string;
   reordering: string;
   reorderError: string;
+  missingCount: (n: number) => string;
 }
 
 export interface SortableBlockListProps {
@@ -218,8 +220,20 @@ function SortableBlockItem({
             {copy.editBlock}
           </button>
         </CardHeader>
-        <CardContent className="text-muted-foreground pt-0 font-mono text-[10px]">
-          #{block.order_index}
+        <CardContent className="text-muted-foreground flex items-center gap-2 pt-0 font-mono text-[10px]">
+          <span>#{block.order_index}</span>
+          {(() => {
+            const missing = countMissingTranslations(block);
+            return missing > 0 ? (
+              <span
+                data-testid={`missing-translations-${block.id}`}
+                className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-[10px] text-amber-700 dark:text-amber-300"
+              >
+                <span aria-hidden>⚠</span>
+                {copy.missingCount(missing)}
+              </span>
+            ) : null;
+          })()}
         </CardContent>
       </Card>
     </li>

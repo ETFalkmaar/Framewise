@@ -105,6 +105,13 @@
         "upload": "Téléverser",
         "uploading": "Téléversement…"
       },
+      "locales": {
+        "nl": "NL",
+        "fr": "FR",
+        "en": "EN"
+      },
+      "missingTranslation": "Traduction manquante",
+      "missingCount": "{count, plural, =1 {# traduction manquante} other {# traductions manquantes}}",
       "status": {
         "draft": "Brouillon",
         "published": "Publié",
