@@ -160,8 +160,7 @@ export async function updateAvailabilityRule(input: {
       end_time: input.patch.end_time ?? rule.end_time,
       slot_duration_minutes: input.patch.slot_duration_minutes ?? rule.slot_duration_minutes,
       max_party_size: input.patch.max_party_size ?? rule.max_party_size,
-      max_concurrent_bookings:
-        input.patch.max_concurrent_bookings ?? rule.max_concurrent_bookings,
+      max_concurrent_bookings: input.patch.max_concurrent_bookings ?? rule.max_concurrent_bookings,
       buffer_minutes: input.patch.buffer_minutes ?? rule.buffer_minutes,
     };
     const err = validateRule(merged);
@@ -272,8 +271,8 @@ export async function createBookingException(
       date: input.date,
       reason: input.reason.trim(),
       is_closed: input.is_closed,
-      custom_start_time: input.is_closed ? null : input.custom_start_time ?? null,
-      custom_end_time: input.is_closed ? null : input.custom_end_time ?? null,
+      custom_start_time: input.is_closed ? null : (input.custom_start_time ?? null),
+      custom_end_time: input.is_closed ? null : (input.custom_end_time ?? null),
     });
     await auditLogsRepo.create({
       tenant_id: ctx.tenant.id,

@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
 import { bookingsRepo } from '@/lib/data';
-import { canViewBookings } from '@/lib/permissions/bookings';
+import { canManageBookings, canViewBookings } from '@/lib/permissions/bookings';
 
 /**
  * Customer-side booking calendar (step 49). Server component:
@@ -62,10 +62,13 @@ export default async function AccountBookingsPage({
 
   const monthStart = new Date(Date.UTC(year, month, 1)).toISOString();
   const monthEnd = new Date(Date.UTC(year, month + 1, 1)).toISOString();
-  const bookings = await bookingsRepo.listByTenant(tenant.id, {
-    from: monthStart,
-    to: monthEnd,
-  });
+  const [bookings, canManage] = await Promise.all([
+    bookingsRepo.listByTenant(tenant.id, {
+      from: monthStart,
+      to: monthEnd,
+    }),
+    canManageBookings(user.id, tenant),
+  ]);
 
   return (
     <main
@@ -80,7 +83,18 @@ export default async function AccountBookingsPage({
         >
           ← {t('backToAccount')}
         </Link>
-        <h1 className="text-display-md mt-2 font-bold tracking-tight">{t('title')}</h1>
+        <div className="mt-2 flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className="text-display-md font-bold tracking-tight">{t('title')}</h1>
+          {canManage ? (
+            <Link
+              href="/account/bookings/availability"
+              data-testid="manage-availability-link"
+              className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
+            >
+              {t('manageAvailability')}
+            </Link>
+          ) : null}
+        </div>
         <p className="text-muted-foreground mt-2 text-sm">{t('calendar')}</p>
       </header>
 

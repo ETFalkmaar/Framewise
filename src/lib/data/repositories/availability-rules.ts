@@ -6,7 +6,9 @@ export interface AvailabilityRulesRepository {
   /** Convenience filter — only `is_active: true` rows. */
   listActive(tenantId: string): Promise<AvailabilityRule[]>;
   findById(id: string): Promise<AvailabilityRule | null>;
-  create(data: Omit<AvailabilityRule, 'id' | 'created_at' | 'updated_at'>): Promise<AvailabilityRule>;
+  create(
+    data: Omit<AvailabilityRule, 'id' | 'created_at' | 'updated_at'>
+  ): Promise<AvailabilityRule>;
   update(id: string, data: Partial<AvailabilityRule>): Promise<AvailabilityRule>;
   delete(id: string): Promise<void>;
 }

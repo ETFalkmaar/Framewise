@@ -35,15 +35,9 @@ import {
 } from './repositories/agent-conversations';
 import { agentKnowledgeRepo, setAgentKnowledgeRepo } from './repositories/agent-knowledge';
 import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
-import {
-  availabilityRulesRepo,
-  setAvailabilityRulesRepo,
-} from './repositories/availability-rules';
+import { availabilityRulesRepo, setAvailabilityRulesRepo } from './repositories/availability-rules';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';
-import {
-  bookingExceptionsRepo,
-  setBookingExceptionsRepo,
-} from './repositories/booking-exceptions';
+import { bookingExceptionsRepo, setBookingExceptionsRepo } from './repositories/booking-exceptions';
 import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
 import { checklistRepo, setChecklistRepo } from './repositories/checklist';
 import { connectionsRepo, setConnectionsRepo } from './repositories/connections';

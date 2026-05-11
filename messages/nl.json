@@ -44,6 +44,74 @@
       "referenceCode": "Referentie: {code}",
       "customerNotes": "Klant notities",
       "internalNotes": "Interne notities"
+    },
+    "manageAvailability": "Beschikbaarheid beheren",
+    "availability": {
+      "title": "Beschikbaarheid",
+      "subtitle": "Beheer wanneer en hoeveel boekingen je aanneemt.",
+      "backToBookings": "Terug naar boekingen",
+      "rulesSection": "Wekelijkse regels",
+      "rulesEmpty": "Nog geen regels — voeg er een toe om slots vrij te geven.",
+      "exceptionsEmpty": "Geen uitzonderingen voor de komende 90 dagen.",
+      "addRule": "Nieuwe regel",
+      "addException": "Uitzondering",
+      "days": {
+        "0": "Zondag",
+        "1": "Maandag",
+        "2": "Dinsdag",
+        "3": "Woensdag",
+        "4": "Donderdag",
+        "5": "Vrijdag",
+        "6": "Zaterdag"
+      },
+      "ruleCard": {
+        "active": "Actief",
+        "inactive": "Inactief",
+        "duration": "{minutes} min slots",
+        "capacity": "Max {count} gelijktijdig",
+        "maxPartySize": "Max {count} personen",
+        "buffer": "{minutes} min pauze",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "deactivate": "Pauzeren",
+        "activate": "Activeren"
+      },
+      "form": {
+        "title": "Nieuwe beschikbaarheidsregel",
+        "editTitle": "Regel bewerken",
+        "name": "Naam",
+        "namePlaceholder": "Bv. Diner service",
+        "dayOfWeek": "Dag van de week",
+        "startTime": "Starttijd",
+        "endTime": "Eindtijd",
+        "slotDuration": "Slotduur (minuten)",
+        "slotDurationHint": "Hoelang duurt één boeking?",
+        "maxPartySize": "Max personen per groep",
+        "maxConcurrent": "Max gelijktijdige boekingen",
+        "bufferMinutes": "Buffer tussen slots (minuten)",
+        "bufferHint": "Reset-tijd tussen twee slots.",
+        "save": "Opslaan",
+        "cancel": "Annuleren",
+        "deleteConfirm": "Weet je zeker dat je dit wil verwijderen?",
+        "errorStartAfterEnd": "Eindtijd moet na de starttijd liggen."
+      },
+      "exception": {
+        "card": {
+          "closed": "Gesloten",
+          "customTimes": "{start}–{end}"
+        },
+        "form": {
+          "title": "Uitzondering toevoegen",
+          "date": "Datum",
+          "reason": "Reden",
+          "reasonPlaceholder": "Bv. Kerstdag, privé-event",
+          "isClosed": "Volledig gesloten",
+          "isClosedHint": "Geen boekingen mogelijk op deze datum.",
+          "customStartTime": "Aangepaste starttijd",
+          "customEndTime": "Aangepaste eindtijd",
+          "save": "Opslaan"
+        }
+      }
     }
   },
   "notifications": {

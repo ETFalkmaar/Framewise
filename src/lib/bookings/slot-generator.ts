@@ -1,8 +1,4 @@
-import {
-  availabilityRulesRepo,
-  bookingExceptionsRepo,
-  bookingsRepo,
-} from '@/lib/data';
+import { availabilityRulesRepo, bookingExceptionsRepo, bookingsRepo } from '@/lib/data';
 import type { AvailabilityRule, DayOfWeek } from '@/types/database';
 
 export interface BookingSlot {

@@ -2,12 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import '@/lib/data';
 
-import {
-  availabilityRulesRepo,
-  bookingExceptionsRepo,
-  bookingsRepo,
-  resetStore,
-} from '@/lib/data';
+import { availabilityRulesRepo, bookingExceptionsRepo, bookingsRepo, resetStore } from '@/lib/data';
 import { generateSlotsForDate } from '@/lib/bookings/slot-generator';
 
 const VILLA_TENANT_ID = '11111111-1111-1111-1111-111111111111';
