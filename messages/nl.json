@@ -202,6 +202,44 @@
     "dismiss": "Naar dashboard",
     "noCustomDomain": "💡 Tip: maak je site nog professioneler met een eigen domein"
   },
+  "adminBookings": {
+    "title": "Booking dashboard",
+    "subtitle": "Cross-tenant boekingen voor super-admins.",
+    "backToAdmin": "Terug naar admin",
+    "kpi": {
+      "today": "Vandaag",
+      "thisWeek": "Deze week",
+      "thisMonth": "Deze maand",
+      "pendingAction": "Wachten op actie"
+    },
+    "perTenant": {
+      "title": "Per tenant",
+      "empty": "Geen tenants met bookings_enabled gevonden.",
+      "count": "{count} boekingen"
+    },
+    "status": {
+      "pending": "In afwachting",
+      "confirmed": "Bevestigd",
+      "cancelled": "Geannuleerd",
+      "completed": "Voltooid",
+      "no_show": "Niet verschenen"
+    },
+    "table": {
+      "title": "Recente boekingen",
+      "empty": "Geen boekingen gevonden voor deze filters.",
+      "columns": {
+        "tenant": "Tenant",
+        "reference": "Code",
+        "start": "Start",
+        "guest": "Klant",
+        "party": "Personen",
+        "status": "Status"
+      },
+      "prev": "Vorige",
+      "next": "Volgende",
+      "pageOf": "Pagina {page} van {total}"
+    }
+  },
   "adminEmailLog": {
     "title": "Email log",
     "subtitle": "Alle email-stub events voor {tenant} (super-admin only).",
