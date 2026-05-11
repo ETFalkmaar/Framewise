@@ -180,6 +180,39 @@ export function bookingCancellationEmail(
 }
 
 /**
+ * Customer notification when they reschedule via the self-service
+ * page (step 54). Shows the old slot crossed-out → new slot, plus
+ * the new reference code so they can pull it up again later.
+ */
+export function bookingRescheduledEmail(
+  oldBooking: Booking,
+  newBooking: Booking,
+  tenant: Tenant,
+  locale: EmailLocale = 'nl'
+): EmailTemplate {
+  const oldFmt = formatStart(oldBooking, locale);
+  const newFmt = formatStart(newBooking, locale);
+  const subject = translate(locale, 'customerRescheduledSubject').replace(
+    '{tenant}',
+    tenant.name
+  );
+  const body = [
+    translate(locale, 'customerHello').replace('{name}', newBooking.customer_name),
+    '',
+    translate(locale, 'customerRescheduledIntro').replace('{tenant}', tenant.name),
+    '',
+    `${translate(locale, 'labelOldSlot')}: ${oldFmt.date} ${oldFmt.time}`,
+    `${translate(locale, 'labelNewSlot')}: ${newFmt.date} ${newFmt.time}`,
+    `${translate(locale, 'labelReference')}: ${newBooking.reference_code}`,
+    '',
+    translate(locale, 'customerRescheduledOutro'),
+    '',
+    tenant.name,
+  ].join('\n');
+  return { subject, body };
+}
+
+/**
  * Reminder email used by the step-95 cron — the helper lives here
  * so the copy is colocated with the rest of the booking emails.
  */
@@ -226,6 +259,9 @@ type Key =
   | 'customerReminderSubject'
   | 'customerReminderIntro'
   | 'customerReminderOutro'
+  | 'customerRescheduledSubject'
+  | 'customerRescheduledIntro'
+  | 'customerRescheduledOutro'
   | 'ownerCreatedSubject'
   | 'ownerHello'
   | 'ownerCreatedIntro'
@@ -238,6 +274,8 @@ type Key =
   | 'labelCustomer'
   | 'labelCustomerNotes'
   | 'labelYourNotes'
+  | 'labelOldSlot'
+  | 'labelNewSlot'
   | 'onePerson'
   | 'multiplePeople';
 
@@ -258,6 +296,9 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     customerReminderSubject: 'Herinnering: reservering bij {tenant}',
     customerReminderIntro: 'Een korte herinnering aan je reservering bij {tenant}.',
     customerReminderOutro: 'Tot snel!',
+    customerRescheduledSubject: 'Reservering verzet - {tenant}',
+    customerRescheduledIntro: 'Je reservering bij {tenant} is verzet.',
+    customerRescheduledOutro: 'Tot snel!',
     ownerCreatedSubject: 'Nieuwe reservering: {reference}',
     ownerHello: 'Hi {tenant} team,',
     ownerCreatedIntro: 'Een nieuwe online reservering is binnengekomen.',
@@ -270,6 +311,8 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     labelCustomer: 'Klant',
     labelCustomerNotes: 'Notities van de klant',
     labelYourNotes: 'Je opmerkingen',
+    labelOldSlot: 'Oude tijd',
+    labelNewSlot: 'Nieuwe tijd',
     onePerson: '1 persoon',
     multiplePeople: '{count} personen',
   },
@@ -289,6 +332,9 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     customerReminderSubject: 'Rappel : réservation chez {tenant}',
     customerReminderIntro: 'Un petit rappel concernant votre réservation chez {tenant}.',
     customerReminderOutro: 'À bientôt !',
+    customerRescheduledSubject: 'Réservation reprogrammée - {tenant}',
+    customerRescheduledIntro: 'Votre réservation chez {tenant} a été reprogrammée.',
+    customerRescheduledOutro: 'À bientôt !',
     ownerCreatedSubject: 'Nouvelle réservation : {reference}',
     ownerHello: 'Bonjour équipe {tenant},',
     ownerCreatedIntro: 'Une nouvelle réservation en ligne est arrivée.',
@@ -301,6 +347,8 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     labelCustomer: 'Client',
     labelCustomerNotes: 'Notes du client',
     labelYourNotes: 'Vos remarques',
+    labelOldSlot: 'Ancienne heure',
+    labelNewSlot: 'Nouvelle heure',
     onePerson: '1 personne',
     multiplePeople: '{count} personnes',
   },
@@ -319,6 +367,9 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     customerReminderSubject: 'Reminder: reservation at {tenant}',
     customerReminderIntro: 'A quick reminder about your reservation at {tenant}.',
     customerReminderOutro: 'See you soon!',
+    customerRescheduledSubject: 'Reservation rescheduled - {tenant}',
+    customerRescheduledIntro: 'Your reservation at {tenant} has been rescheduled.',
+    customerRescheduledOutro: 'See you soon!',
     ownerCreatedSubject: 'New reservation: {reference}',
     ownerHello: 'Hi {tenant} team,',
     ownerCreatedIntro: 'A new online reservation just came in.',
@@ -331,6 +382,8 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     labelCustomer: 'Customer',
     labelCustomerNotes: 'Customer notes',
     labelYourNotes: 'Your notes',
+    labelOldSlot: 'Old time',
+    labelNewSlot: 'New time',
     onePerson: '1 person',
     multiplePeople: '{count} people',
   },

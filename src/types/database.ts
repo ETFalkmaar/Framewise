@@ -744,6 +744,10 @@ export type AuditLogAction =
   | 'tenant_bookings_toggled'
   // Step 51 — anonymous public booking flow.
   | 'booking_created'
+  // Step 54 — customer self-service (cancel / reschedule via reference code).
+  | 'booking_email_verified'
+  | 'booking_cancelled_by_customer'
+  | 'booking_rescheduled_by_customer'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'
