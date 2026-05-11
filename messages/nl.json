@@ -36,6 +36,21 @@
     "viewConnections": "Verbindingen beheren",
     "viewMedia": "Mediabibliotheek",
     "viewEditor": "Pagina's bewerken",
+    "publish": {
+      "ctaTitle": "🚀 Site live zetten",
+      "ctaButton": "Site indienen",
+      "confirmRequest": "Site indienen voor publicatie? Ons team beoordeelt je site binnen 24 uur.",
+      "pendingLabel": "⏳ Je site staat klaar voor goedkeuring",
+      "pendingHint": "We beoordelen binnen 24 uur. Je krijgt bericht als je site live is.",
+      "cancelButton": "Verzoek annuleren",
+      "confirmCancel": "Weet je zeker dat je dit publicatieverzoek wilt annuleren?",
+      "approvedLabel": "✅ Je site is live!",
+      "viewSite": "Bekijk je site",
+      "rejectedLabel": "⚠ Je verzoek is afgewezen",
+      "rejectionNotesLabel": "Reden",
+      "resubmitButton": "Opnieuw indienen",
+      "errorGeneric": "Er ging iets mis, probeer het opnieuw."
+    },
     "history": {
       "title": "Versiegeschiedenis",
       "subtitle": "Bekijk eerdere versies van deze pagina en herstel indien nodig.",
@@ -594,6 +609,27 @@
     "placeholder_note": "Klanten ontvangen een definitief sjabloon voor algemene voorwaarden bij oplevering (komt in stap 93)."
   },
   "admin": {
+    "publish": {
+      "cardTitle": "🔔 Publicatieverzoek",
+      "requestedBy": "Aangevraagd door {user}",
+      "requestedAt": "op {date}",
+      "previewSite": "Bekijk preview",
+      "approveButton": "Goedkeuren",
+      "approveModalTitle": "Site live zetten?",
+      "approveModalBody": "Dit zet de site direct live op het publieke web. De klant krijgt bericht.",
+      "approveNotesLabel": "Interne notitie (optioneel)",
+      "approveSubmit": "Goedkeuren en live zetten",
+      "rejectButton": "Afwijzen",
+      "rejectModalTitle": "Verzoek afwijzen?",
+      "rejectModalBody": "De klant krijgt deze reden te zien.",
+      "rejectNotesLabel": "Reden voor afwijzing",
+      "rejectNotesPlaceholder": "Bijv. Logo is nog niet juist, prijs ontbreekt, ...",
+      "rejectNotesHint": "Minstens 10 tekens",
+      "rejectNotesShort": "Reden moet minstens 10 tekens zijn",
+      "rejectSubmit": "Afwijzen met reden",
+      "cancel": "Annuleren",
+      "errorGeneric": "Er ging iets mis, probeer het opnieuw."
+    },
     "tenants": {
       "title": "Klanten",
       "newClient": "+ Nieuwe klant onboarden",

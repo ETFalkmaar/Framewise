@@ -15,8 +15,9 @@ import {
   listRecentAuditEvents,
   type AuditAction,
 } from '@/lib/admin';
+import { PublishRequestCard } from '@/components/admin/publish-request-card';
 import { getCurrentUser, isUserSuperAdmin } from '@/lib/auth';
-import { subscriptionsRepo, tenantsRepo } from '@/lib/data';
+import { subscriptionsRepo, tenantsRepo, usersRepo } from '@/lib/data';
 import type { Locale } from '@/i18n/routing';
 import type { ConnectionCategory, TenantStatus } from '@/types/database';
 
@@ -58,6 +59,15 @@ export default async function AdminTenantDashboardPage({
   const t = await getTranslations('admin.tenantDashboard');
   const tAuditActions = await getTranslations('admin.tenantDashboard.auditActions');
   const tCategory = await getTranslations('admin.tenantDashboard.categoryLabels');
+  const tPublish = await getTranslations('admin.publish');
+
+  // Step 47 — surface a pending publish request prominently at the
+  // top of the dashboard so the super-admin notices it before they
+  // dive into stats / audit / connections.
+  const publishRequester =
+    tenant.publish_request_status === 'pending' && tenant.publish_requested_by_user_id
+      ? await usersRepo.findById(tenant.publish_requested_by_user_id)
+      : null;
 
   const statusLabels: Record<TenantStatus, string> = {
     onboarding: tStatus('onboarding'),
@@ -103,6 +113,33 @@ export default async function AdminTenantDashboardPage({
           setupChecklist: t('setupChecklist'),
           domain: t('domain'),
           maintenance: t('maintenance'),
+        }}
+      />
+
+      <PublishRequestCard
+        tenant={tenant}
+        requestedBy={publishRequester}
+        previewUrl={`/sites/${tenant.slug}?preview=true&pageId=${tenant.id}`}
+        copy={{
+          cardTitle: tPublish('cardTitle'),
+          requestedBy: tPublish('requestedBy'),
+          requestedAt: tPublish('requestedAt'),
+          previewSite: tPublish('previewSite'),
+          approveButton: tPublish('approveButton'),
+          approveModalTitle: tPublish('approveModalTitle'),
+          approveModalBody: tPublish('approveModalBody'),
+          approveNotesLabel: tPublish('approveNotesLabel'),
+          approveSubmit: tPublish('approveSubmit'),
+          rejectButton: tPublish('rejectButton'),
+          rejectModalTitle: tPublish('rejectModalTitle'),
+          rejectModalBody: tPublish('rejectModalBody'),
+          rejectNotesLabel: tPublish('rejectNotesLabel'),
+          rejectNotesPlaceholder: tPublish('rejectNotesPlaceholder'),
+          rejectNotesHint: tPublish('rejectNotesHint'),
+          rejectNotesShort: tPublish('rejectNotesShort'),
+          rejectSubmit: tPublish('rejectSubmit'),
+          cancel: tPublish('cancel'),
+          errorGeneric: tPublish('errorGeneric'),
         }}
       />
 

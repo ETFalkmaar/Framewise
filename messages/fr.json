@@ -36,6 +36,21 @@
     "viewConnections": "Gérer les connexions",
     "viewMedia": "Bibliothèque média",
     "viewEditor": "Modifier les pages",
+    "publish": {
+      "ctaTitle": "🚀 Mettre le site en ligne",
+      "ctaButton": "Soumettre le site",
+      "confirmRequest": "Soumettre votre site pour publication ? Notre équipe l'examine dans les 24 heures.",
+      "pendingLabel": "⏳ Votre site est en attente d'approbation",
+      "pendingHint": "Nous l'examinons dans les 24 heures. Vous serez prévenu une fois le site en ligne.",
+      "cancelButton": "Annuler la demande",
+      "confirmCancel": "Êtes-vous sûr de vouloir annuler cette demande de publication ?",
+      "approvedLabel": "✅ Votre site est en ligne !",
+      "viewSite": "Voir votre site",
+      "rejectedLabel": "⚠ Votre demande a été refusée",
+      "rejectionNotesLabel": "Motif",
+      "resubmitButton": "Soumettre à nouveau",
+      "errorGeneric": "Une erreur s'est produite, veuillez réessayer."
+    },
     "history": {
       "title": "Historique des versions",
       "subtitle": "Consultez les versions précédentes de cette page et restaurez-les si besoin.",
@@ -594,6 +609,27 @@
     "placeholder_note": "Les clients reçoivent un modèle de conditions générales définitif à la livraison (arrive à l'étape 93)."
   },
   "admin": {
+    "publish": {
+      "cardTitle": "🔔 Demande de publication",
+      "requestedBy": "Demandé par {user}",
+      "requestedAt": "le {date}",
+      "previewSite": "Voir l'aperçu",
+      "approveButton": "Approuver",
+      "approveModalTitle": "Mettre le site en ligne ?",
+      "approveModalBody": "Ceci met le site immédiatement en ligne. Le client sera informé.",
+      "approveNotesLabel": "Note interne (facultatif)",
+      "approveSubmit": "Approuver et publier",
+      "rejectButton": "Refuser",
+      "rejectModalTitle": "Refuser la demande ?",
+      "rejectModalBody": "Le client verra cette raison.",
+      "rejectNotesLabel": "Motif du refus",
+      "rejectNotesPlaceholder": "Ex. Logo incorrect, prix manquant, ...",
+      "rejectNotesHint": "Au moins 10 caractères",
+      "rejectNotesShort": "Le motif doit faire au moins 10 caractères",
+      "rejectSubmit": "Refuser avec motif",
+      "cancel": "Annuler",
+      "errorGeneric": "Une erreur s'est produite, veuillez réessayer."
+    },
     "tenants": {
       "title": "Clients",
       "newClient": "+ Nouveau client",

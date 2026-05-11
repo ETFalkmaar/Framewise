@@ -1909,6 +1909,45 @@ error` labels, `aria-live="polite"`.
 Adds 12 tests (save-block-conflict: 6, blocks-version: 6) —
 total 1245.
 
+### Publish-request flow (step 47 — fase 13 part 1/2)
+
+Customers can ask for go-live from their `/account` dashboard;
+super-admins approve or reject from the per-tenant admin
+dashboard. State lives on `Tenant.publish_request_status`
+(`none` / `pending` / `approved` / `rejected`) plus seven
+nullable timestamp / user-id / notes fields. Every transition
+writes a `site_publish_*` row into the new `audit_logs` table.
+
+- `Tenant.publish_request_status` + 7 lifecycle fields. Mock
+  adapter backfills all of them on legacy seeds (same backfill
+  pattern as `version` in step 46 and `deleted_at` in step 42).
+- `AuditLog` is a new tenant-scoped event-log entity with its
+  own `auditLogsRepo`. `listByTenant` is newest-first, optional
+  `actions` filter for the "publish-only" view.
+- `permissions/publishing` exports three gates: `canRequestPublish`,
+  `canCancelPublishRequest`, `canApprovePublishRequest`.
+  Super-admin bypasses the role + status checks (so they can seed
+  a request from the admin view for debugging) but `approve` is
+  super-admin-only — a tenant owner can never approve their own
+  request.
+- Customer-side server action: `requestSitePublish` /
+  `cancelPublishRequest`. Both write an audit-log entry and
+  revalidate `/account` + `/admin/tenants`.
+- Super-admin server action: `approvePublishRequest` (optional
+  notes) / `rejectPublishRequest` (notes ≥ 10 chars required —
+  the customer sees them on their rejected-banner).
+- `PublishStatusBanner` (client) — four skins (idle CTA / pending
+  / approved-live / rejected-with-notes); window.confirm gate
+  before submit + cancel.
+- `PublishRequestCard` (client) — admin-side approve/reject card
+  + two modals. Surfaces only when `publish_request_status ===
+  'pending'`. Both modals overlay the dashboard so the
+  super-admin keeps the tenant context in view.
+- Translations under `account.publish.*` + `admin.publish.*` in
+  NL / FR / EN.
+
+Adds 14 tests (permissions/publishing) — total 1259.
+
 ## Status
 
-In development - Step 46 of 96 (revised plan) — FASE 12 COMPLEET (8/8)!
+In development - Step 47 of 96 (revised plan) — FASE 13 START (1/2)
