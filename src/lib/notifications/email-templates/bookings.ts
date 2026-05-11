@@ -107,9 +107,7 @@ export function bookingOwnerNotificationEmail(
     '',
     `${translate(locale, 'labelReference')}: ${booking.reference_code}`,
     `${translate(locale, 'labelCustomer')}: ${booking.customer_name} <${booking.customer_email}>`,
-    booking.customer_phone
-      ? `${translate(locale, 'labelPhone')}: ${booking.customer_phone}`
-      : null,
+    booking.customer_phone ? `${translate(locale, 'labelPhone')}: ${booking.customer_phone}` : null,
     `${translate(locale, 'labelDate')}: ${date} ${time}`,
     `${translate(locale, 'labelGuests')}: ${booking.party_size}`,
     booking.notes ? `${translate(locale, 'labelCustomerNotes')}: ${booking.notes}` : null,
@@ -247,8 +245,10 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
   nl: {
     customerCreatedSubject: 'Reservering ontvangen - {tenant}',
     customerHello: 'Beste {name},',
-    customerCreatedIntro: 'Bedankt voor je reservering bij {tenant}. We hebben je aanvraag ontvangen.',
-    customerCreatedOutro: 'Je krijgt een aparte bevestigingsmail zodra we de reservering definitief maken.',
+    customerCreatedIntro:
+      'Bedankt voor je reservering bij {tenant}. We hebben je aanvraag ontvangen.',
+    customerCreatedOutro:
+      'Je krijgt een aparte bevestigingsmail zodra we de reservering definitief maken.',
     customerConfirmedSubject: 'Reservering bevestigd - {tenant}',
     customerConfirmedIntro: 'Goed nieuws — je reservering bij {tenant} is bevestigd.',
     customerConfirmedOutro: 'We zien je graag!',
@@ -276,8 +276,10 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
   fr: {
     customerCreatedSubject: 'Réservation reçue - {tenant}',
     customerHello: 'Bonjour {name},',
-    customerCreatedIntro: 'Merci pour votre réservation chez {tenant}. Nous avons bien reçu votre demande.',
-    customerCreatedOutro: 'Vous recevrez un e-mail de confirmation séparé dès que la réservation sera validée.',
+    customerCreatedIntro:
+      'Merci pour votre réservation chez {tenant}. Nous avons bien reçu votre demande.',
+    customerCreatedOutro:
+      'Vous recevrez un e-mail de confirmation séparé dès que la réservation sera validée.',
     customerConfirmedSubject: 'Réservation confirmée - {tenant}',
     customerConfirmedIntro: 'Bonne nouvelle — votre réservation chez {tenant} est confirmée.',
     customerConfirmedOutro: 'À très bientôt !',
@@ -306,9 +308,10 @@ const COPY: Record<EmailLocale, Record<Key, string>> = {
     customerCreatedSubject: 'Reservation received - {tenant}',
     customerHello: 'Hi {name},',
     customerCreatedIntro: 'Thanks for your reservation at {tenant}. We received your request.',
-    customerCreatedOutro: "You'll get a separate confirmation email once we finalize the reservation.",
+    customerCreatedOutro:
+      "You'll get a separate confirmation email once we finalize the reservation.",
     customerConfirmedSubject: 'Reservation confirmed - {tenant}',
-    customerConfirmedIntro: "Good news — your reservation at {tenant} is confirmed.",
+    customerConfirmedIntro: 'Good news — your reservation at {tenant} is confirmed.',
     customerConfirmedOutro: 'See you soon!',
     customerCancelledSubject: 'Reservation cancelled - {tenant}',
     customerCancelledIntro: 'Your reservation at {tenant} has been cancelled.',
