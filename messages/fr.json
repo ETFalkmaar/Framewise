@@ -44,6 +44,74 @@
       "referenceCode": "Référence : {code}",
       "customerNotes": "Notes du client",
       "internalNotes": "Notes internes"
+    },
+    "manageAvailability": "Gérer la disponibilité",
+    "availability": {
+      "title": "Disponibilité",
+      "subtitle": "Définissez quand et combien de réservations vous acceptez.",
+      "backToBookings": "Retour aux réservations",
+      "rulesSection": "Règles hebdomadaires",
+      "rulesEmpty": "Aucune règle pour l'instant — ajoutez-en une pour libérer des créneaux.",
+      "exceptionsEmpty": "Aucune exception pour les 90 prochains jours.",
+      "addRule": "Nouvelle règle",
+      "addException": "Exception",
+      "days": {
+        "0": "Dimanche",
+        "1": "Lundi",
+        "2": "Mardi",
+        "3": "Mercredi",
+        "4": "Jeudi",
+        "5": "Vendredi",
+        "6": "Samedi"
+      },
+      "ruleCard": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "duration": "Créneaux de {minutes} min",
+        "capacity": "Max {count} simultanées",
+        "maxPartySize": "Max {count} personnes",
+        "buffer": "Pause de {minutes} min",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "deactivate": "Mettre en pause",
+        "activate": "Activer"
+      },
+      "form": {
+        "title": "Nouvelle règle de disponibilité",
+        "editTitle": "Modifier la règle",
+        "name": "Nom",
+        "namePlaceholder": "Ex. Service du dîner",
+        "dayOfWeek": "Jour de la semaine",
+        "startTime": "Heure de début",
+        "endTime": "Heure de fin",
+        "slotDuration": "Durée du créneau (minutes)",
+        "slotDurationHint": "Combien de temps dure une réservation ?",
+        "maxPartySize": "Max personnes par groupe",
+        "maxConcurrent": "Max réservations simultanées",
+        "bufferMinutes": "Pause entre créneaux (minutes)",
+        "bufferHint": "Temps de battement entre deux créneaux.",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+        "errorStartAfterEnd": "L'heure de fin doit être postérieure à l'heure de début."
+      },
+      "exception": {
+        "card": {
+          "closed": "Fermé",
+          "customTimes": "{start}–{end}"
+        },
+        "form": {
+          "title": "Ajouter une exception",
+          "date": "Date",
+          "reason": "Motif",
+          "reasonPlaceholder": "Ex. Noël, événement privé",
+          "isClosed": "Complètement fermé",
+          "isClosedHint": "Aucune réservation possible ce jour-là.",
+          "customStartTime": "Heure de début personnalisée",
+          "customEndTime": "Heure de fin personnalisée",
+          "save": "Enregistrer"
+        }
+      }
     }
   },
   "notifications": {

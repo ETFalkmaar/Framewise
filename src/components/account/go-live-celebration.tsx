@@ -49,17 +49,17 @@ export function GoLiveCelebration({
     });
   }
 
-  const url = data.hasCustomDomain && data.customDomain
-    ? `https://${data.customDomain}`
-    : data.siteUrl;
+  const url =
+    data.hasCustomDomain && data.customDomain ? `https://${data.customDomain}` : data.siteUrl;
   const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
     typeof window !== 'undefined' && data.siteUrl.startsWith('/')
       ? `${window.location.origin}${data.siteUrl}`
       : url
   )}`;
 
-  const daysCopy = (data.daysFromOnboarding === 1 ? copy.celebrationDay : copy.celebrationDays)
-    .replace('{days}', String(data.daysFromOnboarding));
+  const daysCopy = (
+    data.daysFromOnboarding === 1 ? copy.celebrationDay : copy.celebrationDays
+  ).replace('{days}', String(data.daysFromOnboarding));
 
   return (
     <div
@@ -84,7 +84,7 @@ export function GoLiveCelebration({
 
         <div className="bg-background/60 mt-5 rounded-md p-4">
           <p className="text-muted-foreground font-mono text-xs">{copy.yourUrl}</p>
-          <p className="mt-1 break-all font-mono text-sm">{url}</p>
+          <p className="mt-1 font-mono text-sm break-all">{url}</p>
           <p className="mt-2 text-xs">{daysCopy}</p>
         </div>
 
@@ -98,7 +98,7 @@ export function GoLiveCelebration({
             target="_blank"
             rel="noopener noreferrer"
             data-testid="go-live-view-site"
-            className="bg-emerald-600 hover:bg-emerald-700 inline-flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-white transition"
+            className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
           >
             {copy.viewSite}
           </a>

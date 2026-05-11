@@ -29,13 +29,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const cookieStore = await cookies();
   const recentIds = parseRecentTenantsCookie(cookieStore.get(RECENT_TENANTS_COOKIE)?.value);
 
-  const [recentTenants, allTenants, unreadNotifications, recentNotifications] =
-    await Promise.all([
-      hydrateRecentTenants(recentIds),
-      tenantsRepo.list(),
-      notificationsRepo.countUnreadByUser(user.id),
-      notificationsRepo.listByUser(user.id, { limit: 10 }),
-    ]);
+  const [recentTenants, allTenants, unreadNotifications, recentNotifications] = await Promise.all([
+    hydrateRecentTenants(recentIds),
+    tenantsRepo.list(),
+    notificationsRepo.countUnreadByUser(user.id),
+    notificationsRepo.listByUser(user.id, { limit: 10 }),
+  ]);
 
   const tSwitcher = await getTranslations('admin.switcher');
   const tSearch = await getTranslations('admin.search');

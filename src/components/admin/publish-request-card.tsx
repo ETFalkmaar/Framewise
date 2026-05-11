@@ -103,7 +103,7 @@ export function PublishRequestCard({
     <>
       <div
         data-testid="admin-publish-request"
-        className="border-amber-500/40 bg-amber-500/10 mb-6 flex flex-col gap-3 rounded-md border p-4"
+        className="mb-6 flex flex-col gap-3 rounded-md border border-amber-500/40 bg-amber-500/10 p-4"
       >
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="border-amber-500/40 font-mono">
@@ -130,7 +130,7 @@ export function PublishRequestCard({
             data-testid="approve-publish"
             onClick={() => setOpenModal('approve')}
             disabled={pending}
-            className="bg-emerald-600 hover:bg-emerald-700 rounded-md px-3 py-1.5 font-mono text-xs text-white transition disabled:opacity-50"
+            className="rounded-md bg-emerald-600 px-3 py-1.5 font-mono text-xs text-white transition hover:bg-emerald-700 disabled:opacity-50"
           >
             {copy.approveButton}
           </button>
@@ -223,7 +223,7 @@ function ApproveModal({
             data-testid="approve-submit"
             onClick={onSubmit}
             disabled={pending}
-            className="bg-emerald-600 hover:bg-emerald-700 rounded-md px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="rounded-md bg-emerald-600 px-4 py-2 text-sm text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             {copy.approveSubmit}
           </button>

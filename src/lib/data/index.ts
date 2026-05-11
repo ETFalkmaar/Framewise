@@ -11,7 +11,9 @@
 import { mockAgentConversationsRepo } from './adapters/mock/agent-conversations';
 import { mockAgentKnowledgeRepo } from './adapters/mock/agent-knowledge';
 import { mockAuditLogsRepo } from './adapters/mock/audit-logs';
+import { mockAvailabilityRulesRepo } from './adapters/mock/availability-rules';
 import { mockBlocksRepo } from './adapters/mock/blocks';
+import { mockBookingExceptionsRepo } from './adapters/mock/booking-exceptions';
 import { mockBookingsRepo } from './adapters/mock/bookings';
 import { mockChecklistRepo } from './adapters/mock/checklist';
 import { mockConnectionsRepo } from './adapters/mock/connections';
@@ -33,7 +35,9 @@ import {
 } from './repositories/agent-conversations';
 import { agentKnowledgeRepo, setAgentKnowledgeRepo } from './repositories/agent-knowledge';
 import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
+import { availabilityRulesRepo, setAvailabilityRulesRepo } from './repositories/availability-rules';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';
+import { bookingExceptionsRepo, setBookingExceptionsRepo } from './repositories/booking-exceptions';
 import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
 import { checklistRepo, setChecklistRepo } from './repositories/checklist';
 import { connectionsRepo, setConnectionsRepo } from './repositories/connections';
@@ -56,7 +60,9 @@ import { setUsersRepo, usersRepo } from './repositories/users';
 setAgentConversationsRepo(mockAgentConversationsRepo);
 setAgentKnowledgeRepo(mockAgentKnowledgeRepo);
 setAuditLogsRepo(mockAuditLogsRepo);
+setAvailabilityRulesRepo(mockAvailabilityRulesRepo);
 setBlocksRepo(mockBlocksRepo);
+setBookingExceptionsRepo(mockBookingExceptionsRepo);
 setBookingsRepo(mockBookingsRepo);
 setChecklistRepo(mockChecklistRepo);
 setConnectionsRepo(mockConnectionsRepo);
@@ -76,7 +82,9 @@ export {
   agentConversationsRepo,
   agentKnowledgeRepo,
   auditLogsRepo,
+  availabilityRulesRepo,
   blocksRepo,
+  bookingExceptionsRepo,
   bookingsRepo,
   checklistRepo,
   connectionsRepo,

@@ -44,6 +44,74 @@
       "referenceCode": "Reference: {code}",
       "customerNotes": "Customer notes",
       "internalNotes": "Internal notes"
+    },
+    "manageAvailability": "Manage availability",
+    "availability": {
+      "title": "Availability",
+      "subtitle": "Set when and how many bookings you accept.",
+      "backToBookings": "Back to bookings",
+      "rulesSection": "Weekly rules",
+      "rulesEmpty": "No rules yet — add one to release slots.",
+      "exceptionsEmpty": "No exceptions in the next 90 days.",
+      "addRule": "New rule",
+      "addException": "Exception",
+      "days": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      },
+      "ruleCard": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "duration": "{minutes} min slots",
+        "capacity": "Max {count} concurrent",
+        "maxPartySize": "Max {count} people",
+        "buffer": "{minutes} min buffer",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deactivate": "Pause",
+        "activate": "Activate"
+      },
+      "form": {
+        "title": "New availability rule",
+        "editTitle": "Edit rule",
+        "name": "Name",
+        "namePlaceholder": "E.g. Dinner service",
+        "dayOfWeek": "Day of the week",
+        "startTime": "Start time",
+        "endTime": "End time",
+        "slotDuration": "Slot duration (minutes)",
+        "slotDurationHint": "How long does one booking last?",
+        "maxPartySize": "Max people per party",
+        "maxConcurrent": "Max concurrent bookings",
+        "bufferMinutes": "Buffer between slots (minutes)",
+        "bufferHint": "Cooldown time between two slots.",
+        "save": "Save",
+        "cancel": "Cancel",
+        "deleteConfirm": "Are you sure you want to delete?",
+        "errorStartAfterEnd": "End time must be after start time."
+      },
+      "exception": {
+        "card": {
+          "closed": "Closed",
+          "customTimes": "{start}–{end}"
+        },
+        "form": {
+          "title": "Add exception",
+          "date": "Date",
+          "reason": "Reason",
+          "reasonPlaceholder": "E.g. Christmas Day, private event",
+          "isClosed": "Fully closed",
+          "isClosedHint": "No bookings possible on this date.",
+          "customStartTime": "Custom start time",
+          "customEndTime": "Custom end time",
+          "save": "Save"
+        }
+      }
     }
   },
   "notifications": {

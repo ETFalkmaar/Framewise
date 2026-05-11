@@ -3,11 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import '@/lib/data';
 
 import { resetStore, tenantsRepo } from '@/lib/data';
-import {
-  canEnableBookings,
-  canManageBookings,
-  canViewBookings,
-} from '@/lib/permissions/bookings';
+import { canEnableBookings, canManageBookings, canViewBookings } from '@/lib/permissions/bookings';
 import type { Tenant } from '@/types/database';
 
 /**

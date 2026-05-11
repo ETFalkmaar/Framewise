@@ -86,7 +86,7 @@ export function PublishStatusBanner({
     return (
       <div
         data-testid="publish-approved-banner"
-        className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border p-4"
+        className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border border-emerald-500/40 bg-emerald-500/10 p-4 text-emerald-700 dark:text-emerald-300"
       >
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="font-mono">
@@ -112,7 +112,7 @@ export function PublishStatusBanner({
     return (
       <div
         data-testid="publish-pending-banner"
-        className="border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300 mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border p-4"
+        className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border border-amber-500/40 bg-amber-500/10 p-4 text-amber-700 dark:text-amber-300"
       >
         <div className="flex min-w-0 flex-col gap-1">
           <span className="text-sm font-medium">{copy.pendingLabel}</span>

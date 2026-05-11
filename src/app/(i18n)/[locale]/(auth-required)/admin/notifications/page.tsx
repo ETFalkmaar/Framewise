@@ -89,7 +89,7 @@ export default async function AdminNotificationsPage({
           {filter === 'unread' ? t('emptyUnread') : t('empty')}
         </p>
       ) : (
-        <ul className="border-border divide-y divide-border rounded-md border">
+        <ul className="border-border divide-border divide-y rounded-md border">
           {items.map((n) => (
             <li
               key={n.id}

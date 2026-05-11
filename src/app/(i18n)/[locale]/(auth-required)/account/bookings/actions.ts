@@ -98,9 +98,7 @@ export async function cancelBookingAction(input: {
   return { success: true };
 }
 
-export async function markNoShowAction(input: {
-  bookingId: string;
-}): Promise<BookingActionResult> {
+export async function markNoShowAction(input: { bookingId: string }): Promise<BookingActionResult> {
   const ctx = await authenticatedTenantBookingContext(input.bookingId);
   if ('error' in ctx) return { success: false, error: ctx.error };
   try {
