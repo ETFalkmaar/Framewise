@@ -35,6 +35,38 @@
     "logout": "Uitloggen",
     "viewConnections": "Verbindingen beheren",
     "viewMedia": "Mediabibliotheek",
+    "viewEditor": "Pagina's bewerken",
+    "editor": {
+      "title": "Pagina's",
+      "subtitle": "Beheer de pagina's van {tenant}.",
+      "empty": "Nog geen pagina's voor deze tenant.",
+      "newPage": "Nieuwe pagina",
+      "edit": "Bewerken",
+      "blockSuffix": "blocks",
+      "updatedAt": "Laatste update",
+      "backToPages": "Terug naar overzicht",
+      "blockListIntro": "De inhoudsblokken van deze pagina, in volgorde.",
+      "blocksEmpty": "Deze pagina heeft nog geen inhoudsblokken.",
+      "addBlock": "Voeg block toe",
+      "addBlockComingSoon": "Block toevoegen komt in stap 40 (drag & drop).",
+      "editBlock": "Bewerken",
+      "blockEditComingSoon": "Block bewerken komt in stap 41 (TipTap editor).",
+      "status": {
+        "draft": "Concept",
+        "published": "Gepubliceerd",
+        "archived": "Gearchiveerd"
+      },
+      "blockType": {
+        "hero": "Hero",
+        "text": "Tekst",
+        "image": "Afbeelding",
+        "gallery": "Galerij",
+        "cta": "Call-to-action",
+        "faq": "FAQ",
+        "pricing": "Prijzen",
+        "contact": "Contact"
+      }
+    },
     "media": {
       "title": "Mediabibliotheek",
       "subtitle": "Afbeeldingen en documenten die voor deze tenant zijn geüpload.",

@@ -1621,6 +1621,40 @@ with two power-user controls baked in.
 
 Adds 30 tests (global-search: 13, recent-tenants: 17) — total 1107.
 
+### Block-editor foundation (step 39 — fase 12 part 1/8)
+
+Customer-facing block editor entry point. After delivery, Pro
+and Enterprise customers can manage their own page content. Step
+39 ships the route + permission gate + read-only block list so
+steps 40-46 (drag & drop, TipTap, media library, translations,
+versioning, live preview, auto-save) have a foundation to attach
+to.
+
+- `src/lib/permissions/block-editor.ts` — two helpers:
+  - `canEditBlocks(userId, tenant, planCode)` — needs an editor
+    role on the tenant _and_ a Pro / Enterprise plan; super-admin
+    always wins (preview / hands-on troubleshooting access).
+  - `canAddRemoveBlocks(userId, tenant, planCode)` — Enterprise-
+    only. Pro customers can edit blocks but the layout stays
+    locked.
+- `/account/site/pages` — pages list, sorted by `order_index`,
+  with status badge, block count, and an "Edit" link per row.
+  "+ Nieuwe pagina" button surfaces only when add/remove is
+  unlocked. Basic customers redirect to `/account`.
+- `/account/site/pages/[pageId]/edit` — read-only block list
+  for one page. Each row shows the block-type icon, the
+  translated type label, and a tiny excerpt (first usable string
+  in the block JSON, truncated to 80 chars). The "+ block" and
+  "Edit block" buttons render disabled with copy pointing at the
+  follow-up steps that wire them up.
+- `/account` gains an "→ Pagina's bewerken" link visible only
+  for Pro / Enterprise tenants — basic customers don't see the
+  entry point.
+- Translations under `account.editor.*` in NL / FR / EN
+  (including all 8 block-type labels and 3 page-status labels).
+
+Adds 13 tests (block-editor permissions: 13) — total 1120.
+
 ## Status
 
-In development - Step 38 of 96 (revised plan) — **FASE 11 COMPLEET** (admin paneel fundering)
+In development - Step 39 of 96 (revised plan) — FASE 12 START (block editor 1/8)

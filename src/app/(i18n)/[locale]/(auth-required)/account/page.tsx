@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveTenantForUser, getCurrentUserWithTenants, isUserSuperAdmin } from '@/lib/auth';
 import { computeChecklistProgress } from '@/lib/checklist';
+import { subscriptionsRepo } from '@/lib/data';
+import { canEditBlocks } from '@/lib/permissions';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +25,16 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const superAdmin = isUserSuperAdmin(user.id);
   const checklistProgress = activeTenant ? await computeChecklistProgress(activeTenant.id) : null;
   const tSetup = await getTranslations('account.setup');
+
+  // Step 39: surface the block-editor entry point only for plans
+  // that unlock it (pro + enterprise) — basic customers don't
+  // see the link at all.
+  let editorVisible = false;
+  if (activeTenant) {
+    const subscription = await subscriptionsRepo.findByTenant(activeTenant.id);
+    const plan = subscription ? await subscriptionsRepo.findPlanById(subscription.plan_id) : null;
+    editorVisible = await canEditBlocks(user.id, activeTenant, plan?.code ?? null);
+  }
 
   return (
     <main
@@ -136,6 +148,15 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         >
           → {t('viewMedia')}
         </Link>
+        {editorVisible && (
+          <Link
+            href="/account/site/pages"
+            data-testid="link-editor"
+            className="text-foreground hover:bg-muted ring-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+          >
+            → {t('viewEditor')}
+          </Link>
+        )}
         {superAdmin && (
           <Link
             href="/admin/onboarding/new"

@@ -35,6 +35,38 @@
     "logout": "Se déconnecter",
     "viewConnections": "Gérer les connexions",
     "viewMedia": "Bibliothèque média",
+    "viewEditor": "Modifier les pages",
+    "editor": {
+      "title": "Pages",
+      "subtitle": "Gérez les pages de {tenant}.",
+      "empty": "Aucune page pour ce client.",
+      "newPage": "Nouvelle page",
+      "edit": "Modifier",
+      "blockSuffix": "blocs",
+      "updatedAt": "Dernière mise à jour",
+      "backToPages": "Retour aux pages",
+      "blockListIntro": "Les blocs de contenu de cette page, dans l'ordre.",
+      "blocksEmpty": "Cette page n'a encore aucun bloc.",
+      "addBlock": "Ajouter un bloc",
+      "addBlockComingSoon": "L'ajout de blocs arrive à l'étape 40 (glisser-déposer).",
+      "editBlock": "Modifier",
+      "blockEditComingSoon": "L'édition des blocs arrive à l'étape 41 (éditeur TipTap).",
+      "status": {
+        "draft": "Brouillon",
+        "published": "Publié",
+        "archived": "Archivé"
+      },
+      "blockType": {
+        "hero": "Hero",
+        "text": "Texte",
+        "image": "Image",
+        "gallery": "Galerie",
+        "cta": "Appel à l'action",
+        "faq": "FAQ",
+        "pricing": "Tarifs",
+        "contact": "Contact"
+      }
+    },
     "media": {
       "title": "Bibliothèque média",
       "subtitle": "Images et documents téléversés pour ce tenant.",
