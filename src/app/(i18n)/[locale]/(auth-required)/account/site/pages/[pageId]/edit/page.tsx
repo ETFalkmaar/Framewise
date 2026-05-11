@@ -2,7 +2,8 @@ import { notFound, redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { SortableBlockList } from '@/components/editor/sortable-block-list';
 import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
 import { blocksRepo, pagesRepo, subscriptionsRepo } from '@/lib/data';
 import { canAddRemoveBlocks, canEditBlocks } from '@/lib/permissions';
@@ -10,28 +11,16 @@ import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import type { BlockType } from '@/types/database';
 
-const BLOCK_ICON: Record<BlockType, string> = {
-  hero: '🦸',
-  text: '📝',
-  image: '🖼️',
-  gallery: '🎞️',
-  cta: '🔗',
-  faq: '❓',
-  pricing: '💰',
-  contact: '📞',
-};
-
 /**
- * Read-only block list for a single page (fase 12 step 39). The
- * heavy interactivity (drag-to-reorder, inline edit, rich text,
- * preview) lands in steps 40-46. This step ships the route + the
- * permission gate + the "what blocks does this page contain"
- * view so the rest of the fase has a foundation to attach to.
+ * Block list editor for a single page. Step 39 shipped this
+ * read-only; step 40 wires the @dnd-kit sortable + the
+ * `reorderBlocksAction` server action so customers can actually
+ * change the order of their content.
  *
- * The page falls back to the existing public renderer for the
- * actual content layout — what we render here is the *editor
- * preview* row: type icon, type label, and a tiny excerpt of the
- * block's content so the editor can identify what's what.
+ * The drag handle only renders for users who can edit (Pro /
+ * Enterprise + editor role; super-admin bypass). Pro tenants
+ * can reorder but can't add/remove — that gate lives on the
+ * "+ block" button further up the page.
  */
 export default async function EditPagePage({
   params,
@@ -64,6 +53,17 @@ export default async function EditPagePage({
   const t = await getTranslations('account.editor');
   const tType = await getTranslations('account.editor.blockType');
 
+  const blockTypeLabels: Record<BlockType, string> = {
+    hero: tType('hero'),
+    text: tType('text'),
+    image: tType('image'),
+    gallery: tType('gallery'),
+    cta: tType('cta'),
+    faq: tType('faq'),
+    pricing: tType('pricing'),
+    contact: tType('contact'),
+  };
+
   return (
     <main
       data-testid="page-edit"
@@ -84,6 +84,12 @@ export default async function EditPagePage({
           </Badge>
         </div>
         <p className="text-muted-foreground mt-2 text-sm">{t('blockListIntro')}</p>
+        <p
+          className="text-muted-foreground mt-1 font-mono text-[11px]"
+          data-testid="drag-instruction"
+        >
+          {t('dragToReorder')}
+        </p>
       </header>
 
       <section className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -110,59 +116,20 @@ export default async function EditPagePage({
           </CardContent>
         </Card>
       ) : (
-        <ol className="grid gap-3">
-          {blocks.map((block) => (
-            <li key={block.id} data-testid={`block-row-${block.id}`}>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between gap-3 space-y-0">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span aria-hidden className="text-2xl leading-none">
-                      {BLOCK_ICON[block.block_type]}
-                    </span>
-                    <div className="min-w-0">
-                      <CardTitle className="text-sm">{tType(block.block_type)}</CardTitle>
-                      <CardDescription className="font-mono text-[11px]">
-                        {truncate(extractExcerpt(block.data), 80)}
-                      </CardDescription>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    data-testid={`block-edit-trigger-${block.id}`}
-                    disabled
-                    title={t('blockEditComingSoon')}
-                    className="ring-border bg-muted/40 text-muted-foreground inline-flex cursor-not-allowed items-center gap-1 rounded-md px-3 py-1.5 font-mono text-xs ring-1"
-                  >
-                    {t('editBlock')}
-                  </button>
-                </CardHeader>
-              </Card>
-            </li>
-          ))}
-        </ol>
+        <SortableBlockList
+          pageId={page.id}
+          blocks={blocks}
+          canEdit
+          copy={{
+            blockType: blockTypeLabels,
+            editBlock: t('editBlock'),
+            blockEditComingSoon: t('blockEditComingSoon'),
+            dragHandle: t('dragHandle'),
+            reordering: t('reordering'),
+            reorderError: t('reorderError'),
+          }}
+        />
       )}
     </main>
   );
-}
-
-function extractExcerpt(data: Record<string, unknown>): string {
-  // Walk the JSON payload picking up the first string value we
-  // can read. Block schemas differ (hero vs text vs cta) so this
-  // best-effort approach beats hand-wiring one extractor per type
-  // — it's only for the "what is this block roughly" preview.
-  const stack: unknown[] = [data];
-  while (stack.length > 0) {
-    const next = stack.pop();
-    if (typeof next === 'string' && next.trim().length > 0) return next.trim();
-    if (Array.isArray(next)) {
-      for (let i = next.length - 1; i >= 0; i--) stack.push(next[i]);
-    } else if (next && typeof next === 'object') {
-      for (const v of Object.values(next as Record<string, unknown>)) stack.push(v);
-    }
-  }
-  return '';
-}
-
-function truncate(s: string, max: number): string {
-  return s.length <= max ? s : `${s.slice(0, max - 1)}…`;
 }

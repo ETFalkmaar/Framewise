@@ -1655,6 +1655,36 @@ to.
 
 Adds 13 tests (block-editor permissions: 13) — total 1120.
 
+### Drag & drop block reordering (step 40 — fase 12 part 2/8)
+
+Customers can now actually change the order of blocks on their
+pages — the read-only list from step 39 becomes a sortable
+list driven by `@dnd-kit`.
+
+- `src/lib/blocks/reorder.ts` — `reorderBlocksFor()` is the pure
+  use-case: tenant lookup → page lookup → permission gate
+  (re-runs `canEditBlocks`) → validation (count matches,
+  no duplicates, all ids belong to the page) → repo write.
+  Short stable error codes so the action layer maps them to
+  localised strings.
+- The server-action wrapper in
+  `/account/site/pages/[pageId]/edit/actions.ts` resolves the
+  iron-session user + active tenant and delegates to the core
+  function. Revalidates the editor route + the public site
+  path on success so the public renderer reflects the new
+  ordering on the next request.
+- `src/components/editor/sortable-block-list.tsx` — client
+  island with optimistic UI. Drop fires the action via
+  `useTransition`; on failure it rolls back to the previous
+  order and surfaces the localised error message. Keyboard
+  sortable too — `@dnd-kit/sortable`'s keyboard sensor is wired
+  in by default.
+- Drag handle is a separate `⋮⋮` button so a row click doesn't
+  initiate a drag — keeps the row tappable for the upcoming
+  step-41 inline editor.
+
+Adds 13 tests (blocks/reorder: 13) — total 1133.
+
 ## Status
 
-In development - Step 39 of 96 (revised plan) — FASE 12 START (block editor 1/8)
+In development - Step 40 of 96 (revised plan) — FASE 12 deel 2/8 (drag & drop block reordering)
