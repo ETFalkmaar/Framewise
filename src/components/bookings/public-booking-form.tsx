@@ -403,7 +403,9 @@ function PartySizeStep({
         ))}
       </div>
       <p className="text-muted-foreground mt-2 text-xs">
-        {partySize === 1 ? copy.partySize.person : copy.partySize.people.replace('{count}', String(partySize))}
+        {partySize === 1
+          ? copy.partySize.person
+          : copy.partySize.people.replace('{count}', String(partySize))}
       </p>
       <NavRow
         back={copy.back}
