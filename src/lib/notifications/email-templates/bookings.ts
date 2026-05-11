@@ -192,10 +192,7 @@ export function bookingRescheduledEmail(
 ): EmailTemplate {
   const oldFmt = formatStart(oldBooking, locale);
   const newFmt = formatStart(newBooking, locale);
-  const subject = translate(locale, 'customerRescheduledSubject').replace(
-    '{tenant}',
-    tenant.name
-  );
+  const subject = translate(locale, 'customerRescheduledSubject').replace('{tenant}', tenant.name);
   const body = [
     translate(locale, 'customerHello').replace('{name}', newBooking.customer_name),
     '',

@@ -18,11 +18,7 @@ import type { Booking } from '@/types/database';
  * localised disabled-state message without re-deriving the gate.
  */
 
-export type CancelDenial =
-  | 'wrong_status'
-  | 'past_booking'
-  | 'too_close'
-  | 'already_cancelled';
+export type CancelDenial = 'wrong_status' | 'past_booking' | 'too_close' | 'already_cancelled';
 
 export type RescheduleDenial = CancelDenial;
 
