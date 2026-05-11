@@ -579,6 +579,45 @@ export interface TenantCountrySettings {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// notifications (step 48 — fase 13 part 2/2)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Stable notification type codes. The renderer picks the icon +
+ * localised label based on the code so DB rows don't carry copy.
+ * Future steps add more codes (booking_*, ai_agent_*, ...).
+ */
+export type NotificationType =
+  | 'publish_requested'
+  | 'publish_approved'
+  | 'publish_rejected'
+  | 'system';
+
+/**
+ * In-app notification (step 48). Sent to:
+ *  - all super-admins on `publish_requested`
+ *  - the tenant owner on `publish_approved` / `publish_rejected`
+ *
+ * `tenant_id` is nullable because future system-level events
+ * (Framewise platform announcements, etc.) won't be tied to a
+ * tenant. `action_url` is the URL the renderer follows when the
+ * user clicks the notification body or "Bekijken" button — null
+ * means "no actionable link", display only.
+ */
+export interface Notification {
+  id: UUID;
+  user_id: UUID;
+  tenant_id: UUID | null;
+  type: NotificationType;
+  title: string;
+  body: string;
+  action_url: string | null;
+  is_read: boolean;
+  created_at: ISODateTime;
+  read_at: ISODateTime | null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // audit_logs (step 47 — fase 13 part 1/2)
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -591,7 +630,8 @@ export type AuditLogAction =
   | 'site_publish_requested'
   | 'site_publish_cancelled'
   | 'site_publish_approved'
-  | 'site_publish_rejected';
+  | 'site_publish_rejected'
+  | 'email_queued';
 
 /**
  * Tenant-scoped audit-log entry (step 47). Records meaningful
@@ -604,7 +644,12 @@ export interface AuditLog {
   id: UUID;
   tenant_id: UUID;
   action: AuditLogAction;
-  performed_by_user_id: UUID;
+  /**
+   * `null` for system-performed actions (step 48 — e.g. the email
+   * stub queues messages on behalf of the platform, not a user).
+   * User-initiated actions always populate this with the actor.
+   */
+  performed_by_user_id: UUID | null;
   /** Free-form context the renderer can show alongside the event. */
   metadata: Record<string, unknown>;
   created_at: ISODateTime;
@@ -637,6 +682,7 @@ export interface Database {
   tenant_checklist_status: TenantChecklistStatus;
   tenant_country_settings: TenantCountrySettings;
   audit_logs: AuditLog;
+  notifications: Notification;
 }
 
 export type TableName = keyof Database;

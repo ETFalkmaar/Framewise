@@ -3,7 +3,13 @@
 import { revalidatePath } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
-import { auditLogsRepo, tenantsRepo } from '@/lib/data';
+import { findTenantOwnerUserId } from '@/lib/auth/find-tenant-owner';
+import { auditLogsRepo, tenantsRepo, usersRepo } from '@/lib/data';
+import {
+  notifyClientOfApproval,
+  notifyClientOfRejection,
+} from '@/lib/notifications/create-notification';
+import { queueEmail } from '@/lib/notifications/email-stub';
 import { canApprovePublishRequest } from '@/lib/permissions/publishing';
 
 export type AdminPublishErrorCode =
@@ -73,6 +79,30 @@ export async function approvePublishRequest(input: {
         requestedByUserId: tenant.publish_requested_by_user_id,
       },
     });
+    // Step 48 — celebrate the customer.
+    try {
+      const ownerUserId = await findTenantOwnerUserId(tenant.id);
+      if (ownerUserId) {
+        await notifyClientOfApproval({
+          tenantId: tenant.id,
+          userId: ownerUserId,
+          approvedByUserName: user.name,
+        });
+        const owner = await usersRepo.findById(ownerUserId);
+        if (owner) {
+          await queueEmail({
+            to: owner.email,
+            subject: '🎉 Je site is live!',
+            body: `${user.name} heeft ${tenant.name} goedgekeurd. Bekijk je site op /sites/${tenant.slug}.`,
+            tenantId: tenant.id,
+            metadata: { event: 'publish_approved', ownerUserId },
+          });
+        }
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[step-48] notify on approval failed', err);
+    }
   } catch {
     return { success: false, error: 'repo_error' };
   }
@@ -134,6 +164,31 @@ export async function rejectPublishRequest(input: {
         notes: trimmed,
       },
     });
+    // Step 48 — notify the customer with the rejection rationale.
+    try {
+      const ownerUserId = await findTenantOwnerUserId(tenant.id);
+      if (ownerUserId) {
+        await notifyClientOfRejection({
+          tenantId: tenant.id,
+          userId: ownerUserId,
+          rejectedByUserName: user.name,
+          notes: trimmed,
+        });
+        const owner = await usersRepo.findById(ownerUserId);
+        if (owner) {
+          await queueEmail({
+            to: owner.email,
+            subject: 'Publicatie verzoek afgewezen',
+            body: `Reden: ${trimmed}`,
+            tenantId: tenant.id,
+            metadata: { event: 'publish_rejected', ownerUserId, notes: trimmed },
+          });
+        }
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[step-48] notify on rejection failed', err);
+    }
   } catch {
     return { success: false, error: 'repo_error' };
   }

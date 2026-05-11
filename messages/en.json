@@ -1,4 +1,38 @@
 {
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "emptyUnread": "No unread notifications",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all notifications",
+    "unreadCount": "{count} unread",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "openAction": "Open",
+    "types": {
+      "publish_requested": "New publish request",
+      "publish_approved": "Site approved",
+      "publish_rejected": "Request rejected",
+      "system": "System"
+    },
+    "relativeTime": {
+      "justNow": "just now",
+      "minutesAgo": "{count}m ago",
+      "hoursAgo": "{count}h ago",
+      "daysAgo": "{count}d ago"
+    }
+  },
+  "goLive": {
+    "headline": "🎉 Your site is live!",
+    "subheadline": "Congratulations! Your website is now publicly accessible.",
+    "celebrationDays": "Your site was ready in {days} days",
+    "celebrationDay": "Your site was ready in {days} day",
+    "yourUrl": "Your website URL",
+    "viewSite": "View your site",
+    "shareLinkedIn": "Share on LinkedIn",
+    "dismiss": "Back to dashboard",
+    "noCustomDomain": "💡 Tip: make your site even more professional with a custom domain"
+  },
   "common": {
     "comingSoon": "Coming soon",
     "loading": "Loading...",

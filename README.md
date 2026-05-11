@@ -1948,6 +1948,53 @@ writes a `site_publish_*` row into the new `audit_logs` table.
 
 Adds 14 tests (permissions/publishing) — total 1259.
 
+### Publish notifications + go-live ceremony (step 48 — fase 13 part 2/2 — FINALE)
+
+Wires the publish-request lifecycle into a notification system + a
+celebration banner. Super-admins get an in-app bell with unread
+count + dropdown + a dedicated `/admin/notifications` page;
+customers see a confetti banner on `/account` the first time their
+site goes live.
+
+- `Notification` (schema) — id / user_id / nullable tenant_id /
+  type / title / body / action_url / is_read / created_at /
+  read_at. Stable type codes (`publish_requested`,
+  `publish_approved`, `publish_rejected`, `system`) drive the
+  renderer's icon + localised category label.
+- `notificationsRepo` — `listByUser` (newest-first, optional
+  `unreadOnly` + `limit` + `offset`), `countUnreadByUser`,
+  `create`, `markAsRead` (idempotent — keeps original `read_at`),
+  `markAllAsRead` (returns the flip count, scoped to one user).
+- `src/lib/notifications/create-notification.ts` — three notify
+  helpers wired into the step-47 actions:
+  `notifySuperAdminsOfPublishRequest` (fan-out),
+  `notifyClientOfApproval`, `notifyClientOfRejection` (includes
+  the notes verbatim).
+- `src/lib/notifications/email-stub.ts` — `queueEmail` logs +
+  writes an `email_queued` audit-log entry when `tenantId` is
+  supplied. Real SMTP lands in step 21 with the same surface API.
+- `src/lib/site/go-live.ts` — `getGoLiveCelebrationData` produces
+  the celebration payload (URL, days from onboarding, custom-domain
+  flag), floors days to ≥1 so the copy never reads "0 dagen".
+- `findTenantOwnerUserId` (auth helper) — resolves the
+  approve/reject notification recipient from `tenant_users` +
+  `roles`. Deterministic single-owner pick on multi-owner tenants.
+- `NotificationBell` (client) — bell icon + unread badge +
+  dropdown with the 10 most recent, mark-all-read button, link to
+  the full page. Wired into `<AdminHeader>` next to the tenant
+  switcher; admin layout fetches the count + recent list per request.
+- `/admin/notifications` page — filter all / unread, paginate 20
+  per page via query string, click-through to `action_url`.
+- `GoLiveCelebration` (client) — confetti-emoji banner on
+  `/account`, prominent custom domain (or path-prefix URL),
+  "X dagen klaar gekomen" stat, three actions (view site / share
+  on LinkedIn / dismiss). Dismiss marks the driving notification
+  read so the banner stops appearing.
+- Translations under `notifications.*` + `goLive.*` in NL / FR / EN.
+
+Adds 22 tests (notifications-repo: 9, notify helpers: 4,
+email-stub: 3, go-live: 6) — total 1281.
+
 ## Status
 
-In development - Step 47 of 96 (revised plan) — FASE 13 START (1/2)
+In development - Step 48 of 96 (revised plan) — FASE 13 COMPLEET (2/2)!

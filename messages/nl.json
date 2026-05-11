@@ -1,4 +1,38 @@
 {
+  "notifications": {
+    "title": "Meldingen",
+    "empty": "Geen meldingen",
+    "emptyUnread": "Geen ongelezen meldingen",
+    "markAllRead": "Markeer alles gelezen",
+    "viewAll": "Bekijk alle meldingen",
+    "unreadCount": "{count} ongelezen",
+    "filterAll": "Alle",
+    "filterUnread": "Ongelezen",
+    "openAction": "Bekijken",
+    "types": {
+      "publish_requested": "Nieuw publicatie verzoek",
+      "publish_approved": "Site goedgekeurd",
+      "publish_rejected": "Verzoek afgewezen",
+      "system": "Systeem"
+    },
+    "relativeTime": {
+      "justNow": "zojuist",
+      "minutesAgo": "{count}m geleden",
+      "hoursAgo": "{count}u geleden",
+      "daysAgo": "{count}d geleden"
+    }
+  },
+  "goLive": {
+    "headline": "🎉 Je site is live!",
+    "subheadline": "Gefeliciteerd! Je website is nu publiek toegankelijk.",
+    "celebrationDays": "Je site is in {days} dagen klaar gekomen",
+    "celebrationDay": "Je site is in {days} dag klaar gekomen",
+    "yourUrl": "Je website URL",
+    "viewSite": "Bekijk je site",
+    "shareLinkedIn": "Deel op LinkedIn",
+    "dismiss": "Naar dashboard",
+    "noCustomDomain": "💡 Tip: maak je site nog professioneler met een eigen domein"
+  },
   "common": {
     "comingSoon": "Binnenkort beschikbaar",
     "loading": "Laden...",

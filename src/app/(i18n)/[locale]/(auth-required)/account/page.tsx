@@ -1,8 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveTenantForUser, getCurrentUserWithTenants, isUserSuperAdmin } from '@/lib/auth';
 import { computeChecklistProgress } from '@/lib/checklist';
-import { subscriptionsRepo } from '@/lib/data';
+import { notificationsRepo, subscriptionsRepo } from '@/lib/data';
 import { canEditBlocks } from '@/lib/permissions';
+import { getGoLiveCelebrationData } from '@/lib/site/go-live';
+import { GoLiveCelebration } from '@/components/account/go-live-celebration';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { PublishStatusBanner } from '@/components/account/publish-status-banner';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +29,30 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const checklistProgress = activeTenant ? await computeChecklistProgress(activeTenant.id) : null;
   const tSetup = await getTranslations('account.setup');
   const tPublish = await getTranslations('account.publish');
+  const tGoLive = await getTranslations('goLive');
+
+  // Step 48 — celebration mode: tenant live AND unread publish_approved
+  // notification. The dismiss action marks the notification read so the
+  // banner doesn't keep showing up on subsequent /account renders.
+  let goLiveCelebration: {
+    data: Awaited<ReturnType<typeof getGoLiveCelebrationData>>;
+    notificationId: string;
+  } | null = null;
+  if (activeTenant && activeTenant.status === 'live') {
+    const unread = await notificationsRepo.listByUser(user.id, {
+      unreadOnly: true,
+      limit: 10,
+    });
+    const approvalNotif = unread.find(
+      (n) => n.type === 'publish_approved' && n.tenant_id === activeTenant.id
+    );
+    if (approvalNotif) {
+      const data = await getGoLiveCelebrationData(activeTenant.id);
+      if (data) {
+        goLiveCelebration = { data, notificationId: approvalNotif.id };
+      }
+    }
+  }
 
   // Step 39: surface the block-editor entry point only for plans
   // that unlock it (pro + enterprise) — basic customers don't
@@ -58,7 +84,25 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         <LogoutButton />
       </header>
 
-      {activeTenant && (
+      {goLiveCelebration && goLiveCelebration.data && (
+        <GoLiveCelebration
+          data={goLiveCelebration.data}
+          notificationId={goLiveCelebration.notificationId}
+          copy={{
+            headline: tGoLive('headline'),
+            subheadline: tGoLive('subheadline'),
+            celebrationDays: tGoLive('celebrationDays'),
+            celebrationDay: tGoLive('celebrationDay'),
+            yourUrl: tGoLive('yourUrl'),
+            viewSite: tGoLive('viewSite'),
+            shareLinkedIn: tGoLive('shareLinkedIn'),
+            dismiss: tGoLive('dismiss'),
+            noCustomDomain: tGoLive('noCustomDomain'),
+          }}
+        />
+      )}
+
+      {activeTenant && !goLiveCelebration && (
         <PublishStatusBanner
           tenant={activeTenant}
           publicUrl={`/sites/${activeTenant.slug}`}
