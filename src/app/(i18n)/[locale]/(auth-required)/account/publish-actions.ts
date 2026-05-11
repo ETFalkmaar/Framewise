@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 
 import { getActiveTenantForUser, requireCurrentUser } from '@/lib/auth';
 import { auditLogsRepo, tenantsRepo } from '@/lib/data';
+import { notifySuperAdminsOfPublishRequest } from '@/lib/notifications/create-notification';
+import { queueEmail } from '@/lib/notifications/email-stub';
 import { canCancelPublishRequest, canRequestPublish } from '@/lib/permissions/publishing';
 
 export type PublishActionErrorCode =
@@ -66,6 +68,27 @@ export async function requestSitePublish(): Promise<PublishActionResult> {
       performed_by_user_id: user.id,
       metadata: { tenantSlug: fresh.slug, requestedAt: now },
     });
+    // Step 48 — fan out to super-admins (in-app + email-stub).
+    // Both run on a best-effort basis: notification failures must
+    // not roll back the publish-request state.
+    try {
+      await notifySuperAdminsOfPublishRequest({
+        tenantId: tenant.id,
+        tenantName: fresh.name,
+        requestedByUserId: user.id,
+        requestedByUserName: user.name,
+      });
+      await queueEmail({
+        to: 'super-admin@framewise.local',
+        subject: `Nieuw publicatie verzoek: ${fresh.name}`,
+        body: `${user.name} heeft ${fresh.name} klaargemaakt voor publicatie.`,
+        tenantId: tenant.id,
+        metadata: { event: 'publish_requested', requestedByUserId: user.id },
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[step-48] notify on publish-request failed', err);
+    }
   } catch {
     return { success: false, error: 'repo_error' };
   }
