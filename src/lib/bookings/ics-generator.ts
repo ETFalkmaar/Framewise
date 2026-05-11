@@ -86,7 +86,10 @@ function renderEvent(event: ICSEvent): string[] {
  * inside DTSTART / DTEND.
  */
 export function formatICSDate(d: Date): string {
-  return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return d
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 }
 
 /**
@@ -138,13 +141,8 @@ function foldLine(line: string): string {
  * booking lifecycle — pending becomes TENTATIVE, confirmed becomes
  * CONFIRMED, anything else CANCELLED.
  */
-export function bookingToICSEvent(
-  booking: Booking,
-  tenant: Tenant,
-  baseUrl: string
-): ICSEvent {
-  const partyLabel =
-    booking.party_size === 1 ? '1 persoon' : `${booking.party_size} personen`;
+export function bookingToICSEvent(booking: Booking, tenant: Tenant, baseUrl: string): ICSEvent {
+  const partyLabel = booking.party_size === 1 ? '1 persoon' : `${booking.party_size} personen`;
   const summary = `Reservering: ${booking.customer_name} (${partyLabel})`;
 
   const descriptionLines: string[] = [

@@ -93,6 +93,8 @@ export const tenantUpdateSchema = z
     // Step 49 — booking module flags.
     bookings_enabled: z.boolean().optional(),
     booking_timezone: z.string().min(1).max(64).nullable().optional(),
+    // Step 55 — calendar-feed subscription token.
+    calendar_feed_token: z.string().min(16).max(128).nullable().optional(),
   })
   .strict();
 
