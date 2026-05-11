@@ -15,6 +15,7 @@ import { mockBookingsRepo } from './adapters/mock/bookings';
 import { mockChecklistRepo } from './adapters/mock/checklist';
 import { mockConnectionsRepo } from './adapters/mock/connections';
 import { mockMediaRepo } from './adapters/mock/media';
+import { mockPageVersionsRepo } from './adapters/mock/page-versions';
 import { mockPagesRepo } from './adapters/mock/pages';
 import { mockSubscriptionsRepo } from './adapters/mock/subscriptions';
 import { mockSupportHoursRepo } from './adapters/mock/support-hours';
@@ -34,6 +35,7 @@ import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
 import { checklistRepo, setChecklistRepo } from './repositories/checklist';
 import { connectionsRepo, setConnectionsRepo } from './repositories/connections';
 import { mediaRepo, setMediaRepo } from './repositories/media';
+import { pageVersionsRepo, setPageVersionsRepo } from './repositories/page-versions';
 import { pagesRepo, setPagesRepo } from './repositories/pages';
 import { subscriptionsRepo, setSubscriptionsRepo } from './repositories/subscriptions';
 import { setSupportHoursRepo, supportHoursRepo } from './repositories/support-hours';
@@ -55,6 +57,7 @@ setChecklistRepo(mockChecklistRepo);
 setConnectionsRepo(mockConnectionsRepo);
 setMediaRepo(mockMediaRepo);
 setPagesRepo(mockPagesRepo);
+setPageVersionsRepo(mockPageVersionsRepo);
 setSubscriptionsRepo(mockSubscriptionsRepo);
 setSupportHoursRepo(mockSupportHoursRepo);
 setTenantCountrySettingsRepo(mockTenantCountrySettingsRepo);
@@ -72,6 +75,7 @@ export {
   connectionsRepo,
   mediaRepo,
   pagesRepo,
+  pageVersionsRepo,
   subscriptionsRepo,
   supportHoursRepo,
   tenantCountrySettingsRepo,

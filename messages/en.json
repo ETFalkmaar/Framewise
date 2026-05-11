@@ -36,6 +36,27 @@
     "viewConnections": "Manage connections",
     "viewMedia": "Media library",
     "viewEditor": "Edit pages",
+    "history": {
+      "title": "Version history",
+      "subtitle": "Review previous versions of this page and restore them if needed.",
+      "empty": "No versions yet",
+      "emptyHelp": "Versions are created automatically whenever you edit a block.",
+      "viewVersion": "View",
+      "restoreVersion": "Restore",
+      "confirmRestore": "Are you sure you want to restore this version? The current version will be saved first so you can undo the restore.",
+      "restoring": "Restoring…",
+      "restored": "Restored",
+      "byUser": "by {user}",
+      "backToHistory": "Back to history",
+      "backToEdit": "Back to editor",
+      "versionPreview": "Version of {date}",
+      "linkLabel": "History ({count} versions)",
+      "changeSummary": {
+        "block_content_saved": "Block content edited",
+        "blocks_reordered": "Block order changed",
+        "version_restored": "Earlier version restored"
+      }
+    },
     "siteMedia": {
       "title": "Media",
       "subtitle": "Manage images for this tenant's site.",

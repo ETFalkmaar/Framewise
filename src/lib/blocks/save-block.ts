@@ -1,5 +1,6 @@
 import { blocksRepo, pagesRepo, subscriptionsRepo, tenantsRepo } from '@/lib/data';
 import { sanitizeHtml } from '@/lib/editor/sanitize-html';
+import { createPageSnapshot } from '@/lib/editor/snapshot';
 import { canEditBlocks } from '@/lib/permissions';
 
 /**
@@ -68,6 +69,14 @@ export async function saveBlockContentFor(input: SaveBlockInput): Promise<SaveBl
 
   const sanitized = sanitizePayload(input.newData);
   const merged = mergeData(blockRow.data, sanitized);
+
+  // Step 44: snapshot the current page state BEFORE we apply the
+  // update so the customer can restore it from the history page.
+  await createPageSnapshot({
+    pageId: page.id,
+    createdByUserId: input.userId,
+    changeSummary: 'block_content_saved',
+  });
 
   try {
     await blocksRepo.update(input.blockId, { data: merged });

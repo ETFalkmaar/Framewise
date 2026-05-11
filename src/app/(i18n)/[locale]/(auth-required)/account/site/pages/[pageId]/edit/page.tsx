@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableBlockList } from '@/components/editor/sortable-block-list';
 import { getActiveTenantForUser, getCurrentUser } from '@/lib/auth';
-import { blocksRepo, mediaRepo, pagesRepo, subscriptionsRepo } from '@/lib/data';
+import { blocksRepo, mediaRepo, pageVersionsRepo, pagesRepo, subscriptionsRepo } from '@/lib/data';
 import { canAddRemoveBlocks, canEditBlocks } from '@/lib/permissions';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
@@ -47,13 +47,15 @@ export default async function EditPagePage({
 
   const allowAddRemove = await canAddRemoveBlocks(user.id, tenant, plan?.code ?? null);
 
-  const [blocks, mediaLibrary] = await Promise.all([
+  const [blocks, mediaLibrary, versionCount] = await Promise.all([
     blocksRepo.findByPageId(pageId),
     mediaRepo.listByTenant(tenant.id),
+    pageVersionsRepo.countByPage(pageId),
   ]);
   blocks.sort((a, b) => a.order_index - b.order_index);
 
   const t = await getTranslations('account.editor');
+  const tHistory = await getTranslations('account.history');
   const tType = await getTranslations('account.editor.blockType');
 
   const blockTypeLabels: Record<BlockType, string> = {
@@ -93,6 +95,13 @@ export default async function EditPagePage({
         >
           {t('dragToReorder')}
         </p>
+        <Link
+          href={`/account/site/pages/${page.id}/history`}
+          data-testid="link-history"
+          className="text-muted-foreground hover:text-foreground mt-2 inline-block font-mono text-[11px] underline"
+        >
+          {tHistory('linkLabel', { count: versionCount })}
+        </Link>
       </header>
 
       <section className="mb-6 flex flex-wrap items-center justify-between gap-3">
