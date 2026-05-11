@@ -46,7 +46,7 @@
       "internalNotes": "Internal notes"
     },
     "manageAvailability": "Manage availability",
-    "calendar": {
+    "calendarFeed": {
       "managementLink": "Calendar feed",
       "title": "Calendar feed",
       "subtitle": "Subscribe to your reservations from Google, Apple, or Outlook Calendar.",
