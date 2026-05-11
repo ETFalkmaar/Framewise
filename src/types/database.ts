@@ -631,6 +631,56 @@ export interface AgentSettings {
   updated_at: ISODateTime;
 }
 
+/** Voice gender label (UI display only — not used for synthesis). */
+export type VoiceGender = 'male' | 'female' | 'neutral';
+
+/**
+ * Per-agent voice selection + ElevenLabs voice settings (step 57,
+ * fase 15 part 2/9). One row per agent (singleton keyed on agent_id).
+ * Only created when the tenant's channel includes voice (Enterprise);
+ * Pro tenants never see this row.
+ */
+export interface AgentVoiceConfig {
+  agent_id: UUID;
+  /** ElevenLabs voice id (or `stub-voice-*` when in stub mode). */
+  voice_id: string;
+  /** Human-readable name used by the UI. */
+  voice_name: string;
+  language: AgentLanguage;
+  accent: string | null;
+  gender: VoiceGender | null;
+  /** Stability slider (0..1). ElevenLabs default = 0.5. */
+  stability: number;
+  /** Similarity boost slider (0..1). Default = 0.75. */
+  similarity_boost: number;
+  /** Style slider (0..1). Default = 0. */
+  style: number;
+  /** Speaker boost toggle. Default = true. */
+  speaker_boost: boolean;
+  /** Cached preview URL — null until first `generateVoiceSample`. */
+  sample_audio_url: string | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+/**
+ * Catalog entry returned by the ElevenLabs client / stub list. Not a
+ * Database row — sourced from ElevenLabs at request time (or seeded
+ * by the stub in dev / CI).
+ */
+export interface VoiceCatalogEntry {
+  voice_id: string;
+  name: string;
+  language: AgentLanguage;
+  accent: string | null;
+  gender: VoiceGender | null;
+  description: string;
+  /** Preview URL (stub uses a 1-second silent mp3 in production). */
+  sample_url: string;
+  /** Some voices are Enterprise+ only; the picker greys them out otherwise. */
+  is_premium: boolean;
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 // 19. provider_connections
 // ────────────────────────────────────────────────────────────────────────────
@@ -828,6 +878,9 @@ export type AuditLogAction =
   | 'ai_agent_deprovisioned'
   | 'ai_agent_settings_updated'
   | 'ai_agent_error'
+  // Step 57 — voice configuration.
+  | 'agent_voice_selected'
+  | 'agent_voice_settings_updated'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'
@@ -890,6 +943,7 @@ export interface Database {
   booking_exceptions: BookingException;
   ai_agents: AIAgent;
   agent_settings: AgentSettings;
+  agent_voice_configs: AgentVoiceConfig;
 }
 
 export type TableName = keyof Database;

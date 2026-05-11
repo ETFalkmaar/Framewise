@@ -13,6 +13,9 @@
  * var and the same surface flips to live calls automatically.
  */
 
+import type { VoiceCatalogEntry } from '@/types/database';
+import { STUB_VOICES, getVoicesByLanguage } from './voice-catalog';
+
 const ELEVENLABS_API_BASE = 'https://api.elevenlabs.io/v1';
 
 export interface ElevenLabsConfig {
@@ -54,70 +57,35 @@ export interface UpdateAgentInput {
   language?: string;
 }
 
-export interface ElevenLabsVoice {
-  voice_id: string;
-  name: string;
-  language: string;
-  /** Display tag for the UI ("warm" / "professional" / etc.). */
-  accent: string;
-  /** Preview audio URL — stub mode points at a placeholder. */
-  sample_url: string;
-}
+// Backwards-compatible alias for older call sites — the picker uses
+// `VoiceCatalogEntry` directly (richer shape).
+export type ElevenLabsVoice = VoiceCatalogEntry;
 
 export interface KnowledgeBaseDocumentResult {
   document_id: string;
   mode: 'live' | 'stub';
 }
 
-/**
- * The seeded voice list returned by `listVoices()` in stub mode.
- * Six voices spanning the four supported agent languages — enough
- * to exercise the voice-picker UI in step 57 without an API key.
- */
-export const STUB_VOICES: ElevenLabsVoice[] = [
-  {
-    voice_id: 'stub-voice-nl-anna',
-    name: 'Anna',
-    language: 'nl',
-    accent: 'warm',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-anna.mp3',
-  },
-  {
-    voice_id: 'stub-voice-nl-pieter',
-    name: 'Pieter',
-    language: 'nl',
-    accent: 'professional',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-pieter.mp3',
-  },
-  {
-    voice_id: 'stub-voice-nl-saskia',
-    name: 'Saskia',
-    language: 'nl',
-    accent: 'casual',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-saskia.mp3',
-  },
-  {
-    voice_id: 'stub-voice-fr-marie',
-    name: 'Marie',
-    language: 'fr',
-    accent: 'professional',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-marie.mp3',
-  },
-  {
-    voice_id: 'stub-voice-en-james',
-    name: 'James',
-    language: 'en',
-    accent: 'warm',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-james.mp3',
-  },
-  {
-    voice_id: 'stub-voice-es-lucia',
-    name: 'Lucía',
-    language: 'es',
-    accent: 'professional',
-    sample_url: 'https://framewise-pi.vercel.app/audio/stub-lucia.mp3',
-  },
-];
+export interface VoiceSampleResult {
+  audio_url: string;
+  mode: 'live' | 'stub';
+}
+
+export interface UpdateVoiceSettingsInput {
+  agent_id: string;
+  voice_id: string;
+  stability: number;
+  similarity_boost: number;
+  style: number;
+  speaker_boost: boolean;
+}
+
+export interface GenerateVoiceSampleInput {
+  voice_id: string;
+  text: string;
+}
+
+export { STUB_VOICES };
 
 export class ElevenLabsClient {
   private config: ElevenLabsConfig;
@@ -208,8 +176,16 @@ export class ElevenLabsClient {
     return { mode: 'live' };
   }
 
-  async listVoices(): Promise<ElevenLabsVoice[]> {
-    if (this.isStubMode()) return STUB_VOICES;
+  /**
+   * Catalog of voices the agent can pick. Accepts an optional language
+   * filter — stub mode returns the seeded list, live mode hits
+   * `/v1/voices` and maps the response into our richer
+   * `VoiceCatalogEntry` shape.
+   */
+  async listVoices(language?: string): Promise<VoiceCatalogEntry[]> {
+    if (this.isStubMode()) {
+      return language ? getVoicesByLanguage(language) : STUB_VOICES;
+    }
     const res = await this.fetcher()(`${ELEVENLABS_API_BASE}/voices`, {
       method: 'GET',
       headers: this.headers(),
@@ -223,15 +199,81 @@ export class ElevenLabsClient {
         name: string;
         labels?: Record<string, string>;
         preview_url?: string;
+        description?: string;
       }>;
     };
-    return (data.voices ?? []).map((v) => ({
-      voice_id: v.voice_id,
-      name: v.name,
-      language: v.labels?.language ?? 'en',
-      accent: v.labels?.accent ?? 'neutral',
-      sample_url: v.preview_url ?? '',
-    }));
+    const all = (data.voices ?? []).map(
+      (v): VoiceCatalogEntry => ({
+        voice_id: v.voice_id,
+        name: v.name,
+        language: (v.labels?.language as VoiceCatalogEntry['language']) ?? 'en',
+        accent: v.labels?.accent ?? null,
+        gender: (v.labels?.gender as VoiceCatalogEntry['gender']) ?? null,
+        description: v.description ?? v.labels?.description ?? '',
+        sample_url: v.preview_url ?? '',
+        is_premium: false,
+      })
+    );
+    return language ? all.filter((v) => v.language === language) : all;
+  }
+
+  /**
+   * Generate a short audio sample for the picker's "Test voice" button.
+   * Stub mode returns the shared silent mp3 (good enough for UI
+   * verification); live mode calls the text-to-speech endpoint.
+   */
+  async generateVoiceSample(input: GenerateVoiceSampleInput): Promise<VoiceSampleResult> {
+    if (this.isStubMode()) {
+      return { audio_url: '/stub-audio/silent-1s.mp3', mode: 'stub' };
+    }
+    const res = await this.fetcher()(
+      `${ELEVENLABS_API_BASE}/text-to-speech/${input.voice_id}`,
+      {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify({ text: input.text }),
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`ElevenLabs generateVoiceSample ${res.status}: ${res.statusText}`);
+    }
+    // The real API returns binary mp3 — for the picker we surface a
+    // signed/cached URL upstream. The stub path is enough for now.
+    return { audio_url: '', mode: 'live' };
+  }
+
+  /**
+   * Sync voice settings to the agent on ElevenLabs. Stub mode is a
+   * no-op so the local upsert is the source of truth in dev.
+   */
+  async updateVoiceSettings(
+    input: UpdateVoiceSettingsInput
+  ): Promise<{ mode: 'live' | 'stub' }> {
+    if (this.isStubMode()) return { mode: 'stub' };
+    const res = await this.fetcher()(
+      `${ELEVENLABS_API_BASE}/convai/agents/${input.agent_id}`,
+      {
+        method: 'PATCH',
+        headers: this.headers(),
+        body: JSON.stringify({
+          conversation_config: {
+            tts: {
+              voice_id: input.voice_id,
+              stability: input.stability,
+              similarity_boost: input.similarity_boost,
+              style: input.style,
+              use_speaker_boost: input.speaker_boost,
+            },
+          },
+        }),
+      }
+    );
+    if (!res.ok) {
+      throw new Error(
+        `ElevenLabs updateVoiceSettings ${res.status}: ${res.statusText}`
+      );
+    }
+    return { mode: 'live' };
   }
 
   async addKnowledgeBaseDocument(
