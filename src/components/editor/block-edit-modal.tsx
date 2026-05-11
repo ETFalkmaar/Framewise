@@ -7,6 +7,7 @@ import type { Block, BlockType, LocaleCode, Media } from '@/types/database';
 import { saveBlockContentAction } from '@/app/(i18n)/[locale]/(auth-required)/account/site/pages/[pageId]/edit/actions';
 
 import { ImagePicker } from './image-picker';
+import { LocaleTabs } from './locale-tabs';
 import { TipTapEditor } from './tiptap-editor';
 
 interface BlockEditModalCopy {
@@ -51,6 +52,10 @@ interface BlockEditModalCopy {
     cancel: string;
     upload: string;
     uploading: string;
+  };
+  locales: {
+    tabLabels: Record<LocaleCode, string>;
+    missingLabel: string;
   };
 }
 
@@ -201,26 +206,35 @@ interface FormWithMediaProps extends FormProps {
 function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
   const initialTranslations =
     (block.data.content_translations as Record<string, string> | undefined) ?? {};
-  const initialContent = initialTranslations[locale] ?? initialTranslations.nl ?? '';
 
-  const [content, setContent] = useState<string>(initialContent);
+  const [contentTranslations, setContentTranslations] = useState<Record<LocaleCode, string>>({
+    nl: initialTranslations.nl ?? '',
+    fr: initialTranslations.fr ?? '',
+    en: initialTranslations.en ?? '',
+  });
   const { pending, error, saved, save } = useSaveBlock();
 
   return (
     <div data-testid="text-block-form" className="space-y-4">
-      <label className="block">
-        <span className="text-sm font-medium">
-          {copy.blockForms.textContent} ({locale.toUpperCase()})
-        </span>
-        <div className="mt-1">
-          <TipTapEditor
-            id="text-content"
-            initialContent={initialContent}
-            onChange={setContent}
-            copy={copy.tiptap}
-          />
-        </div>
-      </label>
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.textContent}</p>
+        <LocaleTabs
+          testidPrefix="text-content"
+          defaultLocale={locale}
+          values={contentTranslations}
+          onChange={(loc, next) => setContentTranslations((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <TipTapEditor
+              key={loc} // remount per locale so TipTap reinitialises content
+              id={`text-content-${loc}`}
+              initialContent={value}
+              onChange={onChange}
+              copy={copy.tiptap}
+            />
+          )}
+        />
+      </div>
 
       <FormFooter
         pending={pending}
@@ -233,7 +247,7 @@ function TextBlockForm({ block, pageId, locale, onClose, copy }: FormProps) {
               pageId,
               blockId: block.id,
               newData: {
-                content_translations: { ...initialTranslations, [locale]: content },
+                content_translations: { ...initialTranslations, ...contentTranslations },
               },
             },
             onClose
@@ -254,9 +268,21 @@ function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: F
   const ctaTextTranslations =
     (initial.cta_text_translations as Record<string, string> | undefined) ?? {};
 
-  const [headline, setHeadline] = useState<string>(headlineTranslations[locale] ?? '');
-  const [subheadline, setSubheadline] = useState<string>(subheadlineTranslations[locale] ?? '');
-  const [ctaText, setCtaText] = useState<string>(ctaTextTranslations[locale] ?? '');
+  const [headlines, setHeadlines] = useState<Record<LocaleCode, string>>({
+    nl: headlineTranslations.nl ?? '',
+    fr: headlineTranslations.fr ?? '',
+    en: headlineTranslations.en ?? '',
+  });
+  const [subheadlines, setSubheadlines] = useState<Record<LocaleCode, string>>({
+    nl: subheadlineTranslations.nl ?? '',
+    fr: subheadlineTranslations.fr ?? '',
+    en: subheadlineTranslations.en ?? '',
+  });
+  const [ctaTexts, setCtaTexts] = useState<Record<LocaleCode, string>>({
+    nl: ctaTextTranslations.nl ?? '',
+    fr: ctaTextTranslations.fr ?? '',
+    en: ctaTextTranslations.en ?? '',
+  });
   const [ctaLink, setCtaLink] = useState<string>((initial.cta_link as string) ?? '');
   const [overlay, setOverlay] = useState<string>((initial.background_overlay as string) ?? 'dark');
   const [imageUrl, setImageUrl] = useState<string>((initial.image_url as string) ?? '');
@@ -267,24 +293,67 @@ function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: F
   return (
     <div data-testid="hero-block-form" className="space-y-4">
       <ImagePreviewAndPicker imageUrl={imageUrl} onPick={() => setPickerOpen(true)} copy={copy} />
-      <TextInput
-        id="hero-title"
-        label={`${copy.blockForms.heroTitle} (${locale.toUpperCase()})`}
-        value={headline}
-        onChange={setHeadline}
-      />
-      <TextInput
-        id="hero-subtitle"
-        label={`${copy.blockForms.heroSubtitle} (${locale.toUpperCase()})`}
-        value={subheadline}
-        onChange={setSubheadline}
-      />
-      <TextInput
-        id="hero-cta-text"
-        label={`${copy.blockForms.heroCtaText} (${locale.toUpperCase()})`}
-        value={ctaText}
-        onChange={setCtaText}
-      />
+
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.heroTitle}</p>
+        <LocaleTabs
+          testidPrefix="hero-title"
+          defaultLocale={locale}
+          values={headlines}
+          onChange={(loc, next) => setHeadlines((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <input
+              key={loc}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              data-testid={`hero-title-${loc}`}
+              className="bg-background border-input w-full rounded-md border px-3 py-2 text-sm"
+            />
+          )}
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.heroSubtitle}</p>
+        <LocaleTabs
+          testidPrefix="hero-subtitle"
+          defaultLocale={locale}
+          values={subheadlines}
+          onChange={(loc, next) => setSubheadlines((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <input
+              key={loc}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              data-testid={`hero-subtitle-${loc}`}
+              className="bg-background border-input w-full rounded-md border px-3 py-2 text-sm"
+            />
+          )}
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.heroCtaText}</p>
+        <LocaleTabs
+          testidPrefix="hero-cta-text"
+          defaultLocale={locale}
+          values={ctaTexts}
+          onChange={(loc, next) => setCtaTexts((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <input
+              key={loc}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              data-testid={`hero-cta-text-${loc}`}
+              className="bg-background border-input w-full rounded-md border px-3 py-2 text-sm"
+            />
+          )}
+        />
+      </div>
+
       <TextInput
         id="hero-cta-url"
         label={copy.blockForms.heroCtaUrl}
@@ -316,9 +385,9 @@ function HeroBlockForm({ block, pageId, locale, mediaLibrary, onClose, copy }: F
               pageId,
               blockId: block.id,
               newData: {
-                headline_translations: { ...headlineTranslations, [locale]: headline },
-                subheadline_translations: { ...subheadlineTranslations, [locale]: subheadline },
-                cta_text_translations: { ...ctaTextTranslations, [locale]: ctaText },
+                headline_translations: { ...headlineTranslations, ...headlines },
+                subheadline_translations: { ...subheadlineTranslations, ...subheadlines },
+                cta_text_translations: { ...ctaTextTranslations, ...ctaTexts },
                 cta_link: ctaLink,
                 background_overlay: overlay,
                 image_url: imageUrl,
@@ -369,8 +438,16 @@ function ImageBlockForm({
     (initial.caption_translations as Record<string, string> | undefined) ?? {};
 
   const [imageUrl, setImageUrl] = useState<string>((initial.image_url as string) ?? '');
-  const [altText, setAltText] = useState<string>(altTranslations[locale] ?? '');
-  const [caption, setCaption] = useState<string>(captionTranslations[locale] ?? '');
+  const [altTexts, setAltTexts] = useState<Record<LocaleCode, string>>({
+    nl: altTranslations.nl ?? '',
+    fr: altTranslations.fr ?? '',
+    en: altTranslations.en ?? '',
+  });
+  const [captions, setCaptions] = useState<Record<LocaleCode, string>>({
+    nl: captionTranslations.nl ?? '',
+    fr: captionTranslations.fr ?? '',
+    en: captionTranslations.en ?? '',
+  });
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const { pending, error, saved, save } = useSaveBlock();
@@ -378,18 +455,46 @@ function ImageBlockForm({
   return (
     <div data-testid="image-block-form" className="space-y-4">
       <ImagePreviewAndPicker imageUrl={imageUrl} onPick={() => setPickerOpen(true)} copy={copy} />
-      <TextInput
-        id="image-alt"
-        label={`${copy.blockForms.imageAlt} (${locale.toUpperCase()})`}
-        value={altText}
-        onChange={setAltText}
-      />
-      <TextInput
-        id="image-caption"
-        label={`${copy.blockForms.imageCaption} (${locale.toUpperCase()})`}
-        value={caption}
-        onChange={setCaption}
-      />
+
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.imageAlt}</p>
+        <LocaleTabs
+          testidPrefix="image-alt"
+          defaultLocale={locale}
+          values={altTexts}
+          onChange={(loc, next) => setAltTexts((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <input
+              key={loc}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              data-testid={`image-alt-${loc}`}
+              className="bg-background border-input w-full rounded-md border px-3 py-2 text-sm"
+            />
+          )}
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 text-sm font-medium">{copy.blockForms.imageCaption}</p>
+        <LocaleTabs
+          testidPrefix="image-caption"
+          defaultLocale={locale}
+          values={captions}
+          onChange={(loc, next) => setCaptions((prev) => ({ ...prev, [loc]: next }))}
+          copy={copy.locales}
+          renderField={(value, onChange, loc) => (
+            <input
+              key={loc}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              data-testid={`image-caption-${loc}`}
+              className="bg-background border-input w-full rounded-md border px-3 py-2 text-sm"
+            />
+          )}
+        />
+      </div>
 
       <FormFooter
         pending={pending}
@@ -403,8 +508,8 @@ function ImageBlockForm({
               blockId: block.id,
               newData: {
                 image_url: imageUrl,
-                alt_translations: { ...altTranslations, [locale]: altText },
-                caption_translations: { ...captionTranslations, [locale]: caption },
+                alt_translations: { ...altTranslations, ...altTexts },
+                caption_translations: { ...captionTranslations, ...captions },
               },
             },
             onClose
@@ -419,7 +524,9 @@ function ImageBlockForm({
           onClose={() => setPickerOpen(false)}
           onSelect={(url, alt) => {
             setImageUrl(url);
-            if (alt && !altText) setAltText(alt);
+            if (alt && !altTexts[locale]) {
+              setAltTexts((prev) => ({ ...prev, [locale]: alt }));
+            }
             setPickerOpen(false);
           }}
           copy={copy.imagePicker}

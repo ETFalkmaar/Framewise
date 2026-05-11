@@ -105,6 +105,13 @@
         "upload": "Upload nieuw",
         "uploading": "Bezig met uploaden…"
       },
+      "locales": {
+        "nl": "NL",
+        "fr": "FR",
+        "en": "EN"
+      },
+      "missingTranslation": "Vertaling ontbreekt",
+      "missingCount": "{count, plural, =1 {# vertaling ontbreekt} other {# vertalingen ontbreken}}",
       "status": {
         "draft": "Concept",
         "published": "Gepubliceerd",

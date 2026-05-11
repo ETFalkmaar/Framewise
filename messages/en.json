@@ -105,6 +105,13 @@
         "upload": "Upload new",
         "uploading": "Uploading…"
       },
+      "locales": {
+        "nl": "NL",
+        "fr": "FR",
+        "en": "EN"
+      },
+      "missingTranslation": "Translation missing",
+      "missingCount": "{count, plural, =1 {# translation missing} other {# translations missing}}",
       "status": {
         "draft": "Draft",
         "published": "Published",

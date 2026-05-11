@@ -1750,6 +1750,39 @@ them inside `image` and `hero` blocks. Vercel Blob in production
 
 Adds 16 tests (media/library: 16) — total 1181.
 
+### Translation editor per locale (step 43 — fase 12 part 5/8)
+
+Block-edit forms now expose all three locales (NL / FR / EN)
+in tabs, so customers can fill every translation in a single
+modal rather than switching the whole UI language. A small
+amber dot on a tab flags an empty / TipTap-empty value so the
+customer can see which translations still need work without
+clicking every tab.
+
+- `src/lib/editor/translation-status.ts` — `isTranslationMissing`
+  (treats null / whitespace / `<p></p>` / `<p><br></p>` as
+  missing), `getTranslationStatus(values, locales)` per-locale
+  result, `listTranslatableKeys(blockType)` (text → 1 key,
+  hero → 3, image → 2, others → 0 in step 43's wiring),
+  `countMissingTranslations(block, locales)` for the badge.
+- `src/components/editor/locale-tabs.tsx` — generic
+  `<LocaleTabs />` that swaps an inner field across NL / FR /
+  EN. The inner field is rendered via a `renderField` callback
+  so the same component handles TipTap (text content / hero
+  description) and plain inputs (hero title / subtitle / CTA
+  text / image alt / caption).
+- Text + hero + image forms all use `<LocaleTabs />` now.
+  Saves submit all three locales in one `content_translations`
+  / `headline_translations` / `cta_text_translations` /
+  `alt_translations` / `caption_translations` payload — the
+  existing `saveBlockContentFor` core's recursive merge keeps
+  unrelated siblings intact.
+- `<SortableBlockItem />` renders a "⚠ X vertaling(en)
+  ontbreken" badge next to the order-index when any
+  translatable key is empty for any locale.
+
+Adds 17 tests (translation-status: 17) — total 1198.
+
 ## Status
 
-In development - Step 42 of 96 (revised plan) — FASE 12 deel 4/8 (media library + image picker)
+In development - Step 43 of 96 (revised plan) — FASE 12 deel 5/8 (translation editor per locale)

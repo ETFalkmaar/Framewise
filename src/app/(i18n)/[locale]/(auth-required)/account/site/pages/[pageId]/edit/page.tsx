@@ -132,6 +132,7 @@ export default async function EditPagePage({
             dragHandle: t('dragHandle'),
             reordering: t('reordering'),
             reorderError: t('reorderError'),
+            missingCount: (n: number) => t('missingCount', { count: n }),
           }}
           modalCopy={{
             title: t('editBlock'),
@@ -175,6 +176,14 @@ export default async function EditPagePage({
               cancel: t('imagePicker.cancel'),
               upload: t('imagePicker.upload'),
               uploading: t('imagePicker.uploading'),
+            },
+            locales: {
+              tabLabels: {
+                nl: t('locales.nl'),
+                fr: t('locales.fr'),
+                en: t('locales.en'),
+              },
+              missingLabel: t('missingTranslation'),
             },
           }}
         />
