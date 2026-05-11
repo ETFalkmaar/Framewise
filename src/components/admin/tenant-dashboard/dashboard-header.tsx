@@ -11,6 +11,8 @@ interface HeaderCopy {
   setupChecklist: string;
   domain: string;
   maintenance: string;
+  /** Step 52 — link to the per-tenant email-stub audit viewer. */
+  emailLog: string;
 }
 
 export interface DashboardHeaderProps {
@@ -88,6 +90,13 @@ export function DashboardHeader({ tenant, planCode, daysOld, copy }: DashboardHe
           className="ring-border bg-background hover:bg-muted inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
         >
           🛠️ {copy.maintenance}
+        </Link>
+        <Link
+          href={`/admin/tenants/${tenant.id}/emails`}
+          data-testid="header-action-email-log"
+          className="ring-border bg-background hover:bg-muted inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs ring-1 transition"
+        >
+          ✉ {copy.emailLog}
         </Link>
       </nav>
     </header>

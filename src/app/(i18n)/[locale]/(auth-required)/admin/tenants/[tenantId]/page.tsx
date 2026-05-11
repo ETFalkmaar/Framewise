@@ -113,6 +113,7 @@ export default async function AdminTenantDashboardPage({
           setupChecklist: t('setupChecklist'),
           domain: t('domain'),
           maintenance: t('maintenance'),
+          emailLog: t('emailLog'),
         }}
       />
 

@@ -202,6 +202,18 @@
     "dismiss": "Retour au tableau de bord",
     "noCustomDomain": "💡 Astuce : rendez votre site encore plus professionnel avec un domaine personnalisé"
   },
+  "adminEmailLog": {
+    "title": "Journal e-mails",
+    "subtitle": "Tous les événements email-stub pour {tenant} (super-admin uniquement).",
+    "empty": "Aucun e-mail envoyé pour ce locataire pour l'instant.",
+    "columns": {
+      "sentAt": "Heure",
+      "to": "À",
+      "subject": "Objet",
+      "event": "Événement",
+      "recipient": "Type"
+    }
+  },
   "common": {
     "comingSoon": "Bientôt disponible",
     "loading": "Chargement...",
@@ -892,6 +904,7 @@
       "setupChecklist": "Liste de configuration",
       "domain": "Domaine",
       "maintenance": "Page de maintenance",
+      "emailLog": "Journal e-mails",
       "stats": {
         "checklistProgress": "Avancement configuration",
         "activeConnectors": "Connecteurs actifs",

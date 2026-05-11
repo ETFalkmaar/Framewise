@@ -5,6 +5,11 @@ import { revalidatePath } from 'next/cache';
 import { getActiveTenantForUser, requireCurrentUser } from '@/lib/auth';
 import { auditLogsRepo, bookingsRepo, tenantsRepo } from '@/lib/data';
 import { canManageBookings } from '@/lib/permissions/bookings';
+import {
+  bookingCancellationEmail,
+  bookingConfirmedEmail,
+} from '@/lib/notifications/email-templates/bookings';
+import { queueEmail } from '@/lib/notifications/email-stub';
 
 export type BookingActionErrorCode =
   | 'unauthenticated'
@@ -51,8 +56,9 @@ export async function confirmBookingAction(input: {
 }): Promise<BookingActionResult> {
   const ctx = await authenticatedTenantBookingContext(input.bookingId);
   if ('error' in ctx) return { success: false, error: ctx.error };
+  let confirmed;
   try {
-    await bookingsRepo.confirm(input.bookingId);
+    confirmed = await bookingsRepo.confirm(input.bookingId);
     await auditLogsRepo.create({
       tenant_id: ctx.tenant.id,
       action: 'booking_confirmed',
@@ -61,6 +67,26 @@ export async function confirmBookingAction(input: {
     });
   } catch {
     return { success: false, error: 'repo_error' };
+  }
+  // Step 52 — best-effort customer notification.
+  if (confirmed) {
+    try {
+      const template = bookingConfirmedEmail(confirmed, ctx.tenant);
+      await queueEmail({
+        to: confirmed.customer_email,
+        subject: template.subject,
+        body: template.body,
+        tenantId: ctx.tenant.id,
+        metadata: {
+          bookingId: input.bookingId,
+          reference: confirmed.reference_code,
+          recipient: 'customer',
+          event: 'booking_confirmed',
+        },
+      });
+    } catch {
+      /* email is best-effort; confirmation already persisted. */
+    }
   }
   revalidatePath('/account/bookings');
   revalidatePath('/account');
@@ -74,8 +100,9 @@ export async function cancelBookingAction(input: {
   const ctx = await authenticatedTenantBookingContext(input.bookingId);
   if ('error' in ctx) return { success: false, error: ctx.error };
   const reason = input.reason?.trim() || null;
+  let cancelled;
   try {
-    await bookingsRepo.update(input.bookingId, {
+    cancelled = await bookingsRepo.update(input.bookingId, {
       status: 'cancelled',
       cancelled_at: new Date().toISOString(),
       cancellation_reason: reason,
@@ -92,6 +119,28 @@ export async function cancelBookingAction(input: {
     });
   } catch {
     return { success: false, error: 'repo_error' };
+  }
+  // Step 52 — best-effort customer notification with the cancellation
+  // reason if one was provided.
+  if (cancelled) {
+    try {
+      const template = bookingCancellationEmail(cancelled, ctx.tenant);
+      await queueEmail({
+        to: cancelled.customer_email,
+        subject: template.subject,
+        body: template.body,
+        tenantId: ctx.tenant.id,
+        metadata: {
+          bookingId: input.bookingId,
+          reference: cancelled.reference_code,
+          recipient: 'customer',
+          event: 'booking_cancelled',
+          reason,
+        },
+      });
+    } catch {
+      /* email is best-effort; cancellation already persisted. */
+    }
   }
   revalidatePath('/account/bookings');
   revalidatePath('/account');

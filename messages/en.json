@@ -202,6 +202,18 @@
     "dismiss": "Back to dashboard",
     "noCustomDomain": "💡 Tip: make your site even more professional with a custom domain"
   },
+  "adminEmailLog": {
+    "title": "Email log",
+    "subtitle": "All email-stub events for {tenant} (super-admin only).",
+    "empty": "No emails sent for this tenant yet.",
+    "columns": {
+      "sentAt": "Sent",
+      "to": "To",
+      "subject": "Subject",
+      "event": "Event",
+      "recipient": "Type"
+    }
+  },
   "common": {
     "comingSoon": "Coming soon",
     "loading": "Loading...",
@@ -892,6 +904,7 @@
       "setupChecklist": "Setup checklist",
       "domain": "Domain",
       "maintenance": "Maintenance page",
+      "emailLog": "Email log",
       "stats": {
         "checklistProgress": "Setup progress",
         "activeConnectors": "Active connectors",

@@ -3,8 +3,14 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
+import { findTenantOwnerUserId } from '@/lib/auth/find-tenant-owner';
 import { generateSlotsForDate, type BookingSlot } from '@/lib/bookings/slot-generator';
-import { auditLogsRepo, bookingsRepo, tenantsRepo } from '@/lib/data';
+import { auditLogsRepo, bookingsRepo, tenantsRepo, usersRepo } from '@/lib/data';
+import {
+  bookingCustomerConfirmationEmail,
+  bookingOwnerNotificationEmail,
+} from '@/lib/notifications/email-templates/bookings';
+import { queueEmail } from '@/lib/notifications/email-stub';
 
 /**
  * Public booking flow server actions (step 51, fase 14 part 3/7).
@@ -147,6 +153,49 @@ export async function createPublicBooking(
         source: 'public_form',
       },
     });
+
+    // Step 52 — fire-and-forget booking emails. Two recipients:
+    //   1. the customer (confirmation that we received the request)
+    //   2. the tenant owner (so they can confirm in their dashboard)
+    // Both wrapped in try/catch — email queueing is best-effort and
+    // must never break the booking creation flow.
+    try {
+      const customerTemplate = bookingCustomerConfirmationEmail(booking, tenant);
+      await queueEmail({
+        to: data.customer_email,
+        subject: customerTemplate.subject,
+        body: customerTemplate.body,
+        tenantId: tenant.id,
+        metadata: {
+          bookingId: booking.id,
+          reference: booking.reference_code,
+          recipient: 'customer',
+          event: 'booking_created',
+        },
+      });
+
+      const ownerId = await findTenantOwnerUserId(tenant.id);
+      if (ownerId) {
+        const owner = await usersRepo.findById(ownerId);
+        if (owner) {
+          const ownerTemplate = bookingOwnerNotificationEmail(booking, tenant);
+          await queueEmail({
+            to: owner.email,
+            subject: ownerTemplate.subject,
+            body: ownerTemplate.body,
+            tenantId: tenant.id,
+            metadata: {
+              bookingId: booking.id,
+              reference: booking.reference_code,
+              recipient: 'owner',
+              event: 'booking_created',
+            },
+          });
+        }
+      }
+    } catch {
+      /* email queueing is best-effort; booking still succeeds. */
+    }
 
     // ISR refresh — guarded so vitest runs (no Next.js request scope)
     // don't trip the static-generation-store invariant.
