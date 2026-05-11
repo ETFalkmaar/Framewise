@@ -46,6 +46,28 @@
       "internalNotes": "Internal notes"
     },
     "manageAvailability": "Manage availability",
+    "calendar": {
+      "managementLink": "Calendar feed",
+      "title": "Calendar feed",
+      "subtitle": "Subscribe to your reservations from Google, Apple, or Outlook Calendar.",
+      "backToBookings": "Back to bookings",
+      "noToken": "Generate a feed URL to keep your calendar in sync with your reservations.",
+      "generateButton": "Generate feed URL",
+      "feedUrlLabel": "Calendar feed URL",
+      "copyButton": "Copy URL",
+      "copied": "Copied!",
+      "instructions": {
+        "title": "How do I use this URL?",
+        "google": "Google Calendar: 'Other calendars' → 'Add by URL' → paste this URL.",
+        "apple": "Apple Calendar: File → New Calendar Subscription → paste this URL.",
+        "outlook": "Outlook: File → Account Settings → Internet Calendars → New → paste this URL."
+      },
+      "rotate": "Rotate token",
+      "rotateConfirm": "Existing subscribers will lose access and you'll need to share the new URL. Continue?",
+      "revoke": "Disable token",
+      "revokeConfirm": "The calendar feed will be disabled. Continue?",
+      "errorGeneric": "Something went wrong, please try again."
+    },
     "availability": {
       "title": "Availability",
       "subtitle": "Set when and how many bookings you accept.",
@@ -239,6 +261,13 @@
         "slotNotAvailable": "This time slot is no longer available",
         "validationFailed": "Please check your details",
         "unknown": "Unknown error. Please try again later."
+      },
+      "addToCalendar": {
+        "title": "Add to calendar",
+        "apple": "Apple Calendar",
+        "google": "Google Calendar",
+        "outlook": "Outlook",
+        "other": "Other calendar (.ics)"
       }
     }
   },

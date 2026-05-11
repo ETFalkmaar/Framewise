@@ -756,6 +756,10 @@ export type AuditLogAction =
   | 'booking_email_verified'
   | 'booking_cancelled_by_customer'
   | 'booking_rescheduled_by_customer'
+  // Step 55 — calendar feed lifecycle.
+  | 'calendar_feed_token_generated'
+  | 'calendar_feed_token_rotated'
+  | 'calendar_feed_token_revoked'
   // Step 50 — availability rules + exceptions.
   | 'availability_rule_created'
   | 'availability_rule_updated'

@@ -46,6 +46,28 @@
       "internalNotes": "Notes internes"
     },
     "manageAvailability": "Gérer la disponibilité",
+    "calendar": {
+      "managementLink": "Flux calendrier",
+      "title": "Flux calendrier",
+      "subtitle": "Synchronisez vos réservations depuis Google, Apple ou Outlook Calendar.",
+      "backToBookings": "Retour aux réservations",
+      "noToken": "Générez une URL de flux pour synchroniser automatiquement vos réservations.",
+      "generateButton": "Générer l'URL du flux",
+      "feedUrlLabel": "URL du flux calendrier",
+      "copyButton": "Copier l'URL",
+      "copied": "Copié !",
+      "instructions": {
+        "title": "Comment utiliser cette URL ?",
+        "google": "Google Calendar : 'Autres agendas' → 'Ajouter par URL' → collez cette URL.",
+        "apple": "Apple Calendar : Fichier → Nouvel abonnement Calendar → collez cette URL.",
+        "outlook": "Outlook : Fichier → Paramètres du compte → Calendriers Internet → Nouveau → collez cette URL."
+      },
+      "rotate": "Renouveler le token",
+      "rotateConfirm": "Les abonnés existants perdront l'accès et vous devrez repartager la nouvelle URL. Continuer ?",
+      "revoke": "Désactiver le token",
+      "revokeConfirm": "Le flux calendrier sera désactivé. Continuer ?",
+      "errorGeneric": "Une erreur est survenue, réessayez."
+    },
     "availability": {
       "title": "Disponibilité",
       "subtitle": "Définissez quand et combien de réservations vous acceptez.",
@@ -239,6 +261,13 @@
         "slotNotAvailable": "Ce créneau n'est plus disponible",
         "validationFailed": "Vérifiez vos informations",
         "unknown": "Erreur inconnue. Réessayez plus tard."
+      },
+      "addToCalendar": {
+        "title": "Ajouter à l'agenda",
+        "apple": "Apple Calendar",
+        "google": "Google Calendar",
+        "outlook": "Outlook",
+        "other": "Autre agenda (.ics)"
       }
     }
   },

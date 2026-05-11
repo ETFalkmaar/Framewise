@@ -90,7 +90,7 @@ describe('generateICS (step 55)', () => {
     expect(events?.length).toBe(2);
   });
 
-  it("emits STATUS:CANCELLED when the event is cancelled", () => {
+  it('emits STATUS:CANCELLED when the event is cancelled', () => {
     const ics = generateICS([fakeEvent({ status: 'CANCELLED' })], 'Test');
     expect(ics).toContain('STATUS:CANCELLED');
   });
@@ -101,10 +101,7 @@ describe('generateICS (step 55)', () => {
   });
 
   it('keeps unicode characters intact for UTF-8 calendar clients', () => {
-    const ics = generateICS(
-      [fakeEvent({ summary: 'Reservering: Café Übermütig (2)' })],
-      'Test'
-    );
+    const ics = generateICS([fakeEvent({ summary: 'Reservering: Café Übermütig (2)' })], 'Test');
     expect(ics).toContain('Café Übermütig');
   });
 
@@ -196,11 +193,7 @@ describe('bookingToICSEvent (step 55)', () => {
   });
 
   it('maps cancelled booking → STATUS:CANCELLED', async () => {
-    const event = bookingToICSEvent(
-      makeBooking({ status: 'cancelled' }),
-      await tenant(),
-      BASE_URL
-    );
+    const event = bookingToICSEvent(makeBooking({ status: 'cancelled' }), await tenant(), BASE_URL);
     expect(event.status).toBe('CANCELLED');
   });
 
