@@ -82,6 +82,21 @@ export interface Tenant {
   publish_approved_by_user_id: UUID | null;
   publish_rejected_at: ISODateTime | null;
   publish_rejected_by_user_id: UUID | null;
+  /**
+   * Booking module feature flag (step 49, fase 14 part 1/7). Only
+   * Enterprise tenants get a `true` value; super-admin manually
+   * toggles via `/admin/tenants/[id]` after onboarding confirmed
+   * the plan. Default `false` keeps the booking-related routes
+   * 403 for legacy seeds + non-enterprise tenants.
+   */
+  bookings_enabled: boolean;
+  /**
+   * IANA timezone string for the tenant's locale-aware slot
+   * generation (step 50). Used at slot-generation time, not at
+   * storage time — bookings always store ISO datetime in UTC.
+   * Example: `'Europe/Amsterdam'`, `'America/Curacao'`.
+   */
+  booking_timezone: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -343,14 +358,22 @@ export interface Translation {
 // ────────────────────────────────────────────────────────────────────────────
 // 14. bookings
 // ────────────────────────────────────────────────────────────────────────────
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
 export type PaymentStatus = 'unpaid' | 'partial' | 'paid' | 'refunded';
+/**
+ * Step 49 — `time_slot` is the time-window booking model (restaurant
+ * tables, services). `all_day` keeps the legacy villa-nights flow
+ * working — `start_time` / `end_time` collapse to midnight on the
+ * corresponding `start_date` / `end_date`.
+ */
+export type BookingType = 'time_slot' | 'all_day';
 
 /** A guest booking against a bookable resource (villa, table, etc.). */
 export interface Booking {
   id: UUID;
   tenant_id: UUID;
   status: BookingStatus;
+  // ── Legacy nights model (step 13 onwards) ───────────────────────────
   start_date: ISODate;
   end_date: ISODate;
   persons: number;
@@ -363,6 +386,29 @@ export interface Booking {
   payment_provider: string | null;
   payment_reference: string | null;
   notes: string | null;
+  // ── Step 49 — time-slot booking model + lifecycle metadata ─────────
+  /** Discriminator: `time_slot` uses start_time/end_time; `all_day` uses
+   *  the start_date/end_date fields above. Legacy seeds default to
+   *  `'all_day'` via the store loader's normalisation step. */
+  booking_type: BookingType;
+  /** ISO datetime — for `time_slot` the precise window, for `all_day`
+   *  the start_date at 00:00 of the tenant's timezone. */
+  start_time: ISODateTime;
+  end_time: ISODateTime;
+  /** Number of guests — alias / mirror of `persons` for the time-slot
+   *  use case where "party size" is the natural phrasing. */
+  party_size: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  /** Operator-only notes (kept out of the customer-facing emails). */
+  internal_notes: string | null;
+  /** Human-readable handle (`BK-2026-0042`). Unique per tenant per year. */
+  reference_code: string;
+  confirmed_at: ISODateTime | null;
+  cancelled_at: ISODateTime | null;
+  cancellation_reason: string | null;
+  no_show_at: ISODateTime | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -631,7 +677,13 @@ export type AuditLogAction =
   | 'site_publish_cancelled'
   | 'site_publish_approved'
   | 'site_publish_rejected'
-  | 'email_queued';
+  | 'email_queued'
+  // Step 49 — booking lifecycle.
+  | 'booking_confirmed'
+  | 'booking_cancelled'
+  | 'booking_no_show'
+  | 'booking_notes_updated'
+  | 'tenant_bookings_toggled';
 
 /**
  * Tenant-scoped audit-log entry (step 47). Records meaningful

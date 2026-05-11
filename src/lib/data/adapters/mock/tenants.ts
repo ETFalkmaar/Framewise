@@ -48,6 +48,10 @@ export const mockTenantsRepo: TenantsRepository = {
       publish_approved_by_user_id: null,
       publish_rejected_at: null,
       publish_rejected_by_user_id: null,
+      // Step 49 — booking module off by default; super-admin
+      // toggles it after onboarding confirms the Enterprise plan.
+      bookings_enabled: false,
+      booking_timezone: null,
     };
     table('tenants').set(row.id, row);
     return row;
