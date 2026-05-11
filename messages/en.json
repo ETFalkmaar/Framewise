@@ -35,6 +35,38 @@
     "logout": "Sign out",
     "viewConnections": "Manage connections",
     "viewMedia": "Media library",
+    "viewEditor": "Edit pages",
+    "editor": {
+      "title": "Pages",
+      "subtitle": "Manage the pages of {tenant}.",
+      "empty": "No pages yet for this tenant.",
+      "newPage": "New page",
+      "edit": "Edit",
+      "blockSuffix": "blocks",
+      "updatedAt": "Last updated",
+      "backToPages": "Back to pages",
+      "blockListIntro": "The content blocks of this page, in order.",
+      "blocksEmpty": "This page has no content blocks yet.",
+      "addBlock": "Add block",
+      "addBlockComingSoon": "Adding blocks ships in step 40 (drag & drop).",
+      "editBlock": "Edit",
+      "blockEditComingSoon": "Block editing ships in step 41 (TipTap editor).",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "blockType": {
+        "hero": "Hero",
+        "text": "Text",
+        "image": "Image",
+        "gallery": "Gallery",
+        "cta": "Call-to-action",
+        "faq": "FAQ",
+        "pricing": "Pricing",
+        "contact": "Contact"
+      }
+    },
     "media": {
       "title": "Media library",
       "subtitle": "Images and documents uploaded for this tenant.",
