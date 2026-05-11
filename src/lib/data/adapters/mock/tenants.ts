@@ -34,7 +34,21 @@ export const mockTenantsRepo: TenantsRepository = {
       );
     }
     const now = getTimestamp();
-    const row: Tenant = { ...parsed, id: generateId(), created_at: now, updated_at: now };
+    const row: Tenant = {
+      ...parsed,
+      id: generateId(),
+      created_at: now,
+      updated_at: now,
+      // Step 47 — every new tenant starts in the resting publish state.
+      publish_request_status: 'none',
+      publish_requested_at: null,
+      publish_requested_by_user_id: null,
+      publish_approval_notes: null,
+      publish_approved_at: null,
+      publish_approved_by_user_id: null,
+      publish_rejected_at: null,
+      publish_rejected_by_user_id: null,
+    };
     table('tenants').set(row.id, row);
     return row;
   },

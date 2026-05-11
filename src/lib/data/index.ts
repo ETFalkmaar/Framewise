@@ -10,6 +10,7 @@
 
 import { mockAgentConversationsRepo } from './adapters/mock/agent-conversations';
 import { mockAgentKnowledgeRepo } from './adapters/mock/agent-knowledge';
+import { mockAuditLogsRepo } from './adapters/mock/audit-logs';
 import { mockBlocksRepo } from './adapters/mock/blocks';
 import { mockBookingsRepo } from './adapters/mock/bookings';
 import { mockChecklistRepo } from './adapters/mock/checklist';
@@ -30,6 +31,7 @@ import {
   setAgentConversationsRepo,
 } from './repositories/agent-conversations';
 import { agentKnowledgeRepo, setAgentKnowledgeRepo } from './repositories/agent-knowledge';
+import { auditLogsRepo, setAuditLogsRepo } from './repositories/audit-logs';
 import { blocksRepo, setBlocksRepo } from './repositories/blocks';
 import { bookingsRepo, setBookingsRepo } from './repositories/bookings';
 import { checklistRepo, setChecklistRepo } from './repositories/checklist';
@@ -51,6 +53,7 @@ import { setUsersRepo, usersRepo } from './repositories/users';
 // Wire mock implementations once at module load.
 setAgentConversationsRepo(mockAgentConversationsRepo);
 setAgentKnowledgeRepo(mockAgentKnowledgeRepo);
+setAuditLogsRepo(mockAuditLogsRepo);
 setBlocksRepo(mockBlocksRepo);
 setBookingsRepo(mockBookingsRepo);
 setChecklistRepo(mockChecklistRepo);
@@ -69,6 +72,7 @@ setUsersRepo(mockUsersRepo);
 export {
   agentConversationsRepo,
   agentKnowledgeRepo,
+  auditLogsRepo,
   blocksRepo,
   bookingsRepo,
   checklistRepo,

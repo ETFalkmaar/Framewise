@@ -66,6 +66,22 @@ export interface Tenant {
   maintenance_logo_url: string | null;
   /** Email shown on the maintenance page so visitors can reach the customer (step 34). */
   maintenance_contact_email: string | null;
+  /**
+   * Site publish-request lifecycle (step 47, fase 13 part 1/2).
+   * The customer asks for go-live via `requestSitePublish`; the
+   * super-admin then approves (status → `live`) or rejects (with
+   * required notes). `'none'` is the resting state for both fresh
+   * onboarding tenants and previously-rejected ones that haven't
+   * resubmitted yet.
+   */
+  publish_request_status: 'none' | 'pending' | 'approved' | 'rejected';
+  publish_requested_at: ISODateTime | null;
+  publish_requested_by_user_id: UUID | null;
+  publish_approval_notes: string | null;
+  publish_approved_at: ISODateTime | null;
+  publish_approved_by_user_id: UUID | null;
+  publish_rejected_at: ISODateTime | null;
+  publish_rejected_by_user_id: UUID | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -563,6 +579,38 @@ export interface TenantCountrySettings {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// audit_logs (step 47 — fase 13 part 1/2)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Stable action codes for the audit trail. New codes are added as
+ * features land; the renderer uses the code to pick an icon + a
+ * localised label so the database doesn't carry copy.
+ */
+export type AuditLogAction =
+  | 'site_publish_requested'
+  | 'site_publish_cancelled'
+  | 'site_publish_approved'
+  | 'site_publish_rejected';
+
+/**
+ * Tenant-scoped audit-log entry (step 47). Records meaningful
+ * lifecycle events on a tenant's site — publish requests, approvals,
+ * rejections — so super-admins can audit who did what and when.
+ * Per-page snapshot history lives in `page_versions` (step 44) and
+ * stays there; this table is for tenant-level, cross-page events.
+ */
+export interface AuditLog {
+  id: UUID;
+  tenant_id: UUID;
+  action: AuditLogAction;
+  performed_by_user_id: UUID;
+  /** Free-form context the renderer can show alongside the event. */
+  metadata: Record<string, unknown>;
+  created_at: ISODateTime;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // Database umbrella (mirrors Supabase Database<T> convention)
 // ────────────────────────────────────────────────────────────────────────────
 export interface Database {
@@ -588,6 +636,7 @@ export interface Database {
   setup_checklist_items: SetupChecklistItem;
   tenant_checklist_status: TenantChecklistStatus;
   tenant_country_settings: TenantCountrySettings;
+  audit_logs: AuditLog;
 }
 
 export type TableName = keyof Database;
