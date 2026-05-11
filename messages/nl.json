@@ -111,7 +111,8 @@
         "en": "EN"
       },
       "missingTranslation": "Vertaling ontbreekt",
-      "missingCount": "{count, plural, =1 {# vertaling ontbreekt} other {# vertalingen ontbreken}}",
+      "missingCountSingular": "{count} vertaling ontbreekt",
+      "missingCountPlural": "{count} vertalingen ontbreken",
       "status": {
         "draft": "Concept",
         "published": "Gepubliceerd",

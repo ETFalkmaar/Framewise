@@ -111,7 +111,8 @@
         "en": "EN"
       },
       "missingTranslation": "Translation missing",
-      "missingCount": "{count, plural, =1 {# translation missing} other {# translations missing}}",
+      "missingCountSingular": "{count} translation missing",
+      "missingCountPlural": "{count} translations missing",
       "status": {
         "draft": "Draft",
         "published": "Published",

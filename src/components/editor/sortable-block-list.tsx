@@ -46,7 +46,14 @@ interface SortableBlockListCopy {
   dragHandle: string;
   reordering: string;
   reorderError: string;
-  missingCount: (n: number) => string;
+  /**
+   * Precomputed singular/plural strings — the server component
+   * can't pass a function across the RSC boundary, so we expand
+   * the ICU plural at render time on the server and forward the
+   * two variants to the client.
+   */
+  missingCountSingular: string;
+  missingCountPlural: string;
 }
 
 export interface SortableBlockListProps {
@@ -224,15 +231,17 @@ function SortableBlockItem({
           <span>#{block.order_index}</span>
           {(() => {
             const missing = countMissingTranslations(block);
-            return missing > 0 ? (
+            if (missing === 0) return null;
+            const template = missing === 1 ? copy.missingCountSingular : copy.missingCountPlural;
+            return (
               <span
                 data-testid={`missing-translations-${block.id}`}
                 className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-[10px] text-amber-700 dark:text-amber-300"
               >
                 <span aria-hidden>⚠</span>
-                {copy.missingCount(missing)}
+                {template.replace('{count}', String(missing))}
               </span>
-            ) : null;
+            );
           })()}
         </CardContent>
       </Card>
