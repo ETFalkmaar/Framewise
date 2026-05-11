@@ -226,14 +226,11 @@ export class ElevenLabsClient {
     if (this.isStubMode()) {
       return { audio_url: '/stub-audio/silent-1s.mp3', mode: 'stub' };
     }
-    const res = await this.fetcher()(
-      `${ELEVENLABS_API_BASE}/text-to-speech/${input.voice_id}`,
-      {
-        method: 'POST',
-        headers: this.headers(),
-        body: JSON.stringify({ text: input.text }),
-      }
-    );
+    const res = await this.fetcher()(`${ELEVENLABS_API_BASE}/text-to-speech/${input.voice_id}`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ text: input.text }),
+    });
     if (!res.ok) {
       throw new Error(`ElevenLabs generateVoiceSample ${res.status}: ${res.statusText}`);
     }
@@ -246,32 +243,25 @@ export class ElevenLabsClient {
    * Sync voice settings to the agent on ElevenLabs. Stub mode is a
    * no-op so the local upsert is the source of truth in dev.
    */
-  async updateVoiceSettings(
-    input: UpdateVoiceSettingsInput
-  ): Promise<{ mode: 'live' | 'stub' }> {
+  async updateVoiceSettings(input: UpdateVoiceSettingsInput): Promise<{ mode: 'live' | 'stub' }> {
     if (this.isStubMode()) return { mode: 'stub' };
-    const res = await this.fetcher()(
-      `${ELEVENLABS_API_BASE}/convai/agents/${input.agent_id}`,
-      {
-        method: 'PATCH',
-        headers: this.headers(),
-        body: JSON.stringify({
-          conversation_config: {
-            tts: {
-              voice_id: input.voice_id,
-              stability: input.stability,
-              similarity_boost: input.similarity_boost,
-              style: input.style,
-              use_speaker_boost: input.speaker_boost,
-            },
+    const res = await this.fetcher()(`${ELEVENLABS_API_BASE}/convai/agents/${input.agent_id}`, {
+      method: 'PATCH',
+      headers: this.headers(),
+      body: JSON.stringify({
+        conversation_config: {
+          tts: {
+            voice_id: input.voice_id,
+            stability: input.stability,
+            similarity_boost: input.similarity_boost,
+            style: input.style,
+            use_speaker_boost: input.speaker_boost,
           },
-        }),
-      }
-    );
+        },
+      }),
+    });
     if (!res.ok) {
-      throw new Error(
-        `ElevenLabs updateVoiceSettings ${res.status}: ${res.statusText}`
-      );
+      throw new Error(`ElevenLabs updateVoiceSettings ${res.status}: ${res.statusText}`);
     }
     return { mode: 'live' };
   }
