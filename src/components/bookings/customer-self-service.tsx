@@ -96,8 +96,10 @@ export interface CustomerSelfServiceProps {
   /** 14-day availability snapshot for the reschedule picker. */
   rescheduleAvailability: PublicAvailabilityDay[];
   locale: string;
-  /** New booking URL after a successful reschedule (server provides). */
-  manageHrefFactory: (reference: string) => string;
+  /** Template URL for the new booking after reschedule. Contains
+   *  `__REF__` which the client swaps for the new reference code.
+   *  (We can't pass a function across the server→client boundary.) */
+  manageHrefTemplate: string;
   copy: SelfServiceCopy;
 }
 
@@ -290,7 +292,7 @@ function ActiveBookingView(props: CustomerSelfServiceProps): React.ReactElement 
             // Hard-navigate to the new reference so the new booking's
             // cookie + URL match.
             setTimeout(() => {
-              window.location.href = props.manageHrefFactory(newRef);
+              window.location.href = props.manageHrefTemplate.replace('__REF__', newRef);
             }, 1200);
           }}
         />
