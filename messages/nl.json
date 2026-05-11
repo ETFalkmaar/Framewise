@@ -46,7 +46,7 @@
       "internalNotes": "Interne notities"
     },
     "manageAvailability": "Beschikbaarheid beheren",
-    "calendar": {
+    "calendarFeed": {
       "managementLink": "Calendar feed",
       "title": "Calendar feed",
       "subtitle": "Subscribe op je reserveringen vanuit Google, Apple of Outlook Calendar.",

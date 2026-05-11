@@ -39,7 +39,7 @@ export default async function CalendarFeedPage({
   const baseUrl = resolveBaseUrl();
   const feedUrlBase = `${baseUrl}/api/tenants/${tenant.id}/calendar.ics`;
 
-  const t = await getTranslations('bookings.calendar');
+  const t = await getTranslations('bookings.calendarFeed');
 
   return (
     <main

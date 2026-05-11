@@ -99,7 +99,7 @@ export default async function AccountBookingsPage({
                 data-testid="calendar-feed-link"
                 className="ring-border bg-background hover:bg-muted rounded-md px-3 py-1.5 font-mono text-xs ring-1 transition"
               >
-                {t('calendar.managementLink')}
+                {t('calendarFeed.managementLink')}
               </Link>
             </div>
           ) : null}

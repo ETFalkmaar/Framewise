@@ -46,7 +46,7 @@
       "internalNotes": "Notes internes"
     },
     "manageAvailability": "Gérer la disponibilité",
-    "calendar": {
+    "calendarFeed": {
       "managementLink": "Flux calendrier",
       "title": "Flux calendrier",
       "subtitle": "Synchronisez vos réservations depuis Google, Apple ou Outlook Calendar.",
